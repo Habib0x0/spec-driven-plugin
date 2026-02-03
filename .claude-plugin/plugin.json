@@ -1,0 +1,9 @@
+{
+  "name": "spec-driven",
+  "version": "1.0.0",
+  "description": "Spec-driven development workflow with structured requirements, design, and task phases",
+  "author": {
+    "name": "habib0x"
+  },
+  "keywords": ["specs", "requirements", "design", "planning", "workflow", "EARS"]
+}

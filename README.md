@@ -4,7 +4,7 @@ A structured workflow plugin for Claude Code that transforms feature ideas into 
 
 ## Overview
 
-Inspired by Kiro's spec-driven approach, this plugin guides you through three phases:
+This plugin guides you through three phases:
 
 1. **Requirements** - User stories with EARS notation and acceptance criteria
 2. **Design** - Technical architecture, sequence diagrams, implementation considerations
@@ -62,3 +62,39 @@ Example:
 WHEN a user submits invalid form data
 THE SYSTEM SHALL display validation errors inline
 ```
+
+## Installation
+
+Add to your `~/.claude/settings.json`:
+
+```json
+{
+  "enabledPlugins": {
+    "spec-driven@spec-driven": true
+  },
+  "extraKnownMarketplaces": {
+    "spec-driven": {
+      "source": {
+        "source": "github",
+        "repo": "Habib0x0/spec-driven-plugin"
+      }
+    }
+  }
+}
+```
+
+Then restart Claude Code.
+
+## Inspiration
+
+This plugin was inspired by [Kiro](https://kiro.dev)'s spec-driven development functionality. Kiro introduced the concept of structured specification workflows that guide developers through requirements gathering, design, and task breakdown before implementation.
+
+Key concepts borrowed from Kiro:
+- **Three-phase workflow**: Requirements → Design → Tasks
+- **EARS notation**: Structured acceptance criteria format
+- **Spec file organization**: Dedicated spec directories with separate documents for each phase
+- **Task traceability**: Linking implementation tasks back to requirements
+
+## License
+
+MIT

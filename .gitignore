@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+*.swo
+*~
+.claude/*.local.md
+.claude/*.local.json

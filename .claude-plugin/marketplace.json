@@ -1,0 +1,19 @@
+{
+  "name": "spec-driven",
+  "description": "Spec-driven development workflow with structured requirements, design, and task phases",
+  "owner": {
+    "name": "habib0x"
+  },
+  "plugins": [
+    {
+      "name": "spec-driven",
+      "description": "Structured workflow for spec-driven development with EARS notation, guiding features through Requirements, Design, and Tasks phases",
+      "version": "1.0.0",
+      "author": {
+        "name": "habib0x"
+      },
+      "source": ".",
+      "category": "development"
+    }
+  ]
+}

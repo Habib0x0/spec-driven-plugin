@@ -142,6 +142,37 @@ Organize tasks into logical phases:
 
 For detailed task breakdown strategies, consult `references/task-breakdown.md`.
 
+## Phase 4: Execution
+
+After planning is complete, execute the spec autonomously using the provided scripts.
+
+### Single Iteration
+
+Run one task at a time:
+
+```bash
+${CLAUDE_PLUGIN_ROOT}/scripts/spec-exec.sh --spec-name <name>
+```
+
+Each run picks the highest-priority pending task, implements it, tests it, updates the spec, and commits.
+
+### Loop Until Done
+
+Run all tasks in a loop:
+
+```bash
+${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name> --max-iterations 50
+```
+
+The loop re-reads spec files each iteration, detects completion via `<promise>COMPLETE</promise>`, and stops when all tasks are done.
+
+### Execution Commands
+
+| Command | Description |
+|---------|-------------|
+| `/spec-exec` | Run one implementation iteration |
+| `/spec-loop` | Loop until all tasks complete |
+
 ## Spec File Location
 
 Create specs in the project's `.claude/specs/` directory:

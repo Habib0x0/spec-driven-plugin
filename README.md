@@ -19,6 +19,8 @@ This plugin guides you through three phases:
 | `/spec-tasks` | Regenerate tasks from updated spec |
 | `/spec-status` | Show spec progress and task completion |
 | `/spec-validate` | Validate spec completeness and consistency |
+| `/spec-exec` | Run one autonomous implementation iteration |
+| `/spec-loop` | Loop implementation until all tasks complete |
 
 ## Usage
 
@@ -43,6 +45,20 @@ Specs are stored in `.claude/specs/<feature-name>/`:
 ├── design.md         # Architecture and implementation plan
 └── tasks.md          # Trackable implementation tasks
 ```
+
+## Execution
+
+After creating a spec, run autonomous implementation:
+
+```bash
+# single task
+spec-exec.sh --spec-name user-authentication
+
+# loop until done
+spec-loop.sh --spec-name user-authentication --max-iterations 20
+```
+
+Scripts live in the plugin's `scripts/` directory. If only one spec exists, `--spec-name` is auto-detected.
 
 ## Auto-Context
 

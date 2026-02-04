@@ -29,7 +29,7 @@ description: |
   After spec changes, validation ensures documents remain aligned and no gaps were introduced.
   </commentary>
   </example>
-model: inherit
+model: claude-sonnet-4-5-20250929
 color: yellow
 tools:
   - Read

@@ -7,6 +7,7 @@ allowed-tools:
   - Write
   - Glob
   - Grep
+  - Task
   - TaskCreate
   - TaskUpdate
   - TaskList
@@ -15,7 +16,15 @@ allowed-tools:
 
 # /spec Command
 
-Create a new specification for a feature using the 3-phase spec-driven workflow.
+Create a new specification for a feature using the 3-phase spec-driven workflow. Each phase automatically uses the optimal model via specialized agents.
+
+## Model Routing
+
+| Phase | Agent | Model | Why |
+|-------|-------|-------|-----|
+| Requirements + Design | spec-planner | Opus 4.5 | Deep reasoning for edge cases and architecture |
+| Tasks | spec-tasker | Sonnet | Fast, structured task generation |
+| Validation | spec-validator | Sonnet | Checklist-based verification |
 
 ## Arguments
 
@@ -34,83 +43,44 @@ Create the spec directory structure:
 └── tasks.md
 ```
 
-Use templates from `${CLAUDE_PLUGIN_ROOT}/templates/` as starting points.
+Use templates from `${CLAUDE_PLUGIN_ROOT}/templates/` as starting points. Copy each template to the spec directory.
 
-### 2. Requirements Phase (Interactive)
+### 2. Requirements + Design Phase (via spec-planner agent)
 
-Guide the user through requirements gathering:
+Delegate to the **spec-planner** agent using the Task tool. This agent runs on **Opus 4.5** for deep reasoning about requirements and architecture.
 
-1. Ask about the feature's purpose and goals
-2. Identify user roles and personas
-3. Gather user stories with acceptance criteria
-4. Use EARS notation for all acceptance criteria:
-   ```
-   WHEN [condition]
-   THE SYSTEM SHALL [behavior]
-   ```
-5. Identify non-functional requirements (performance, security, accessibility)
-6. Document out-of-scope items
-7. List open questions
+Tell the spec-planner agent:
+- The feature name
+- The spec directory path
+- To complete both Requirements (Phase 1) and Design (Phase 2)
+- To write results to the spec directory
 
-Write results to `.claude/specs/<feature-name>/requirements.md`
+The spec-planner agent will:
+1. Ask clarifying questions about the feature
+2. Write requirements with EARS notation
+3. Design the architecture
+4. Write both requirements.md and design.md
 
-### 3. Design Phase (Interactive)
+### 3. Tasks Phase (via spec-tasker agent)
 
-Guide the user through technical design:
+After the spec-planner completes, delegate to the **spec-tasker** agent using the Task tool. This agent runs on **Sonnet** for efficient task breakdown.
 
-1. Review requirements with the user
-2. Discuss architectural approach
-3. Identify major components
-4. Define data models and schemas
-5. Design APIs if applicable
-6. Document sequence diagrams for key flows
-7. Discuss alternatives and trade-offs
-8. Address security and performance considerations
+Tell the spec-tasker agent:
+- The feature name
+- The spec directory path
+- To read the completed requirements.md and design.md
+- To generate tasks and sync to Claude Code todos
 
-Write results to `.claude/specs/<feature-name>/design.md`
+### 4. Summary
 
-### 4. Tasks Phase
-
-Break down design into implementation tasks:
-
-1. Analyze design for discrete implementation units
-2. Create tasks organized by phase:
-   - Phase 1: Setup/Foundation
-   - Phase 2: Core Implementation
-   - Phase 3: Integration
-   - Phase 4: Testing
-   - Phase 5: Polish
-3. Each task must have:
-   - Clear title (imperative form)
-   - Link to requirements (US-X)
-   - Detailed description
-   - Testable acceptance criteria
-   - Dependencies
-4. Write tasks to `.claude/specs/<feature-name>/tasks.md`
-
-### 5. Sync Tasks to Claude Code
-
-After creating tasks.md, sync to Claude Code's todo system:
-
-```
-For each task in tasks.md:
-  TaskCreate(
-    subject: task title,
-    description: full task description with acceptance criteria,
-    activeForm: present continuous form of action
-  )
-```
-
-Set up dependencies between tasks using TaskUpdate with addBlockedBy.
-
-### 6. Summary
-
-After completing all phases, provide a summary:
+After all agents complete, provide a summary:
 
 - Number of user stories created
 - Number of tasks created
 - Key architectural decisions made
-- Next steps for implementation
+- Model usage: Opus for planning, Sonnet for tasks
+- Next steps: suggest running `/spec-validate` before implementation
+- Remind user: implementation works best with Sonnet (fast code generation from clear specs)
 
 ## Example Usage
 
@@ -127,3 +97,4 @@ After completing all phases, provide a summary:
 - Tasks should trace back to requirements
 - Start with the happy path, then add error handling tasks
 - Include testing tasks for each major component
+- After spec is complete, switch to Sonnet for implementation — the spec provides all the context needed

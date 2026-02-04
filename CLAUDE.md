@@ -11,6 +11,7 @@ This is a Claude Code plugin that provides spec-driven development workflows. It
 ```
 .claude-plugin/plugin.json  - Plugin manifest (name, version, metadata)
 commands/                   - Slash command definitions
+scripts/                    - Standalone execution scripts (spec-exec, spec-loop)
 skills/spec-workflow/       - Main skill with reference docs
 agents/                     - Subagent definitions
 templates/                  - Document scaffolding for specs
@@ -25,6 +26,8 @@ templates/                  - Document scaffolding for specs
 | `/spec-tasks` | Regenerate tasks from spec |
 | `/spec-status` | Show progress and task completion |
 | `/spec-validate` | Validate completeness and consistency |
+| `/spec-exec` | Run one autonomous implementation iteration |
+| `/spec-loop` | Loop implementation until all tasks complete |
 
 ## Model Routing
 
@@ -79,6 +82,17 @@ Place supplementary docs in `skills/spec-workflow/references/`. The skill file r
 
 ### Template Variables
 Templates use `{{PLACEHOLDER}}` syntax for substitution during spec creation.
+
+## Execution Mode
+
+After completing the spec workflow (Requirements, Design, Tasks), use the execution scripts to implement autonomously:
+
+- `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
+- `spec-loop.sh` - Loops until all tasks complete or max iterations reached
+
+Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
+
+Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
 
 ## Validation Rules
 

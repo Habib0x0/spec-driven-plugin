@@ -91,8 +91,8 @@ Add to your `~/.claude/settings.json`:
   "extraKnownMarketplaces": {
     "spec-driven": {
       "source": {
-        "source": "github",
-        "repo": "Habib0x0/spec-driven-plugin"
+        "source": "url",
+        "url": "https://github.com/Habib0x0/spec-driven-plugin.git"
       }
     }
   }

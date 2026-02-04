@@ -26,6 +26,20 @@ templates/                  - Document scaffolding for specs
 | `/spec-status` | Show progress and task completion |
 | `/spec-validate` | Validate completeness and consistency |
 
+## Model Routing
+
+The plugin automatically uses the optimal model for each phase:
+
+| Agent | Model | Phase | Rationale |
+|-------|-------|-------|-----------|
+| spec-planner | Opus 4.5 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
+| spec-tasker | Sonnet | Task breakdown | Fast, structured decomposition |
+| spec-validator | Sonnet | Validation | Checklist-based verification |
+
+The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
+
+For implementation after spec completion, Sonnet is recommended — the spec provides all the context needed for accurate code generation.
+
 ## Key Concepts
 
 ### EARS Notation

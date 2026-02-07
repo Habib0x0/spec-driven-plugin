@@ -62,6 +62,15 @@ for f in requirements.md design.md tasks.md; do
   fi
 done
 
+# create progress.md if it doesn't exist
+if [ ! -f "$SPEC_DIR/progress.md" ]; then
+  echo "# Progress Log: $SPEC_NAME" > "$SPEC_DIR/progress.md"
+  echo "" >> "$SPEC_DIR/progress.md"
+  echo "> Append-only session log. Do NOT edit previous entries." >> "$SPEC_DIR/progress.md"
+  echo "" >> "$SPEC_DIR/progress.md"
+  echo "---" >> "$SPEC_DIR/progress.md"
+fi
+
 OUTPUT_FILE=$(mktemp)
 PROMPT_FILE=$(mktemp)
 trap "rm -f $OUTPUT_FILE $PROMPT_FILE" EXIT
@@ -82,19 +91,56 @@ while true; do
     echo ""
     echo "# Tasks"
     cat "$SPEC_DIR/tasks.md"
+    echo ""
+    echo "# Progress Log"
+    cat "$SPEC_DIR/progress.md"
     cat << 'EOF'
 
 ## Instructions
-1. Find the highest-priority feature to work on and work only on that feature.
-   This should be the one YOU decide has the highest priority - not necessarily the first in the list.
-2. Check that the types check via pnpm typecheck and that the tests pass via pnpm test.
-3. Update the SPEC with work that was done.
-4. Append your progress to the tasks.md file.
-   Use this to leave a note for the next person working in the codebase.
-5. Make a git commit of that feature.
 
-ONLY WORK ON A SINGLE FEATURE.
-If, while implementing the feature, you notice the SPEC is complete, output <promise>COMPLETE</promise>.
+### Step 1: Get Your Bearings
+1. Run `pwd` to see where you are.
+2. Read the Progress Log above to understand what happened in previous sessions.
+3. Check git log to see recent commits.
+4. Run a basic health check — verify the app/tests still work before making changes.
+
+### Step 2: Pick ONE Task
+1. Find the highest-priority task that is NOT yet verified.
+2. Only work on that ONE task. Do not try to do multiple tasks.
+
+### Step 3: Implement
+1. Write the code for the task.
+2. Follow existing patterns in the codebase.
+
+### Step 4: Test and Verify
+1. Run the relevant tests (unit, integration, e2e as appropriate).
+2. Manually verify the feature works end-to-end if applicable.
+3. It is UNACCEPTABLE to mark a task as verified without actually testing it.
+4. Only set **Verified: yes** after you have confirmed the acceptance criteria pass.
+
+### Step 5: Update Spec Files
+1. Update tasks.md: set Status to "completed" and Verified to "yes" (only if actually verified).
+2. Do NOT edit task descriptions, acceptance criteria, or dependencies — only Status and Verified.
+3. Append a session entry to progress.md with:
+   - What you worked on
+   - What you completed and verified
+   - Any issues encountered and how you resolved them
+   - What should be worked on next
+
+### Step 6: Commit
+1. Make a git commit with a descriptive message.
+2. The commit should leave the codebase in a clean, working state.
+
+### Completion
+- If ALL tasks have Status: completed AND Verified: yes, output <promise>COMPLETE</promise>
+- Otherwise, just complete your one task and exit cleanly.
+
+CRITICAL RULES:
+- Only work on ONE task per session.
+- Never mark Verified: yes without actually testing.
+- Never edit task descriptions — only Status and Verified fields.
+- Always append to progress.md, never edit previous entries.
+- Always leave the codebase in a working state.
 EOF
   } > "$PROMPT_FILE"
 
@@ -102,7 +148,7 @@ EOF
 
   if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
     echo ""
-    echo "All tasks complete!"
+    echo "All tasks complete and verified!"
     break
   fi
 

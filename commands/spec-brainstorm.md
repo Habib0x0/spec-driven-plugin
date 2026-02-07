@@ -113,7 +113,3 @@ Then tell the user:
 - Reference specific code when discussing feasibility
 - It's fine to say "I'm not sure, let's figure it out together"
 
-## Example Flow
-
-```
-User: /spec-brainstorm better error handling

@@ -6,15 +6,36 @@ version: 1.0.0
 
 # Spec-Driven Development Workflow
 
-A structured approach to feature development through three phases: Requirements, Design, and Tasks. This methodology prevents ad-hoc coding by ensuring proper planning before implementation.
+A structured approach to feature development through four phases: Brainstorm, Requirements, Design, and Tasks. This methodology prevents ad-hoc coding by ensuring proper planning before implementation.
 
 ## Overview
 
 Spec-driven development transforms vague feature ideas into formal, traceable specifications:
 
 ```
-Feature Idea → Requirements (EARS) → Design (Architecture) → Tasks (Trackable)
+Feature Idea → Brainstorm (Conversation) → Requirements (EARS) → Design (Architecture) → Tasks (Trackable)
 ```
+
+## Phase 0: Brainstorm
+
+Before formalizing requirements, use `/spec-brainstorm` to explore the idea through conversation.
+
+### When to Brainstorm
+
+- You have a vague idea that needs refinement
+- You're weighing multiple approaches
+- You want to think through feasibility before committing
+- The scope isn't clear yet
+
+### Brainstorm Workflow
+
+1. Start with `/spec-brainstorm [idea]`
+2. Have a back-and-forth conversation exploring the problem
+3. Claude asks probing questions, suggests alternatives, identifies gaps
+4. When the idea is solid, Claude outputs a brief
+5. Use that brief as input for `/spec <feature-name>`
+
+The brainstorm phase is optional — if you already know exactly what you want, skip straight to `/spec`.
 
 All spec files are stored in `.claude/specs/<feature-name>/`:
 - `requirements.md` - User stories with EARS acceptance criteria

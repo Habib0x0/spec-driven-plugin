@@ -21,6 +21,7 @@ templates/                  - Document scaffolding for specs
 
 | Command | Purpose |
 |---------|---------|
+| `/spec-brainstorm` | Brainstorm a feature idea through conversation |
 | `/spec <name>` | Start new spec with 3-phase workflow |
 | `/spec-refine` | Update existing requirements/design |
 | `/spec-tasks` | Regenerate tasks from spec |

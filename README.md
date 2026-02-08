@@ -22,6 +22,7 @@ This plugin guides you through three phases:
 | `/spec-validate` | Validate spec completeness and consistency |
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
+| `/spec-team` | Execute with agent team (4 specialized agents) |
 
 ## Usage
 
@@ -57,9 +58,22 @@ spec-exec.sh --spec-name user-authentication
 
 # loop until done
 spec-loop.sh --spec-name user-authentication --max-iterations 20
+
+# agent team (Implementer + Tester + Reviewer + Debugger)
+spec-team.sh --spec-name user-authentication
 ```
 
 Scripts live in the plugin's `scripts/` directory. If only one spec exists, `--spec-name` is auto-detected.
+
+### Agent Team Mode
+
+Use `spec-team.sh` when you need reliable verification. It spawns 4 specialized agents:
+- **Implementer** — writes code
+- **Tester** — verifies with Playwright/tests (only they can mark Verified: yes)
+- **Reviewer** — checks code quality, security, architecture (uses Opus)
+- **Debugger** — fixes issues when Tester or Reviewer reject
+
+This costs more tokens but prevents tasks from being marked complete without real testing.
 
 ## Auto-Context
 

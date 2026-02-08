@@ -102,7 +102,8 @@ while true; do
 1. Run `pwd` to see where you are.
 2. Read the Progress Log above to understand what happened in previous sessions.
 3. Check git log to see recent commits.
-4. Run a basic health check — verify the app/tests still work before making changes.
+4. If init.sh exists in the spec directory, read it to understand how to run the app.
+5. Run a basic health check — start the dev server if needed, verify the app/tests still work before making changes.
 
 ### Step 2: Pick ONE Task
 1. Find the highest-priority task that is NOT yet verified.
@@ -114,9 +115,14 @@ while true; do
 
 ### Step 4: Test and Verify
 1. Run the relevant tests (unit, integration, e2e as appropriate).
-2. Manually verify the feature works end-to-end if applicable.
-3. It is UNACCEPTABLE to mark a task as verified without actually testing it.
-4. Only set **Verified: yes** after you have confirmed the acceptance criteria pass.
+2. For UI features: Use the Playwright MCP to launch a browser and verify the feature works.
+   - Navigate to the relevant page
+   - Interact with the UI as a user would
+   - Take screenshots as evidence
+   - Do NOT skip this step for any user-facing feature
+3. For API/backend features: Use curl or test commands to verify endpoints work.
+4. It is UNACCEPTABLE to mark a task as verified without actually testing it.
+5. Only set **Verified: yes** after you have confirmed the acceptance criteria pass.
 
 ### Step 5: Update Spec Files
 1. Update tasks.md: set Status to "completed" and Verified to "yes" (only if actually verified).

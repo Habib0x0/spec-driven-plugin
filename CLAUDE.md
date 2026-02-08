@@ -29,6 +29,7 @@ templates/                  - Document scaffolding for specs
 | `/spec-validate` | Validate completeness and consistency |
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
+| `/spec-team` | Execute with agent team (Implementer + Tester + Reviewer + Debugger) |
 
 ## Model Routing
 
@@ -39,6 +40,10 @@ The plugin automatically uses the optimal model for each phase:
 | spec-planner | Opus 4.5 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
 | spec-tasker | Sonnet | Task breakdown | Fast, structured decomposition |
 | spec-validator | Sonnet | Validation | Checklist-based verification |
+| spec-implementer | Sonnet | Implementation | Writes code for tasks |
+| spec-tester | Sonnet | Testing | Verifies with Playwright/tests |
+| spec-reviewer | Opus | Review | Code quality, security, architecture |
+| spec-debugger | Sonnet | Debugging | Fixes issues when rejected |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
 

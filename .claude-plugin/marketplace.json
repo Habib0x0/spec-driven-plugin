@@ -8,7 +8,7 @@
     {
       "name": "spec-driven",
       "description": "Structured workflow for spec-driven development with EARS notation, guiding features through Requirements, Design, and Tasks phases",
-      "version": "1.3.0",
+      "version": "2.0.0",
       "author": {
         "name": "habib0x"
       },

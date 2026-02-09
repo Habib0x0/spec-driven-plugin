@@ -55,6 +55,10 @@ if [ ! -d "$SPEC_DIR" ]; then
   exit 1
 fi
 
+# Generate unique team name per project
+PROJECT_DIR=$(basename "$(pwd)")
+TEAM_NAME="spec-${PROJECT_DIR}-${SPEC_NAME}"
+
 for f in requirements.md design.md tasks.md; do
   if [ ! -f "$SPEC_DIR/$f" ]; then
     echo "Error: Missing $f in $SPEC_DIR"
@@ -79,6 +83,8 @@ trap "rm -f $PROMPT_FILE" EXIT
   echo "# Spec-Driven Agent Team"
   echo ""
   echo "You are the TEAM LEAD coordinating an agent team to implement this spec."
+  echo ""
+  echo "**IMPORTANT**: When creating your agent team, use this unique team name: \`$TEAM_NAME\`"
   echo ""
   echo "## Spec Files"
   echo ""
@@ -169,13 +175,14 @@ As team lead, you can:
 2. Read progress.md to understand previous sessions
 3. Check git log for recent history
 4. If init.sh exists, read it to understand how to run the app
-5. Create your agent team and start working through tasks
+5. Create your agent team with name `$TEAM_NAME` and start working through tasks
 
-Create an agent team now with the 4 teammates (Implementer, Tester, Reviewer, Debugger) and begin implementing the first unverified task.
+Create an agent team now with team name `$TEAM_NAME` and the 4 teammates (Implementer, Tester, Reviewer, Debugger) and begin implementing the first unverified task.
 EOF
 } > "$PROMPT_FILE"
 
 echo "=== Starting Spec Team for: $SPEC_NAME ==="
+echo "Team Name: $TEAM_NAME"
 echo "Team: Implementer + Tester + Reviewer + Debugger"
 echo ""
 

@@ -4,7 +4,11 @@
 
 <!--
 IMPORTANT: Do NOT edit task descriptions, acceptance criteria, or dependencies.
-Only update Status and Verified fields. This ensures traceability.
+Only update Status, Wired, and Verified fields. This ensures traceability.
+
+Status lifecycle: pending → in_progress → completed → (only after Wired + Verified)
+Wired: Is this code connected to the rest of the application? Can a user reach it?
+Verified: Has it been tested end-to-end as a user would interact with it?
 -->
 
 ## Summary
@@ -14,6 +18,7 @@ Only update Status and Verified fields. This ensures traceability.
 | Pending | {{PENDING_COUNT}} |
 | In Progress | {{IN_PROGRESS_COUNT}} |
 | Completed | {{COMPLETED_COUNT}} |
+| Wired | {{WIRED_COUNT}} |
 | Verified | {{VERIFIED_COUNT}} |
 
 ---
@@ -23,6 +28,7 @@ Only update Status and Verified fields. This ensures traceability.
 ### T-1: {{TASK_TITLE}}
 
 - **Status**: pending | in_progress | completed
+- **Wired**: n/a | no | yes
 - **Verified**: no
 - **Requirements**: US-1
 - **Description**: {{DETAILED_DESCRIPTION}}
@@ -32,6 +38,7 @@ Only update Status and Verified fields. This ensures traceability.
 ### T-2: {{TASK_TITLE}}
 
 - **Status**: pending
+- **Wired**: n/a | no | yes
 - **Verified**: no
 - **Requirements**: US-1
 - **Description**: {{DETAILED_DESCRIPTION}}
@@ -45,6 +52,7 @@ Only update Status and Verified fields. This ensures traceability.
 ### T-3: {{TASK_TITLE}}
 
 - **Status**: pending
+- **Wired**: no
 - **Verified**: no
 - **Requirements**: US-1, US-2
 - **Description**: {{DETAILED_DESCRIPTION}}
@@ -53,22 +61,45 @@ Only update Status and Verified fields. This ensures traceability.
 
 ---
 
-## Phase 3: Testing & Polish
+## Phase 3: Integration
+
+<!--
+This phase wires the core implementation into the application.
+Every backend endpoint must have a frontend caller.
+Every component must be rendered in a route/page.
+Every service must be connected to the UI or API entry point.
+-->
 
 ### T-4: {{TASK_TITLE}}
 
 - **Status**: pending
+- **Wired**: no
 - **Verified**: no
-- **Requirements**: US-1
-- **Description**: {{DETAILED_DESCRIPTION}}
-- **Acceptance**: {{HOW_TO_VERIFY_DONE}}
+- **Requirements**: US-1, US-2
+- **Description**: {{DETAILED_DESCRIPTION_WIRING}}
+- **Acceptance**: {{HOW_TO_VERIFY_WIRED}}
 - **Dependencies**: T-3
+
+---
+
+## Phase 4: Testing & Polish
 
 ### T-5: {{TASK_TITLE}}
 
 - **Status**: pending
+- **Wired**: n/a
+- **Verified**: no
+- **Requirements**: US-1
+- **Description**: {{DETAILED_DESCRIPTION}}
+- **Acceptance**: {{HOW_TO_VERIFY_DONE}}
+- **Dependencies**: T-4
+
+### T-6: {{TASK_TITLE}}
+
+- **Status**: pending
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-2
 - **Description**: {{DETAILED_DESCRIPTION}}
 - **Acceptance**: {{HOW_TO_VERIFY_DONE}}
-- **Dependencies**: T-3
+- **Dependencies**: T-4

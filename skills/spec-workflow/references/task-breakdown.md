@@ -141,27 +141,41 @@ Main feature functionality:
 - Dependencies: T-4
 ```
 
-### Phase 3: Integration
+### Phase 3: Integration (MANDATORY)
 
-Connect components and external systems:
+This phase wires core implementation into the application. Every backend task from Phase 2 must have corresponding integration tasks here. Code that exists but isn't reachable is useless.
+
+**Key question for each Phase 2 task: "Can a user reach this feature after Phase 2 alone?"** If not, add integration tasks.
 
 ```markdown
 ## Phase 3: Integration
 
-### T-7: Integrate frontend with auth API
+### T-7: Wire login form to authentication endpoint
 - Status: pending
+- Wired: no
 - Requirements: US-1
-- Description: Connect login form to authentication endpoint
-- Acceptance: User can log in from UI, token stored correctly
+- Description: Connect login form submission to POST /api/auth/login. Display success/error states. Store JWT token. Redirect to dashboard on success.
+- Acceptance: User can click "Login" button, enter credentials, submit form, and see dashboard (or error message)
 - Dependencies: T-5, T-6
 
-### T-8: Implement protected routes
+### T-8: Add dashboard route and navigation link
 - Status: pending
+- Wired: no
 - Requirements: US-1
-- Description: Add auth middleware, protect dashboard routes
-- Acceptance: Unauthenticated requests return 401
+- Description: Register /dashboard route in router. Add "Dashboard" link to sidebar navigation. Protect route with auth middleware.
+- Acceptance: Logged-in user can click "Dashboard" in sidebar and see the dashboard page. Unauthenticated users are redirected to login.
 - Dependencies: T-6
+
+### T-9: Wire user profile page to user API
+- Status: pending
+- Wired: no
+- Requirements: US-2
+- Description: Connect profile page to GET /api/users/:id endpoint. Render user data in profile component. Add "Profile" link to user menu.
+- Acceptance: User can click their name in the header, select "Profile", and see their profile data loaded from the API.
+- Dependencies: T-5, T-7
 ```
+
+**Integration task naming convention:** Start with "Wire", "Connect", "Add [X] to [Y]", or "Register" to make wiring tasks immediately identifiable.
 
 ### Phase 4: Testing
 
@@ -288,9 +302,21 @@ For dependencies:
 ### Keeping in Sync
 
 When updating task status:
-1. Update tasks.md file
+1. Update tasks.md file (Status, Wired, and Verified fields)
 2. Call TaskUpdate with new status
 3. Summary count updates automatically
+
+### Wired + Verified Tracking
+
+The tasks.md summary table tracks both Wired and Verified counts:
+
+| Status | Count |
+|--------|-------|
+| Completed | 8 |
+| Wired | 6 |
+| Verified | 5 |
+
+This makes it immediately clear when tasks are "completed" but not actually working.
 
 ## Common Patterns
 
@@ -334,6 +360,8 @@ T-N+2: Write E2E tests (few, slow)
 ### T-{ID}: {Imperative title}
 
 - **Status**: pending
+- **Wired**: no | n/a
+- **Verified**: no
 - **Requirements**: {US-X, US-Y or "infrastructure"}
 - **Description**: {Detailed description of what to implement}
 - **Acceptance**:
@@ -342,6 +370,22 @@ T-N+2: Write E2E tests (few, slow)
 - **Dependencies**: {T-X, T-Y or "none"}
 - **Notes**: {Optional implementation hints or considerations}
 ```
+
+### Wired Field Values
+
+- `no` -- Code exists but is not connected to the application
+- `yes` -- Code is reachable from the application's entry points (routes, navigation, API)
+- `n/a` -- Task is infrastructure/config with nothing to wire (database setup, test writing, CI config)
+
+### Task Lifecycle
+
+```
+pending → in_progress → completed (code written)
+                         → Wired: yes (code connected to app)
+                         → Verified: yes (tested end-to-end)
+```
+
+A task is only truly DONE when Status=completed AND Wired=yes/n/a AND Verified=yes.
 
 ## Anti-Patterns to Avoid
 

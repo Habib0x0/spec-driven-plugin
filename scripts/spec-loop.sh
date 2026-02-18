@@ -108,43 +108,70 @@ while true; do
 ### Step 2: Pick ONE Task
 1. Find the highest-priority task that is NOT yet verified.
 2. Only work on that ONE task. Do not try to do multiple tasks.
+3. Respect dependencies — don't start a task if its dependencies aren't completed.
 
 ### Step 3: Implement
 1. Write the code for the task.
 2. Follow existing patterns in the codebase.
+3. **WIRE IT IN**: Do not just create files in isolation. Every piece of code must be connected to the application:
+   - New routes must be registered in the router
+   - New pages must be linked in navigation (sidebar, menu, header)
+   - New components must be imported and rendered in the appropriate page/route
+   - New API endpoints must be registered in the server
+   - New frontend API calls must be triggered by the appropriate user action
+   - Form submissions must call the correct API endpoint
+   - API responses must be rendered in the UI
+4. After writing code, trace the path from the app's entry point to your new code. If there's a gap, fill it.
 
-### Step 4: Test and Verify
+### Step 4: Integration Check (MANDATORY before testing)
+1. **Can a user reach this feature?** Navigate from the app's entry point to the new feature using normal UI interactions (clicking links, menu items, buttons).
+2. If the feature is a backend-only change, verify the endpoint is registered and callable.
+3. If the feature requires UI changes, verify the UI element is visible and interactive.
+4. **If the code is NOT wired in, DO NOT proceed to testing. Fix the wiring first.**
+5. Set **Wired: yes** in tasks.md only after confirming the integration chain is complete.
+6. For infrastructure/setup tasks with nothing to wire, set **Wired: n/a**.
+
+### Step 5: Test and Verify
 1. Run the relevant tests (unit, integration, e2e as appropriate).
 2. For UI features: Use the Playwright MCP to launch a browser and verify the feature works.
-   - Navigate to the relevant page
+   - Start from the app's main entry point (NOT a direct URL to the feature)
+   - Navigate to the feature through normal user interactions
    - Interact with the UI as a user would
    - Take screenshots as evidence
+   - Also verify via direct URL that the route works
    - Do NOT skip this step for any user-facing feature
 3. For API/backend features: Use curl or test commands to verify endpoints work.
 4. It is UNACCEPTABLE to mark a task as verified without actually testing it.
-5. Only set **Verified: yes** after you have confirmed the acceptance criteria pass.
+5. It is UNACCEPTABLE to mark a task as verified if the feature isn't reachable from the app.
+6. Only set **Verified: yes** after you have confirmed:
+   - The code is wired into the application (Wired: yes)
+   - All acceptance criteria pass when tested end-to-end
+   - The feature is reachable through normal user navigation
 
-### Step 5: Update Spec Files
-1. Update tasks.md: set Status to "completed" and Verified to "yes" (only if actually verified).
-2. Do NOT edit task descriptions, acceptance criteria, or dependencies — only Status and Verified.
+### Step 6: Update Spec Files
+1. Update tasks.md: set Status, Wired, and Verified fields appropriately.
+2. Do NOT edit task descriptions, acceptance criteria, or dependencies — only Status, Wired, and Verified.
 3. Append a session entry to progress.md with:
    - What you worked on
    - What you completed and verified
+   - **Integration status**: How the feature is wired in, what connects to what
    - Any issues encountered and how you resolved them
    - What should be worked on next
 
-### Step 6: Commit
+### Step 7: Commit
 1. Make a git commit with a descriptive message.
 2. The commit should leave the codebase in a clean, working state.
 
 ### Completion
-- If ALL tasks have Status: completed AND Verified: yes, output <promise>COMPLETE</promise>
+- If ALL tasks have Status: completed AND Wired: yes/n/a AND Verified: yes, output <promise>COMPLETE</promise>
 - Otherwise, just complete your one task and exit cleanly.
 
 CRITICAL RULES:
 - Only work on ONE task per session.
-- Never mark Verified: yes without actually testing.
-- Never edit task descriptions — only Status and Verified fields.
+- Never mark Verified: yes without actually testing end-to-end.
+- Never mark Wired: yes without confirming the feature is reachable from the app.
+- Never create code in isolation — always wire it into the application.
+- Never edit task descriptions — only Status, Wired, and Verified fields.
 - Always append to progress.md, never edit previous entries.
 - Always leave the codebase in a working state.
 EOF

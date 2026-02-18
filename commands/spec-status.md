@@ -32,8 +32,12 @@ Parse tasks.md to count:
 - Total tasks
 - Pending tasks
 - In-progress tasks
-- Completed tasks
-- Completion percentage
+- Completed tasks (Status: completed)
+- Wired tasks (Wired: yes)
+- Verified tasks (Verified: yes)
+- Completion percentage (based on verified, not just completed)
+
+**Important**: A task is only truly "done" when it is completed AND wired AND verified. Display this distinction clearly.
 
 ### 4. Check Todo Sync
 
@@ -57,18 +61,28 @@ Output a formatted status report:
 ### Progress
 | Status | Count | Percentage |
 |--------|-------|------------|
-| Completed | Z | ZZ% |
-| In Progress | A | AA% |
-| Pending | B | BB% |
+| Verified (done) | Z | ZZ% |
+| Wired (not verified) | A | AA% |
+| Completed (not wired) | B | BB% |
+| In Progress | C | CC% |
+| Pending | D | DD% |
 
 ### Progress Bar
-[████████░░░░░░░░] 50%
+[████████░░░░░░░░] 50% verified
+
+### Integration Health
+- Tasks completed but NOT wired: X (these need wiring!)
+- Tasks wired but NOT verified: Y (these need testing!)
 
 ### Current Focus
 - In Progress: T-5: Implement authentication endpoint
 
 ### Blocked Tasks
 - T-8: Integration tests (blocked by T-5, T-6)
+
+### Unwired Tasks (Action Needed)
+- T-3: Create user profile component (Status: completed, Wired: no)
+  -> Needs: Route registration, navigation link
 
 ### Next Up
 - T-6: Create session management
@@ -79,9 +93,11 @@ Output a formatted status report:
 
 Based on status, suggest next actions:
 
+- If tasks are completed but not wired: "T-X is completed but not wired into the app. Wire it before moving on."
+- If tasks are wired but not verified: "T-X is wired but not verified. Run tests to confirm it works."
 - If no in-progress tasks: "Consider starting T-X next"
 - If blocked tasks: "Complete T-Y to unblock T-Z"
-- If all complete: "Spec complete! Consider running /spec-validate"
+- If all verified: "Spec complete! Consider running /spec-validate"
 
 ## Example Usage
 
@@ -92,5 +108,7 @@ Based on status, suggest next actions:
 ## Tips
 
 - Run periodically to track progress
+- Pay attention to "Unwired Tasks" -- these are the root cause of features not working
 - Check for blocked tasks that need attention
 - Verify todo sync is maintained
+- A task marked "completed" but not "wired" is NOT done

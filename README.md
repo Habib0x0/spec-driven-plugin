@@ -15,6 +15,7 @@ This plugin guides you through three phases:
 | Command | Description |
 |---------|-------------|
 | `/spec-brainstorm` | Brainstorm a feature idea through conversation until ready |
+| `/spec-consult` | Brainstorm with domain expert consultants |
 | `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |
@@ -23,6 +24,11 @@ This plugin guides you through three phases:
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
 | `/spec-team` | Execute with agent team (4 specialized agents) |
+| `/spec-accept` | Run user acceptance testing for formal sign-off |
+| `/spec-docs` | Generate documentation from spec and implementation |
+| `/spec-release` | Generate release notes and deployment checklist |
+| `/spec-verify` | Run post-deployment smoke tests |
+| `/spec-retro` | Run a retrospective on a completed spec |
 
 ## Usage
 

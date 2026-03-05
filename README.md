@@ -81,6 +81,41 @@ Use `spec-team.sh` when you need reliable verification. It spawns 4 specialized 
 
 This costs more tokens but prevents tasks from being marked complete without real testing.
 
+### Post-Implementation Pipeline
+
+After all tasks are complete, run the post-implementation scripts:
+
+```bash
+# user acceptance testing (verify requirements are met)
+spec-accept.sh --spec-name user-authentication
+
+# generate documentation from spec + code
+spec-docs.sh --spec-name user-authentication
+
+# generate release notes + deployment checklist
+spec-release.sh --spec-name user-authentication --version-bump minor
+
+# create git tag + GitHub release
+spec-release.sh --spec-name user-authentication --version-bump minor --release
+
+# post-deployment smoke test against live environment
+spec-verify.sh --spec-name user-authentication --url https://staging.example.com
+
+# quick health check only
+spec-verify.sh --spec-name user-authentication --url https://prod.example.com --scope quick
+```
+
+### CI/CD Integration
+
+The verification script returns exit codes for CI pipelines:
+- `spec-verify.sh` exits `0` on PASS, `1` on FAIL
+- `spec-accept.sh` outputs `<promise>ACCEPTED</promise>` or `<promise>REJECTED</promise>`
+
+Example CI stage:
+```bash
+spec-verify.sh --url "$STAGING_URL" --scope quick || exit 1
+```
+
 ## Auto-Context
 
 When implementing features, Claude automatically includes relevant spec files as context if you're working in a directory with specs.

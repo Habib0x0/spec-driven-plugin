@@ -109,6 +109,15 @@ Both scripts build a prompt from the spec files and run `claude --dangerously-sk
 
 Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
 
+### Post-Implementation Scripts
+
+After all tasks are complete, these scripts handle the remaining SDLC phases:
+
+- `spec-accept.sh` - User acceptance testing against requirements (outputs `ACCEPTED`/`REJECTED`)
+- `spec-docs.sh` - Generate documentation from spec + code (API ref, user guide, ADR, runbook)
+- `spec-release.sh` - Release notes, changelog, deployment checklist; optional `--tag` and `--release`
+- `spec-verify.sh` - Post-deployment smoke test against a live URL (exits 0/1 for CI/CD)
+
 ## Validation Rules
 
 The spec-validator agent checks:

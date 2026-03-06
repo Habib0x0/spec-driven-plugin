@@ -29,7 +29,7 @@ description: |
   Transitioning from design to tasks. The tasker agent picks up where the planner left off, using the structured spec to generate tasks.
   </commentary>
   </example>
-model: claude-sonnet-4-5-20250929
+model: claude-sonnet-4-6
 color: green
 tools:
   - Read

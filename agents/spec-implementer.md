@@ -2,7 +2,7 @@
 name: spec-implementer
 description: |
   Implements code for a single task from the spec. Focuses only on writing code, not testing or reviewing.
-model: claude-sonnet-4-5-20250929
+model: claude-sonnet-4-6
 color: green
 tools:
   - Read

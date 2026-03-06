@@ -2,7 +2,7 @@
 name: spec-reviewer
 description: |
   Reviews code quality, security, and architectural alignment after Tester verifies functionality. Uses Opus for deep reasoning about subtle issues.
-model: claude-opus-4-5-20251101
+model: claude-opus-4-6
 color: blue
 tools:
   - Read

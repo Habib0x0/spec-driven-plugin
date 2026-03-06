@@ -29,7 +29,7 @@ description: |
   Architectural redesign benefits from Opus's superior reasoning about tradeoffs and system design.
   </commentary>
   </example>
-model: claude-opus-4-5-20251101
+model: claude-opus-4-6
 color: blue
 tools:
   - Read

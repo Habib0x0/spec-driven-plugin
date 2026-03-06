@@ -37,7 +37,7 @@ The plugin automatically uses the optimal model for each phase:
 
 | Agent | Model | Phase | Rationale |
 |-------|-------|-------|-----------|
-| spec-planner | Opus 4.5 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
+| spec-planner | Opus 4.6 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
 | spec-tasker | Sonnet | Task breakdown | Fast, structured decomposition |
 | spec-validator | Sonnet | Validation | Checklist-based verification |
 | spec-implementer | Sonnet | Implementation | Writes code for tasks |

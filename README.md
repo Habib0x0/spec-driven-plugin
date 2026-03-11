@@ -14,7 +14,7 @@ This plugin guides you through three phases:
 
 | Command | Description |
 |---------|-------------|
-| `/spec-brainstorm` | Brainstorm a feature idea through conversation until ready |
+| `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
 | `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |
@@ -23,6 +23,11 @@ This plugin guides you through three phases:
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
 | `/spec-team` | Execute with agent team (4 specialized agents) |
+| `/spec-accept` | Run user acceptance testing for formal sign-off |
+| `/spec-docs` | Generate documentation from spec and implementation |
+| `/spec-release` | Generate release notes and deployment checklist |
+| `/spec-verify` | Run post-deployment smoke tests |
+| `/spec-retro` | Run a retrospective on a completed spec |
 
 ## Usage
 
@@ -74,6 +79,41 @@ Use `spec-team.sh` when you need reliable verification. It spawns 4 specialized 
 - **Debugger** — fixes issues when Tester or Reviewer reject
 
 This costs more tokens but prevents tasks from being marked complete without real testing.
+
+### Post-Implementation Pipeline
+
+After all tasks are complete, run the post-implementation scripts:
+
+```bash
+# user acceptance testing (verify requirements are met)
+spec-accept.sh --spec-name user-authentication
+
+# generate documentation from spec + code
+spec-docs.sh --spec-name user-authentication
+
+# generate release notes + deployment checklist
+spec-release.sh --spec-name user-authentication --version-bump minor
+
+# create git tag + GitHub release
+spec-release.sh --spec-name user-authentication --version-bump minor --release
+
+# post-deployment smoke test against live environment
+spec-verify.sh --spec-name user-authentication --url https://staging.example.com
+
+# quick health check only
+spec-verify.sh --spec-name user-authentication --url https://prod.example.com --scope quick
+```
+
+### CI/CD Integration
+
+The verification script returns exit codes for CI pipelines:
+- `spec-verify.sh` exits `0` on PASS, `1` on FAIL
+- `spec-accept.sh` outputs `<promise>ACCEPTED</promise>` or `<promise>REJECTED</promise>`
+
+Example CI stage:
+```bash
+spec-verify.sh --url "$STAGING_URL" --scope quick || exit 1
+```
 
 ## Auto-Context
 

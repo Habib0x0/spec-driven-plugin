@@ -21,7 +21,7 @@ templates/                  - Document scaffolding for specs
 
 | Command | Purpose |
 |---------|---------|
-| `/spec-brainstorm` | Brainstorm a feature idea through conversation |
+| `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
 | `/spec <name>` | Start new spec with 3-phase workflow |
 | `/spec-refine` | Update existing requirements/design |
 | `/spec-tasks` | Regenerate tasks from spec |
@@ -30,6 +30,11 @@ templates/                  - Document scaffolding for specs
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
 | `/spec-team` | Execute with agent team (Implementer + Tester + Reviewer + Debugger) |
+| `/spec-accept` | Run user acceptance testing for formal sign-off |
+| `/spec-docs` | Generate documentation from spec and implementation |
+| `/spec-release` | Generate release notes, changelog, and deployment checklist |
+| `/spec-verify` | Run post-deployment smoke tests against a live environment |
+| `/spec-retro` | Run a retrospective to capture lessons learned |
 
 ## Model Routing
 
@@ -43,6 +48,9 @@ The plugin automatically uses the optimal model for each phase:
 | spec-implementer | Sonnet | Implementation | Writes code for tasks |
 | spec-tester | Sonnet | Testing | Verifies with Playwright/tests |
 | spec-reviewer | Opus | Review | Code quality, security, architecture |
+| spec-consultant | Sonnet | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
+| spec-acceptor | Sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
+| spec-documenter | Sonnet | Documentation | Generates docs from spec and code |
 | spec-debugger | Sonnet | Debugging | Fixes issues when rejected |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
@@ -99,6 +107,15 @@ After completing the spec workflow (Requirements, Design, Tasks), use the execut
 Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
 
 Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
+
+### Post-Implementation Scripts
+
+After all tasks are complete, these scripts handle the remaining SDLC phases:
+
+- `spec-accept.sh` - User acceptance testing against requirements (outputs `ACCEPTED`/`REJECTED`)
+- `spec-docs.sh` - Generate documentation from spec + code (API ref, user guide, ADR, runbook)
+- `spec-release.sh` - Release notes, changelog, deployment checklist; optional `--tag` and `--release`
+- `spec-verify.sh` - Post-deployment smoke test against a live URL (exits 0/1 for CI/CD)
 
 ## Validation Rules
 

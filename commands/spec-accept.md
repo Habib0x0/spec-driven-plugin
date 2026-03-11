@@ -16,7 +16,9 @@ Perform user acceptance testing (UAT) to verify the implementation satisfies all
 
 ## Philosophy
 
-Automated tests verify correctness. Acceptance testing verifies **value**. The spec-tester checks that code passes tests; the acceptor checks that every EARS acceptance criterion in `requirements.md` is actually satisfied by the implementation. This is the last gate before release.
+Automated tests verify correctness. Acceptance testing verifies **value**. The spec-tester checks that code passes tests per task; the spec-reviewer checks security and code quality; the acceptor verifies that every EARS acceptance criterion in `requirements.md` traces to verified, reviewed tasks and that non-functional requirements are met. This is the last gate before release.
+
+The acceptor does NOT re-run functional or security tests — it reads results from `tasks.md` (tester verification) and references reviewer assessments. It focuses on traceability, non-functional gaps, and formal sign-off.
 
 ## Workflow
 
@@ -39,7 +41,7 @@ Read `tasks.md` and verify implementation status:
 Use AskUserQuestion:
 - **Full acceptance test** — Test all requirements and acceptance criteria
 - **Specific requirements only** — Let me pick which requirements to test
-- **Non-functional requirements only** — Focus on performance, security, accessibility
+- **Non-functional requirements only** — Focus on performance, accessibility, data integrity
 
 If "Specific requirements only," follow up asking which requirement IDs to test.
 

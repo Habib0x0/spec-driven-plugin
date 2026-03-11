@@ -14,8 +14,7 @@ This plugin guides you through three phases:
 
 | Command | Description |
 |---------|-------------|
-| `/spec-brainstorm` | Brainstorm a feature idea through conversation until ready |
-| `/spec-consult` | Brainstorm with domain expert consultants |
+| `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
 | `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |

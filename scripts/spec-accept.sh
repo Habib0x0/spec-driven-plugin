@@ -92,45 +92,42 @@ trap "rm -f $PROMPT_FILE" EXIT
 
 ## Instructions
 
-You are performing **User Acceptance Testing (UAT)** — verifying that the implementation satisfies all spec requirements. This is NOT unit testing; you're checking that the RIGHT THING was built.
+You are performing **User Acceptance Testing (UAT)** — verifying that the implementation satisfies all spec requirements. You do NOT re-run functional tests (the spec-tester already did that). You verify traceability, non-functional requirements, and formal acceptance.
 
 ### Step 1: Get Your Bearings
 1. Run `pwd` to see where you are.
 2. Read the spec files above carefully — especially the acceptance criteria in requirements.md.
-3. Check tasks.md to understand what was implemented.
-4. If init.sh exists in the spec directory, read it to understand how to run the app.
-5. Start the dev server if needed.
+3. Check tasks.md to understand what was implemented and which tasks are Verified: yes/no.
 
-### Step 2: Build Acceptance Matrix
-For each user story in requirements.md, list every EARS acceptance criterion:
-- WHEN [trigger] THE SYSTEM SHALL [behavior]
+### Step 2: Build Traceability Matrix
+For each user story in requirements.md, map every EARS acceptance criterion to implementing tasks:
+- WHEN [trigger] THE SYSTEM SHALL [behavior] -> Implemented by: T-X (Verified: yes/no)
 
-### Step 3: Verify Each Criterion
+### Step 3: Verify Traceability
 For each acceptance criterion:
+- Is there at least one completed, verified task that implements it?
+- Are there orphan tasks (tasks not linked to any requirement)?
+- Are there unimplemented requirements (criteria with no task)?
 
-**UI behaviors** — Use Playwright MCP to:
-- Navigate to the relevant page
-- Perform the trigger action
-- Verify the expected behavior
-- Take screenshots as evidence
+Trust the spec-tester's functional verification (Verified: yes in tasks.md).
+Trust the spec-reviewer's security assessment.
 
-**API/logic behaviors** — Use curl or code inspection to:
-- Hit the endpoint or invoke the function
-- Verify the response matches the criterion
+### Step 4: Verify Non-Functional Requirements
+Focus on what the tester and reviewer don't cover:
+- Performance: obvious bottlenecks, N+1 queries, missing indexes, unbounded queries
+- Accessibility: semantic HTML, ARIA labels, keyboard navigation
+- Data integrity: validation, constraints, transaction boundaries
 
-**Non-functional requirements** — Check:
-- Performance: obvious bottlenecks, missing indexes
-- Security: auth checks, input validation, data protection
-- Accessibility: semantic HTML, ARIA labels
+Security is covered by the spec-reviewer — reference their results, don't re-check.
 
-### Step 4: Classify Results
+### Step 5: Classify Results
 For each criterion:
-- **PASS** — Behavior matches with evidence
-- **FAIL** — Behavior doesn't match or is missing
-- **PARTIAL** — Some aspects work, others don't
+- **PASS** — Traced to verified task(s), non-functional checks pass
+- **FAIL** — No implementing task, task not verified, or non-functional issue
+- **PARTIAL** — Some aspects covered, others missing
 - **UNTESTABLE** — Cannot verify automatically (explain why)
 
-### Step 5: Write Report
+### Step 6: Write Report
 Write the UAT report to the spec directory as `acceptance.md`:
 
 ```markdown
@@ -144,26 +141,28 @@ Write the UAT report to the spec directory as `acceptance.md`:
 - Untestable: X
 - **Overall: ACCEPTED / NOT ACCEPTED**
 
-### Results by Requirement
-[Detailed results per requirement with evidence]
+### Traceability Matrix
+[Per requirement: AC -> implementing tasks -> verified status -> result]
 
-### Failed Criteria Details
-[For each failure: expected, actual, likely cause, suggested fix]
+### Gaps Found
+[Unimplemented criteria, unverified tasks, orphan tasks]
 
 ### Non-Functional Requirements
-[Performance, Security, Accessibility status]
+[Performance, Accessibility, Data Integrity status]
+[Security: reference spec-reviewer results]
 
 ### Recommendation
 [ACCEPT or REJECT with reasoning]
 ```
 
-### Step 6: Signal Result
+### Step 7: Signal Result
 - If ALL testable criteria PASS: output <promise>ACCEPTED</promise>
 - If ANY criteria FAIL: output <promise>REJECTED</promise>
 
 CRITICAL RULES:
-- Test against the ACTUAL running application, not just code inspection.
-- Provide evidence (screenshots, curl output) for every result.
+- Do NOT re-run functional tests — read tester results from tasks.md.
+- Do NOT re-check security — reference reviewer results.
+- Focus on traceability gaps and non-functional requirements.
 - Do NOT modify any application code — this is read-only verification.
 - Be thorough but practical — test what matters.
 EOF

@@ -6,7 +6,7 @@ description: |
   discussion context, and specific question via the prompt. Returns structured analysis to the Lead.
 
   <example>
-  Context: During /spec-consult, the Lead needs security input on an authentication design.
+  Context: During /spec-brainstorm with experts enabled, the Lead needs security input on an authentication design.
   assistant: Spawns spec-consultant with Security Expert persona and specific question about token storage.
   <commentary>
   The consultant receives its persona and context from the spawn prompt. It reads relevant codebase
@@ -15,7 +15,7 @@ description: |
   </example>
 
   <example>
-  Context: During /spec-consult, the Lead needs architecture input on a multi-service integration.
+  Context: During /spec-brainstorm with experts enabled, the Lead needs architecture input on a multi-service integration.
   assistant: Spawns spec-consultant with Software Architect persona and question about service boundaries.
   <commentary>
   The same agent definition is reused with a different persona. The architect consultant analyzes

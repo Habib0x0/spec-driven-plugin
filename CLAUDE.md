@@ -21,8 +21,7 @@ templates/                  - Document scaffolding for specs
 
 | Command | Purpose |
 |---------|---------|
-| `/spec-brainstorm` | Brainstorm a feature idea through conversation |
-| `/spec-consult` | Brainstorm with domain expert consultants |
+| `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
 | `/spec <name>` | Start new spec with 3-phase workflow |
 | `/spec-refine` | Update existing requirements/design |
 | `/spec-tasks` | Regenerate tasks from spec |
@@ -49,8 +48,8 @@ The plugin automatically uses the optimal model for each phase:
 | spec-implementer | Sonnet | Implementation | Writes code for tasks |
 | spec-tester | Sonnet | Testing | Verifies with Playwright/tests |
 | spec-reviewer | Opus | Review | Code quality, security, architecture |
-| spec-consultant | Sonnet | Consultation | Domain expert analysis during brainstorming |
-| spec-acceptor | Sonnet | Acceptance | User acceptance testing against requirements |
+| spec-consultant | Sonnet | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
+| spec-acceptor | Sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
 | spec-documenter | Sonnet | Documentation | Generates docs from spec and code |
 | spec-debugger | Sonnet | Debugging | Fixes issues when rejected |
 

@@ -11,10 +11,11 @@ This is a Claude Code plugin that provides spec-driven development workflows. It
 ```
 .claude-plugin/plugin.json  - Plugin manifest (name, version, metadata)
 commands/                   - Slash command definitions
-scripts/                    - Standalone execution scripts (spec-exec, spec-loop)
+scripts/                    - Standalone execution scripts (spec-exec, spec-loop, spec-parallel)
+scripts/lib/                - Shared libraries (task-parser.sh)
 skills/spec-workflow/       - Main skill with reference docs
 agents/                     - Subagent definitions
-templates/                  - Document scaffolding for specs
+templates/                  - Document scaffolding for specs (incl. learnings.md)
 ```
 
 ## Commands
@@ -28,7 +29,8 @@ templates/                  - Document scaffolding for specs
 | `/spec-status` | Show progress and task completion |
 | `/spec-validate` | Validate completeness and consistency |
 | `/spec-exec` | Run one autonomous implementation iteration |
-| `/spec-loop` | Loop implementation until all tasks complete |
+| `/spec-loop` | Loop implementation until all tasks complete (with timeout, smart selection, batching) |
+| `/spec-parallel` | Run independent tasks in parallel via git worktrees |
 | `/spec-team` | Execute with agent team (Implementer + Tester + Reviewer + Debugger) |
 | `/spec-accept` | Run user acceptance testing for formal sign-off |
 | `/spec-docs` | Generate documentation from spec and implementation |
@@ -103,10 +105,39 @@ After completing the spec workflow (Requirements, Design, Tasks), use the execut
 
 - `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
 - `spec-loop.sh` - Loops until all tasks complete or max iterations reached
+- `spec-parallel.sh` - Runs independent tasks in parallel via git worktrees
 
-Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
+All scripts use:
+- **Pre-computed task briefs** — parses tasks.md into targeted JSON, eliminating cold-start overhead (~3min saved per iteration)
+- **Smart task selection** — picks the task that unblocks the most downstream work (not just next-in-line)
+- **Per-iteration timeout** — kills stuck sessions after configurable timeout (default 20min) with heartbeat monitoring
+- **learnings.md** — cross-iteration knowledge carry-forward (codebase gotchas, schema notes, pattern discoveries)
+- **Per-iteration logging** — separate log files + machine-readable `progress.json`
+- **Structured events** — JSON completion signals for parent session parsing
 
-Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
+### Key Flags
+
+| Flag | Available In | Description |
+|------|-------------|-------------|
+| `--timeout <sec>` | exec, loop | Per-iteration timeout (default: 1200 = 20min) |
+| `--skip-e2e` | exec, loop, parallel | Skip Playwright for Docker/deployed environments |
+| `--task <T-XX>` | exec, loop | Target a specific task |
+| `--batch` | loop | Batch same-phase tasks into single sessions |
+| `--batch-size <n>` | loop | Max tasks per batch (default: 3) |
+| `--workers <n>` | parallel | Max parallel workers (default: 3) |
+
+### Monitoring
+
+```bash
+# Machine-readable progress
+cat .claude/specs/<name>/logs/progress.json
+
+# Per-iteration logs
+tail -f .claude/specs/<name>/logs/iteration-012.log
+
+# Structured events from output
+spec-loop.sh ... | grep '"event"'
+```
 
 ### Post-Implementation Scripts
 

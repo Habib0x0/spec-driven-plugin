@@ -116,6 +116,7 @@ After all tasks are complete, these scripts handle the remaining SDLC phases:
 - `spec-docs.sh` - Generate documentation from spec + code (API ref, user guide, ADR, runbook)
 - `spec-release.sh` - Release notes, changelog, deployment checklist; optional `--tag` and `--release`
 - `spec-verify.sh` - Post-deployment smoke test against a live URL (exits 0/1 for CI/CD)
+- `spec-retro.sh` - Retrospective analysis of a completed spec; accepts `--spec-name <name>` (outputs `RETRO_COMPLETE`)
 
 ## Validation Rules
 

@@ -414,3 +414,24 @@
 **Integration**: This modifies an existing command definition file (`commands/spec.md`) that is auto-discovered by the plugin system. The `/spec` command is already wired in. The preset selection step reads from `templates/presets/` (created in T-7). Wired=yes because the command is reachable via the `/spec` slash command.
 
 **Next**: T-15 (wire spec-retro.sh into CLAUDE.md), T-16 (version bump), then T-17 through T-22 (manual smoke tests).
+
+## Session 15 — 2026-03-19
+
+### Task: T-15 — Make spec-retro.sh executable and update CLAUDE.md
+
+**Status**: Completed and verified
+
+**What was done**:
+- Confirmed `scripts/spec-retro.sh` already has executable bit set (chmod +x was done during T-5)
+- Updated `CLAUDE.md` Post-Implementation Scripts section: added `spec-retro.sh` entry with description mentioning `--spec-name` argument and `RETRO_COMPLETE` promise
+- Commands table already had `/spec-retro` row (added in a prior session)
+
+**Verification** (4 acceptance criteria checked):
+1. `ls -l scripts/spec-retro.sh` shows executable bit set (-rwxr-xr-x)
+2. CLAUDE.md Commands table includes `/spec-retro` row (line 37)
+3. CLAUDE.md post-implementation scripts section lists `spec-retro.sh` (line 119)
+4. Entry description mentions `--spec-name` and `RETRO_COMPLETE`
+
+**Integration**: `spec-retro.sh` is now fully documented in CLAUDE.md alongside the other post-implementation scripts. The script was already executable and standalone. Wired=yes because it is discoverable through CLAUDE.md documentation (the standard way users find and use scripts).
+
+**Next**: T-16 (version bump to 3.0.0), then T-17 through T-22 (manual smoke tests).

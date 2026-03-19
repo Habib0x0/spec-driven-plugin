@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 5 |
+| Pending | 4 |
 | In Progress | 0 |
-| Completed | 17 |
+| Completed | 18 |
 | Wired | 0 |
-| Verified | 15 |
+| Verified | 16 |
 
 ---
 
@@ -512,9 +512,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-18: Manual smoke test — checkpoint and rollback
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-2
 - **Description**: Manually test checkpoint and recovery behavior in spec-loop.sh and spec-team.sh:
   1. Start a loop run with uncommitted changes; verify `checkpoint: pre-iteration 1` commit appears in `git log`

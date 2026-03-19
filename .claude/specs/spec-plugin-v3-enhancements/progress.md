@@ -485,3 +485,34 @@
 **Integration**: n/a — this is a test-only task validating existing integrations from T-10, T-11, T-12.
 
 **Next**: T-18 (checkpoint and rollback smoke test), T-19 (dependency checking), T-20 (spec-retro.sh), T-21 (presets + import), T-22 (templates).
+
+## Session 18 — 2026-03-19
+
+### Task: T-18 — Manual smoke test: checkpoint and rollback
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created a comprehensive 12-scenario test script exercising all checkpoint/rollback functionality
+- Tested against real temporary git repositories with actual git operations
+- All 32 assertions passed with 0 failures
+
+**Scenarios verified**:
+1. Checkpoint commit created with uncommitted changes (correct message format, SHA captured)
+2. No checkpoint when no uncommitted changes (CHECKPOINT_SHA empty, HEAD unchanged)
+3. Non-zero exit triggers rollback: HEAD returns to checkpoint SHA, file content restored, rollback message printed to stderr
+4. Zero exit does NOT trigger rollback: Claude's commits and file changes preserved
+5. Recovery with empty checkpoint SHA: no action taken, HEAD unchanged
+6. Multiple iterations: two distinct checkpoint SHAs created, rollback targets correct iteration
+7. spec-loop.sh integration: sources checkpoint.sh, calls create/handle, uses PIPESTATUS pattern
+8. spec-team.sh integration: sources checkpoint.sh, creates single checkpoint at iteration 1, uses PIPESTATUS
+9. spec-exec.sh exclusion: does NOT source or call any checkpoint functions (per US-2 AC-6)
+10. --no-worktree mode: checkpoints work on current branch (main), correct commit messages
+11. Staged-only changes: checkpoint captures staged files correctly
+12. Multiple Claude commits: rollback reverts past multiple commits, removes files Claude created
+
+**Issues found**: None. All scenarios passed on first run.
+
+**Integration**: n/a — this is a test-only task validating T-3 (checkpoint.sh), T-11 (spec-loop.sh), and T-12 (spec-team.sh).
+
+**Next**: T-19 (cross-spec dependency checking smoke test), T-20 (spec-retro.sh), T-21 (presets + import), T-22 (templates).

@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 10 |
+| Pending | 9 |
 | In Progress | 0 |
-| Completed | 12 |
+| Completed | 13 |
 | Wired | 0 |
-| Verified | 11 |
+| Verified | 12 |
 
 ---
 
@@ -397,9 +397,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-13: Add dependency display to /spec-status command
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-5
 - **Description**: Modify `commands/spec-status.md` to display cross-spec dependency status:
   1. In the "Read Spec Files" step, add: parse the `## Depends On` section from requirements.md to extract dependency names

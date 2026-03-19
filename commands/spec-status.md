@@ -22,9 +22,11 @@ If multiple specs exist, show status for all or ask which one to detail.
 ### 2. Read Spec Files
 
 For each spec, read:
-- `requirements.md` - count user stories
+- `requirements.md` - count user stories AND parse `## Depends On` section for dependency names
 - `design.md` - verify exists
 - `tasks.md` - count and categorize tasks
+
+**Dependency Parsing**: Look for a `## Depends On` section in requirements.md. Extract each `- <spec-name>` bullet as a dependency. If the section is absent or contains only comments, the spec has no dependencies.
 
 ### 3. Calculate Progress
 
@@ -80,6 +82,10 @@ Output a formatted status report:
 ### Blocked Tasks
 - T-8: Integration tests (blocked by T-5, T-6)
 
+### Dependencies
+- auth-system: COMPLETE (10/10 verified) [does not block execution]
+- database-migrations: INCOMPLETE (3/5 verified) [BLOCKS EXECUTION]
+
 ### Unwired Tasks (Action Needed)
 - T-3: Create user profile component (Status: completed, Wired: no)
   -> Needs: Route registration, navigation link
@@ -89,10 +95,26 @@ Output a formatted status report:
 - T-7: Implement logout endpoint
 ```
 
-### 6. Recommendations
+### 6. Check Cross-Spec Dependencies
+
+If the `## Depends On` section from step 2 yielded dependency names:
+
+For each dependency spec name:
+1. Check if `.claude/specs/<dep-name>/` exists. If not, report it as "NOT FOUND".
+2. If it exists, read its `tasks.md` and count:
+   - Total tasks (any `### T-N:` heading)
+   - Verified tasks (Status: completed AND Wired: yes/n/a AND Verified: yes)
+3. If all tasks are verified, the dependency is COMPLETE. Otherwise, INCOMPLETE.
+4. An INCOMPLETE or NOT FOUND dependency BLOCKS EXECUTION (spec-exec, spec-loop, spec-team will refuse to run).
+
+Display the `### Dependencies` section (from the output format in step 5) only if the spec has at least one dependency. Omit it entirely if there are no dependencies.
+
+### 7. Recommendations
 
 Based on status, suggest next actions:
 
+- If any cross-spec dependency is incomplete: "Dependency <name> is incomplete (<N>/<M> verified). Complete it before running execution scripts."
+- If any cross-spec dependency is not found: "Dependency <name> not found. Create the spec or remove it from the Depends On section."
 - If tasks are completed but not wired: "T-X is completed but not wired into the app. Wire it before moving on."
 - If tasks are wired but not verified: "T-X is wired but not verified. Run tests to confirm it works."
 - If no in-progress tasks: "Consider starting T-X next"

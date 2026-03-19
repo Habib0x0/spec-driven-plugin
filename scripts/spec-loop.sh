@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 SPEC_NAME=""
+USE_WORKTREE=true
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
 
@@ -20,9 +23,13 @@ while [[ $# -gt 0 ]]; do
       PROGRESS_TAIL="$2"
       shift 2
       ;;
+    --no-worktree)
+      USE_WORKTREE=false
+      shift
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree]"
       exit 1
       ;;
   esac
@@ -67,6 +74,18 @@ for f in requirements.md design.md tasks.md; do
   fi
 done
 
+# source shared libraries
+source "$SCRIPT_DIR/lib/deps.sh"
+source "$SCRIPT_DIR/lib/worktree.sh"
+source "$SCRIPT_DIR/lib/checkpoint.sh"
+
+# check cross-spec dependencies before any worktree creation
+check_dependencies "$SPEC_NAME"
+
+# setup worktree (sets WORK_DIR)
+setup_worktree "$SPEC_NAME" "$USE_WORKTREE"
+cd "$WORK_DIR"
+
 # create progress.md if it doesn't exist
 if [ ! -f "$SPEC_DIR/progress.md" ]; then
   echo "# Progress Log: $SPEC_NAME" > "$SPEC_DIR/progress.md"
@@ -86,6 +105,9 @@ while true; do
   ITERATION=$((ITERATION + 1))
   ITER_START=$(date +%s)
   echo "=== Spec Loop: Iteration $ITERATION / $MAX_ITERATIONS ==="
+
+  # create checkpoint commit before this iteration
+  create_checkpoint "$ITERATION" "$WORK_DIR"
 
   # build fresh prompt each iteration (re-reads spec files to get latest state)
   {
@@ -222,7 +244,13 @@ EOF
     PROGRESS_HASH_BEFORE=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
   fi
 
+  set +e
   claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
+  CLAUDE_EXIT=${PIPESTATUS[0]}
+  set -e
+
+  # handle checkpoint recovery on failure
+  handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" "$ITERATION" "$WORK_DIR"
 
   # if Claude didn't update progress.md, append a fallback entry
   PROGRESS_HASH_AFTER=""
@@ -242,6 +270,7 @@ EOF
   if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
     echo ""
     echo "All tasks complete and verified!"
+    print_pr_suggestion "$SPEC_NAME"
     break
   fi
 

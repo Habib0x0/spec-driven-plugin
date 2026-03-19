@@ -279,3 +279,44 @@
 **Integration**: spec-exec.sh now sources lib/worktree.sh and lib/deps.sh. When invoked, it checks dependencies first, then creates/reuses a worktree, cd's into it, builds the prompt, and invokes Claude. On COMPLETE, it prints the PR suggestion. All existing behavior (--spec-name, auto-detect, file validation) preserved.
 
 **Next**: T-11 (wire libraries into spec-loop.sh), T-12 (wire into spec-team.sh), T-13 (spec-status deps), T-14 (preset selection), T-15 (spec-retro wiring), T-16 (version bump).
+
+---
+
+## Session 11 — 2026-03-19
+
+### Task: T-11 — Wire lib/worktree.sh, lib/checkpoint.sh, and lib/deps.sh into spec-loop.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Added `SCRIPT_DIR` and `USE_WORKTREE=true` defaults at the top of spec-loop.sh
+- Added `--no-worktree` flag to argument parser, updated usage string
+- Sourced all three libraries (deps.sh, worktree.sh, checkpoint.sh) after spec validation
+- Added `check_dependencies` call before worktree creation (fast fail)
+- Added `setup_worktree` and `cd "$WORK_DIR"` before the iteration loop
+- Added `create_checkpoint` call at the start of each iteration
+- Replaced `claude ... | tee` with `set +e` / `PIPESTATUS` pattern to capture exit code
+- Added `handle_checkpoint_recovery` after each Claude invocation
+- Added `print_pr_suggestion` to the COMPLETE detection block
+
+**Bug fix in lib/deps.sh**:
+- Fixed `set -e` compatibility: `counts="$(_check_spec_complete "$dep")"` was terminating the script when dep was incomplete (non-zero exit from command substitution triggers `set -e`)
+- Changed to `counts="$(_check_spec_complete "$dep")" || true` and check counts instead of exit code
+- Applied same fix to `get_dependency_status` function
+
+**Testing** (11 scenarios verified):
+1. `--no-worktree` flag parsed correctly
+2. Unknown arg produces updated usage with `--no-worktree`
+3. Worktree created at correct path on correct branch
+4. `cd "$WORK_DIR"` succeeds
+5. Checkpoint created with uncommitted changes (correct message format, SHA captured)
+6. Checkpoint skipped when no uncommitted changes
+7. Rollback on non-zero exit restores pre-iteration state
+8. No rollback on zero exit (Claude's commits preserved)
+9. Dependency check blocks on incomplete dep (with correct error message under set -e)
+10. Missing dep error message correct
+11. PR suggestion printed on COMPLETE
+
+**Integration**: spec-loop.sh now sources all three library files. Flow: parse args -> validate spec -> check dependencies (fast fail) -> setup worktree -> cd into WORK_DIR -> loop { checkpoint -> build prompt -> invoke claude (set +e/PIPESTATUS) -> recover on failure -> check progress -> check COMPLETE/max-iter }. All existing behavior (--max-iterations, --progress-tail, auto-detect, progress.md fallback) preserved.
+
+**Next**: T-12 (wire into spec-team.sh), T-13 (spec-status deps), T-14 (preset selection), T-15 (spec-retro wiring), T-16 (version bump).

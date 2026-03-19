@@ -169,9 +169,11 @@ For each task:
 10. If APPROVED → continue to Phase 4
 11. If REJECTED → Spawn Debugger with Reviewer's feedback, then re-review (max 2 attempts)
 
-### Phase 4: Commit
-12. Make a git commit with descriptive message
-13. Update progress.md with session notes including integration status
+### Phase 4: Update progress.md (MANDATORY)
+12. Append a `---` delimiter followed by a session entry to progress.md. Include what was worked on, what was completed, integration status, issues, and what's next.
+
+### Phase 5: Commit
+13. Make a git commit with descriptive message
 14. Move to next task
 
 ## Escalation

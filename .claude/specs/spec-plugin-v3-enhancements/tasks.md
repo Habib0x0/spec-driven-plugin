@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 8 |
+| Pending | 7 |
 | In Progress | 0 |
-| Completed | 14 |
+| Completed | 15 |
 | Wired | 0 |
-| Verified | 13 |
+| Verified | 14 |
 
 ---
 
@@ -448,9 +448,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-15: Make spec-retro.sh executable and update CLAUDE.md
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-3
 - **Description**: Wire `scripts/spec-retro.sh` into the documented plugin surface:
   1. Ensure `scripts/spec-retro.sh` is executable (`chmod +x scripts/spec-retro.sh`)

@@ -149,3 +149,26 @@
 **Integration**: Not yet wired into CLAUDE.md — that happens in T-15. Script is standalone and executable.
 
 **Next**: T-6 (init.sh), T-7 (presets), T-8 (requirements template), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies.
+## Session 6 — 2026-03-19
+
+### Task: T-6 — Enhance templates/init.sh with multi-stack examples
+
+**Status**: Completed and verified
+
+**What was done**:
+- Replaced `templates/init.sh` in-place with an enhanced version
+- Added header comment explaining that spec execution scripts (spec-exec.sh, spec-loop.sh, spec-team.sh) read this file
+- Added DEPENDENCY INSTALLATION as a new first section (previously missing)
+- All 5 sections present with `===` banner style: DEPENDENCY INSTALLATION, ENVIRONMENT SETUP, START DEVELOPMENT SERVER, HEALTH CHECK, RUN TESTS
+- Each section includes commented-out examples for Node.js/npm, Python/pip, and Go
+- All actionable lines are commented out — running `bash templates/init.sh` produces no output and exits 0
+
+**Testing** (4 checks verified):
+1. `bash templates/init.sh` exits 0 with no output
+2. All 5 sections present with `===` banners (10 banner lines total)
+3. Each section has Node.js, Python, and Go example blocks (5 of each = 15 stack labels)
+4. Header comment explains file purpose in context of spec execution scripts
+
+**Integration**: n/a — this is a template file, not wired into runtime code. Used when `/spec` copies templates to a new spec directory.
+
+**Next**: T-7 (presets), T-8 (requirements template), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies.

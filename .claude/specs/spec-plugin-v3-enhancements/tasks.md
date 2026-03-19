@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 17 |
+| Pending | 16 |
 | In Progress | 0 |
-| Completed | 5 |
+| Completed | 6 |
 | Wired | 0 |
-| Verified | 5 |
+| Verified | 6 |
 
 ---
 
@@ -172,9 +172,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-6: Enhance templates/init.sh with multi-stack examples
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-4
 - **Description**: Replace the contents of `templates/init.sh` in-place with an enhanced version. The new template must:
   - Add a header comment block explaining that spec execution scripts (spec-exec.sh, spec-loop.sh, spec-team.sh) read this file to understand how to run the project

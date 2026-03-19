@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 11 |
+| Pending | 10 |
 | In Progress | 0 |
-| Completed | 11 |
+| Completed | 12 |
 | Wired | 0 |
-| Verified | 10 |
+| Verified | 11 |
 
 ---
 
@@ -371,9 +371,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-12: Wire lib/worktree.sh, lib/checkpoint.sh, and lib/deps.sh into spec-team.sh
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-1, US-2, US-5
 - **Description**: Modify `scripts/spec-team.sh` to integrate all three libraries. spec-team.sh has a single outer Claude invocation (no bash iteration loop), so checkpoint handling differs slightly:
   1. Add `SCRIPT_DIR`, `USE_WORKTREE=true`, and `--no-worktree` flag

@@ -192,12 +192,11 @@ check_dependencies() {
     fi
 
     local counts
-    counts="$(_check_spec_complete "$dep")"
-    local exit_code=$?
+    counts="$(_check_spec_complete "$dep")" || true
     local verified="${counts%%:*}"
     local total="${counts##*:}"
 
-    if [[ $exit_code -ne 0 ]]; then
+    if [[ "$total" -eq 0 ]] || [[ "$verified" -ne "$total" ]]; then
       echo "Error: Dependency incomplete: $dep ($verified/$total tasks verified)" >&2
       has_failure=true
     fi
@@ -231,12 +230,11 @@ get_dependency_status() {
     fi
 
     local counts
-    counts="$(_check_spec_complete "$dep")"
-    local exit_code=$?
+    counts="$(_check_spec_complete "$dep")" || true
     local verified="${counts%%:*}"
     local total="${counts##*:}"
 
-    if [[ $exit_code -eq 0 ]]; then
+    if [[ "$total" -gt 0 ]] && [[ "$verified" -eq "$total" ]]; then
       echo "$dep:complete:$verified:$total"
     else
       echo "$dep:incomplete:$verified:$total"

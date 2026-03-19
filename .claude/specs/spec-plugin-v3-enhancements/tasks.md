@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 12 |
+| Pending | 11 |
 | In Progress | 0 |
-| Completed | 10 |
+| Completed | 11 |
 | Wired | 0 |
-| Verified | 9 |
+| Verified | 10 |
 
 ---
 
@@ -337,9 +337,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-11: Wire lib/worktree.sh, lib/checkpoint.sh, and lib/deps.sh into spec-loop.sh
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-1, US-2, US-5
 - **Description**: Modify `scripts/spec-loop.sh` to integrate all three libraries:
   1. Add `SCRIPT_DIR`, `USE_WORKTREE=true`, and `--no-worktree` flag (same pattern as T-10)

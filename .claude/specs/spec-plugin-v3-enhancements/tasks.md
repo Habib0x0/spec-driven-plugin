@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 9 |
+| Pending | 8 |
 | In Progress | 0 |
-| Completed | 13 |
+| Completed | 14 |
 | Wired | 0 |
-| Verified | 12 |
+| Verified | 13 |
 
 ---
 
@@ -422,9 +422,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-14: Add preset selection step to /spec command
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-6
 - **Description**: Modify `commands/spec.md` to add a preset selection step between step 1 (Initialize Spec Directory) and step 2 (Interactive Requirements Gathering). Label it step 1.5 or renumber as appropriate.
 

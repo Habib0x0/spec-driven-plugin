@@ -53,3 +53,35 @@
 **Integration**: Not yet wired into execution scripts — that happens in T-10, T-11, T-12.
 
 **Next**: T-3 (checkpoint.sh), T-4 (deps.sh), or any independent task (T-5 through T-9).
+---
+
+## Session 3 — 2026-03-19
+
+### Task: T-3 — Implement lib/checkpoint.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Implemented `create_checkpoint(iteration, work_dir)` function:
+  - Checks for uncommitted changes via `git status --porcelain`
+  - If no changes, sets `CHECKPOINT_SHA=""` and returns (skips checkpoint)
+  - If changes exist, stages all with `git add -A` and commits with `checkpoint: pre-iteration N`
+  - Captures commit SHA into `CHECKPOINT_SHA`
+  - Uses `git -C "$work_dir"` for all operations to support worktree paths
+- Implemented `handle_checkpoint_recovery(exit_code, checkpoint_sha, iteration, work_dir)`:
+  - Returns immediately if exit_code=0 or checkpoint_sha is empty
+  - On non-zero exit with valid checkpoint, runs `git reset --hard $checkpoint_sha`
+  - Prints rollback message to stderr on success
+  - Prints critical error to stderr if `git reset --hard` itself fails
+
+**Testing** (6 scenarios verified):
+1. No uncommitted changes: CHECKPOINT_SHA empty, no commit created
+2. With changes: checkpoint commit created with correct message format, SHA captured
+3. Recovery with exit=0: no rollback occurs
+4. Recovery with exit=1: branch rolled back to checkpoint SHA, file changes reverted
+5. Recovery with empty SHA: no action taken
+6. Recovery with invalid SHA: critical error printed, script does not crash
+
+**Integration**: Not yet wired into execution scripts — that happens in T-11 (spec-loop.sh) and T-12 (spec-team.sh).
+
+**Next**: T-4 (deps.sh), or any independent task (T-5 through T-9).

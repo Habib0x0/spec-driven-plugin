@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 20 |
+| Pending | 19 |
 | In Progress | 0 |
-| Completed | 2 |
+| Completed | 3 |
 | Wired | 0 |
-| Verified | 2 |
+| Verified | 3 |
 
 ---
 
@@ -73,9 +73,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-3: Implement lib/checkpoint.sh — create_checkpoint and handle_checkpoint_recovery
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-2
 - **Description**: Implement `scripts/lib/checkpoint.sh` as a sourceable bash library with two functions.
 

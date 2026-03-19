@@ -136,17 +136,19 @@ trap "rm -f $PROMPT_FILE" EXIT
    - All acceptance criteria pass when tested end-to-end
    - The feature is reachable through normal user navigation
 
-### Step 6: Update Spec Files
-1. Update tasks.md: set Status, Wired, and Verified fields appropriately.
+### Step 6: Update tasks.md
+1. Set Status, Wired, and Verified fields appropriately.
 2. Do NOT edit task descriptions, acceptance criteria, or dependencies — only Status, Wired, and Verified.
-3. Append a session entry to progress.md with:
-   - What you worked on
-   - What you completed and verified
-   - **Integration status**: How the feature is wired in, what connects to what
-   - Any issues encountered and how you resolved them
-   - What should be worked on next
 
-### Step 7: Commit
+### Step 7: Update progress.md (MANDATORY)
+Append a `---` delimiter followed by a session entry. This MUST happen every iteration. Include:
+- What you worked on
+- What you completed and verified
+- **Integration status**: How the feature is wired in, what connects to what
+- Any issues encountered and how you resolved them
+- What should be worked on next
+
+### Step 8: Commit
 1. Make a git commit with a descriptive message.
 2. The commit should leave the codebase in a clean, working state.
 

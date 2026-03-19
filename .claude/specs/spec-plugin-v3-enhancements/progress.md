@@ -363,3 +363,27 @@
 **Integration**: spec-team.sh now sources all three library files. Flow: parse args -> validate spec -> generate team name -> clean stale teams -> validate files -> source libs -> check dependencies (fast fail) -> setup worktree -> cd into WORK_DIR -> create progress.md -> build prompt -> write team metadata -> create checkpoint -> invoke Claude (set +e/PIPESTATUS) -> recover on failure -> check COMPLETE. All existing behavior (--max-iterations, team metadata, CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1, auto-detect) preserved.
 
 **Next**: T-13 (spec-status deps display), T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump).
+
+## Session 13 — 2026-03-19
+
+### Task: T-13 — Add dependency display to /spec-status command
+
+**Status**: Completed and verified
+
+**What was done**:
+- Modified `commands/spec-status.md` to integrate cross-spec dependency display
+- Step 2 (Read Spec Files): added instruction to parse `## Depends On` section from requirements.md for dependency names, with parsing guidance
+- Step 5 (Display Status): added `### Dependencies` section in the output format, positioned after `### Blocked Tasks`, showing format: `dep-name: COMPLETE/INCOMPLETE (N/M verified) [does not block execution/BLOCKS EXECUTION]`
+- Step 6 (new): added "Check Cross-Spec Dependencies" step with full algorithm: check directory existence, read tasks.md, count verified tasks, determine COMPLETE vs INCOMPLETE status, flag blocking deps
+- Step 7 (renumbered from 6): added dependency-specific recommendations: incomplete deps recommend completion before execution, not-found deps recommend creation or removal from Depends On
+- Dependencies section is omitted entirely when spec has no `## Depends On` section (no empty section shown)
+
+**Verification** (4 acceptance criteria checked):
+1. Dependencies section in output format shows COMPLETE with counts for complete deps
+2. Dependencies section shows INCOMPLETE with counts and [BLOCKS EXECUTION] for incomplete deps
+3. Spec with no `## Depends On` section: Dependencies section omitted entirely (explicit instruction in step 6)
+4. Dependencies section positioned after Blocked Tasks in the display format
+
+**Integration**: This modifies an existing command definition file (`commands/spec-status.md`) that is auto-discovered by the plugin system. The `/spec-status` command is already wired in. The dependency display integrates with the data format produced by `lib/deps.sh` (T-4) — same completion definition (Status: completed + Wired: yes/n/a + Verified: yes).
+
+**Next**: T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump).

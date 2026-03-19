@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 21 |
+| Pending | 20 |
 | In Progress | 0 |
-| Completed | 1 |
+| Completed | 2 |
 | Wired | 0 |
-| Verified | 1 |
+| Verified | 2 |
 
 ---
 
@@ -42,9 +42,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-2: Implement lib/worktree.sh — setup_worktree and print_pr_suggestion
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1
 - **Description**: Implement `scripts/lib/worktree.sh` as a sourceable bash library with two functions.
 

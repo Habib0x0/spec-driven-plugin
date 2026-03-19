@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 15 |
+| Pending | 14 |
 | In Progress | 0 |
-| Completed | 7 |
+| Completed | 8 |
 | Wired | 0 |
-| Verified | 7 |
+| Verified | 8 |
 
 ---
 
@@ -233,9 +233,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-8: Add "## Depends On" section to templates/requirements.md
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-5
 - **Description**: Edit `templates/requirements.md` to insert a `## Depends On` section. Position: between `## Overview` and `## User Stories`. Content:
 

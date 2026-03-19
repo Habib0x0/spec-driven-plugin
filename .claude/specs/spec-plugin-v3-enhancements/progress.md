@@ -575,3 +575,29 @@
 **Integration**: n/a — test-only task validating T-5 (spec-retro.sh) and T-15 (CLAUDE.md wiring).
 
 **Next**: T-21 (preset templates and spec-import smoke test), T-22 (verify enhanced templates).
+
+## Session 21 — 2026-03-19
+
+### Task: T-21 — Manual smoke test: preset templates and spec-import command
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created and ran comprehensive smoke test with 67 assertions across 8 scenarios
+- All 66 real assertions passed; 1 false positive from grep matching a table row instead of a step heading
+
+**Scenarios verified** (8 scenarios, 67 assertions):
+1. Preset files exist and are structurally valid: all 3 presets (rest-api, react-page, cli-tool) have Overview, User Stories (>=5 each), EARS criteria (18-22 each), Depends On section, no {{PLACEHOLDER}} tokens
+2. /spec command references presets correctly: Preset Selection step present, all 4 options listed (REST API, React Page, CLI Tool, Start from scratch), correct slugs and paths referenced, customization instruction present, step ordering correct (Preset Selection line 49, Requirements Gathering line 67)
+3. /spec-import command structure valid: correct name in frontmatter, all 6 allowed tools (Read, Write, Glob, Grep, Task, AskUserQuestion), --file in argument-hint
+4. File-not-found handling: "File not found" error described, explicit no-directory-creation on missing file
+5. Non-markdown warning: "File may not be markdown. Proceeding with import." text present
+6. Post-import summary: "Import complete" message, /spec-refine reference, explicit no design.md/tasks.md generation
+7. Preset content quality: REST API covers CRUD/Validation/Auth/Error/Pagination; React Page covers Rendering/Routing/State/API/Loading/Responsive; CLI Tool covers Argument/Subcommand/Format/Error/Help/Version
+8. EARS conversion instruction: spec-import references EARS notation and WHEN/SHALL syntax
+
+**False positive explanation**: The step ordering test initially matched "Requirements Gathering" in the Model Routing table (line 25) rather than the actual step heading (line 67). When matching step headings (^### ), Preset Selection (line 49) correctly precedes Requirements Gathering (line 67).
+
+**Integration**: n/a — test-only task validating T-7 (presets), T-9 (spec-import), T-14 (preset selection in /spec).
+
+**Next**: T-22 (verify enhanced init.sh and requirements.md templates) — the final task.

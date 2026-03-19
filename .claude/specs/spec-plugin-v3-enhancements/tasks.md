@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 2 |
+| Pending | 1 |
 | In Progress | 0 |
-| Completed | 20 |
+| Completed | 21 |
 | Wired | 0 |
-| Verified | 18 |
+| Verified | 19 |
 
 ---
 
@@ -582,9 +582,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-21: Manual smoke test — preset templates and spec-import command
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-6, US-7
 - **Description**: Manually test preset selection and the spec-import command:
   1. `/spec test-rest-api`, select "REST API": spec-planner receives preset content and produces REST API-style requirements.md

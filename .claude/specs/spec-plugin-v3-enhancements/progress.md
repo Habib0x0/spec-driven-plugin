@@ -546,3 +546,32 @@
 **Integration**: n/a — test-only task validating T-4 (deps.sh), T-11 (spec-loop.sh), T-13 (spec-status).
 
 **Next**: T-20 (spec-retro.sh smoke test), T-21 (presets + import), T-22 (templates).
+
+## Session 20 — 2026-03-19
+
+### Task: T-20 — Manual smoke test: spec-retro.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created comprehensive smoke test script exercising all spec-retro.sh functionality
+- Used a mock `claude` binary (PATH override) to test without real Claude CLI invocation
+- Tested against real temporary git repositories with actual spec files
+- All 26 assertions passed with 0 failures across 8 scenarios
+
+**Scenarios verified** (8 scenarios, 26 assertions):
+1. `--spec-name test-spec` with all files present (including progress.md): script invokes correctly, RETRO_COMPLETE promise in output, retro.md written to spec directory
+2. Prompt content verification: contains retro header, requirements/design/tasks/progress sections, git history section, RETRO_COMPLETE instruction, retro.md writing instruction
+3. Auto-detect with single spec: correctly identifies and runs against the only spec
+4. Multiple specs without `--spec-name`: exits 1, lists both spec names in error message
+5. Missing progress.md: script succeeds (exit 0), prompt notes "progress.md not found"
+6. Unknown argument (`--bogus`): exits 1 with usage message
+7. Non-existent spec directory: exits 1 with "Spec directory not found"
+8. Missing required file (design.md absent): exits 1 identifying the missing file
+9. Invocation format: matches spec-accept.sh exactly (`claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"`)
+
+**Issues found**: None. All scenarios passed on first run.
+
+**Integration**: n/a — test-only task validating T-5 (spec-retro.sh) and T-15 (CLAUDE.md wiring).
+
+**Next**: T-21 (preset templates and spec-import smoke test), T-22 (verify enhanced templates).

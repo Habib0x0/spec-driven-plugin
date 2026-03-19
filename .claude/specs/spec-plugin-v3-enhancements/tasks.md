@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 3 |
+| Pending | 2 |
 | In Progress | 0 |
-| Completed | 19 |
+| Completed | 20 |
 | Wired | 0 |
-| Verified | 17 |
+| Verified | 18 |
 
 ---
 
@@ -559,9 +559,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-20: Manual smoke test — spec-retro.sh
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-3
 - **Description**: Manually test spec-retro.sh:
   1. `spec-retro.sh --spec-name <name>` with all files present (including progress.md): Claude is invoked, prompt contains spec artifacts and retro instructions

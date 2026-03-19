@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 16 |
+| Pending | 15 |
 | In Progress | 0 |
-| Completed | 6 |
+| Completed | 7 |
 | Wired | 0 |
-| Verified | 6 |
+| Verified | 7 |
 
 ---
 
@@ -193,9 +193,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-7: Create templates/presets/ directory with three preset files
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-6
 - **Description**: Create the `templates/presets/` directory and three preset files. All files must be structurally valid requirements.md starters with realistic content — no `{{PLACEHOLDER}}` tokens.
 

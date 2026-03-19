@@ -172,3 +172,30 @@
 **Integration**: n/a — this is a template file, not wired into runtime code. Used when `/spec` copies templates to a new spec directory.
 
 **Next**: T-7 (presets), T-8 (requirements template), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies.
+## Session 7 — 2026-03-19
+
+### Task: T-7 — Create templates/presets/ directory with three preset files
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created `templates/presets/` directory
+- Created three preset files: `rest-api.md`, `react-page.md`, `cli-tool.md`
+- Each file is a structurally valid requirements.md starter with realistic content
+- No `{{PLACEHOLDER}}` tokens in any file (title uses plain `# Requirements` instead of `{{FEATURE_NAME}}`)
+- Each file includes: Overview, Depends On section stub, User Stories with EARS acceptance criteria, Non-Functional Requirements, Out of Scope, Open Questions
+
+**Content summary**:
+- `rest-api.md`: 5 user stories (CRUD, Input Validation, Auth/Authz, Error Responses, Pagination) — 22 EARS criteria
+- `react-page.md`: 6 user stories (Component Rendering, Routing, State Management, API Integration, Loading/Error States, Responsive Layout) — 20 EARS criteria
+- `cli-tool.md`: 5 user stories (Argument Parsing, Subcommands, Output Formatting, Error Handling, Help/Version) — 18 EARS criteria
+
+**Testing** (4 checks verified):
+1. All three files exist at `templates/presets/`
+2. Each has Overview section and at least 5 User Stories with EARS acceptance criteria
+3. No `{{PLACEHOLDER}}` tokens in any file (grep confirms 0 matches)
+4. Each file is syntactically valid markdown with proper heading structure
+
+**Integration**: Not yet wired into `/spec` command — that happens in T-14 (preset selection step). Files are standalone templates read by the spec-planner agent.
+
+**Next**: T-8 (requirements template Depends On section), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies. T-14 (wire presets into /spec) depends on T-7 (now complete).

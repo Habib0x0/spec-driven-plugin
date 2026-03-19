@@ -85,3 +85,35 @@
 **Integration**: Not yet wired into execution scripts — that happens in T-11 (spec-loop.sh) and T-12 (spec-team.sh).
 
 **Next**: T-4 (deps.sh), or any independent task (T-5 through T-9).
+
+---
+
+## Session 4 — 2026-03-19
+
+### Task: T-4 — Implement lib/deps.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Implemented `_parse_depends_on(spec_name)`: parses `## Depends On` section from requirements.md, extracts bullet items as dependency names, stops at next heading
+- Implemented `_check_spec_complete(spec_name)`: reads tasks.md, counts tasks where Status=completed AND Wired=yes/n/a AND Verified=yes, returns verified:total counts
+- Implemented `_detect_cycle(spec_name, visited_dir, path_dir, chain)`: DFS-based cycle detection using temp files for visited/path tracking (bash 3 portable), passes chain string for readable error messages
+- Implemented `check_dependencies(spec_name)`: orchestrates cycle detection then completeness checking, exits 1 with descriptive errors on failure
+- Implemented `get_dependency_status(spec_name)`: outputs colon-delimited status lines without calling exit
+
+**Testing** (11 scenarios verified):
+1. No `## Depends On` section: passes silently
+2. Empty `## Depends On` section (only comments): passes silently
+3. Complete dependency: passes without error
+4. Incomplete dependency: exits 1 with name and verified/total count
+5. Missing dependency directory: exits 1 with "Dependency spec not found: <name>"
+6. Missing tasks.md in dependency: exits 1 with "has no tasks.md"
+7. `get_dependency_status` complete/incomplete/not_found output formats
+8. No deps produces no output from `get_dependency_status`
+9. Circular A -> B -> A: detected with correct chain "spec-a -> spec-b -> spec-a"
+10. Longer cycle A -> B -> C -> A: detected with full chain
+11. Diamond dependency (A->B, A->C, B->D, C->D): no false positive
+
+**Integration**: Not yet wired into execution scripts — that happens in T-10, T-11, T-12. Also used by T-13 (`/spec-status` dependency display).
+
+**Next**: T-5 (spec-retro.sh), T-6 (init.sh), T-7 (presets), T-8 (requirements template), T-9 (spec-import command), or T-16 (version bump) — all have no unmet dependencies.

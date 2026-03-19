@@ -387,3 +387,30 @@
 **Integration**: This modifies an existing command definition file (`commands/spec-status.md`) that is auto-discovered by the plugin system. The `/spec-status` command is already wired in. The dependency display integrates with the data format produced by `lib/deps.sh` (T-4) — same completion definition (Status: completed + Wired: yes/n/a + Verified: yes).
 
 **Next**: T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump).
+
+## Session 14 — 2026-03-19
+
+### Task: T-14 — Add preset selection step to /spec command
+
+**Status**: Completed and verified
+
+**What was done**:
+- Modified `commands/spec.md` to add a new step 2 (Preset Selection) between step 1 (Initialize Spec Directory) and the renamed step 3 (Interactive Requirements Gathering)
+- New step uses AskUserQuestion to present 4 options: REST API, React Page, CLI Tool, Start from scratch
+- Each preset option describes its content briefly to help users choose
+- Instructions for reading preset files from `${CLAUDE_PLUGIN_ROOT}/templates/presets/<slug>.md` when selected
+- "Start from scratch" selection continues with existing flow unchanged (no preset context)
+- Renumbered subsequent steps: 3 (Requirements Gathering), 4 (spec-planner), 5 (spec-tasker), 6 (Summary)
+- Updated step 4 (spec-planner delegation) to pass preset content labeled "Preset Template (customize for this specific feature — do not use verbatim)" when a preset was selected
+- Explicit instruction that planner should customize the preset based on user answers, not copy it wholesale
+
+**Verification** (5 acceptance criteria checked):
+1. `/spec myfeature` presents preset selection (step 2) before requirements-gathering questions (step 3)
+2. Selecting "REST API" causes spec-planner to receive rest-api.md preset content with customization instruction
+3. Selecting "Start from scratch" produces v2.x behavior (no preset context passed to planner)
+4. All 4 options listed: REST API, React Page, CLI Tool, Start from scratch
+5. Existing steps (Initialize, Requirements Gathering, spec-planner, spec-tasker, Summary) preserved with only step numbers changed
+
+**Integration**: This modifies an existing command definition file (`commands/spec.md`) that is auto-discovered by the plugin system. The `/spec` command is already wired in. The preset selection step reads from `templates/presets/` (created in T-7). Wired=yes because the command is reachable via the `/spec` slash command.
+
+**Next**: T-15 (wire spec-retro.sh into CLAUDE.md), T-16 (version bump), then T-17 through T-22 (manual smoke tests).

@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 19 |
+| Pending | 18 |
 | In Progress | 0 |
-| Completed | 3 |
+| Completed | 4 |
 | Wired | 0 |
-| Verified | 3 |
+| Verified | 4 |
 
 ---
 
@@ -105,9 +105,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-4: Implement lib/deps.sh — check_dependencies and get_dependency_status
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-5
 - **Description**: Implement `scripts/lib/deps.sh` as a sourceable bash library with two functions.
 

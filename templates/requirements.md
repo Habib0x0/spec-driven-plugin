@@ -6,6 +6,11 @@
 
 {{BRIEF_DESCRIPTION}}
 
+## Depends On
+
+<!-- List spec names this spec depends on, one per line as a bullet. Remove this section if none. -->
+<!-- - other-spec-name -->
+
 ## User Stories
 
 ### US-1: {{STORY_TITLE}}

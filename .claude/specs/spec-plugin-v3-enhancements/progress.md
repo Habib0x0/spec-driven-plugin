@@ -199,3 +199,23 @@
 **Integration**: Not yet wired into `/spec` command — that happens in T-14 (preset selection step). Files are standalone templates read by the spec-planner agent.
 
 **Next**: T-8 (requirements template Depends On section), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies. T-14 (wire presets into /spec) depends on T-7 (now complete).
+## Session 8 — 2026-03-19
+
+### Task: T-8 — Add "## Depends On" section to templates/requirements.md
+
+**Status**: Completed and verified
+
+**What was done**:
+- Edited `templates/requirements.md` to insert a `## Depends On` section between `## Overview` and `## User Stories`
+- Section contains only HTML comments (no active bullets) serving as placeholder guidance
+- All existing sections (Overview, User Stories, Non-Functional Requirements, Out of Scope, Open Questions) remain unchanged
+
+**Testing** (4 checks verified):
+1. `## Depends On` section present in templates/requirements.md (line 9)
+2. Section positioned after `## Overview` (line 5) and before `## User Stories` (line 14)
+3. Section body is fully commented out — no active dependency bullets
+4. All other existing sections remain unchanged and intact
+
+**Integration**: n/a — this is a template file. When `/spec` copies templates to create a new spec, the generated requirements.md will include the `## Depends On` stub. Parsed by `lib/deps.sh` (T-4).
+
+**Next**: T-9 (spec-import command), T-16 (version bump), T-10/T-11/T-12 (wire libraries into execution scripts — depends on T-2, T-3, T-4 which are complete), T-13 (spec-status deps — depends on T-4 which is complete), T-14 (preset selection — depends on T-7 which is complete), T-15 (wire spec-retro — depends on T-5 which is complete).

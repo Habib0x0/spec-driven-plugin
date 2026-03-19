@@ -601,3 +601,22 @@
 **Integration**: n/a — test-only task validating T-7 (presets), T-9 (spec-import), T-14 (preset selection in /spec).
 
 **Next**: T-22 (verify enhanced init.sh and requirements.md templates) — the final task.
+
+## Session 22 — 2026-03-19
+
+### Task: T-22 — Verify enhanced init.sh template and requirements.md template
+
+**Status**: Completed and verified
+
+**What was done**:
+- Verified all 4 acceptance criteria for the two updated templates:
+  1. `bash templates/init.sh` exits 0 with no output (all lines commented out)
+  2. `templates/init.sh` has all 5 sections with `===` banners (DEPENDENCY INSTALLATION, ENVIRONMENT SETUP, START DEVELOPMENT SERVER, HEALTH CHECK, RUN TESTS), each with Node.js/Python/Go examples, and header comment referencing execution scripts
+  3. `templates/requirements.md` has `## Depends On` section at line 9, positioned between `## Overview` (line 5) and `## User Stories` (line 14), with content fully commented out (no active bullets)
+  4. `/spec` command copies from `${CLAUDE_PLUGIN_ROOT}/templates/` as starting points (confirmed in commands/spec.md line 47), so any new spec inherits the `## Depends On` stub
+
+**Issues found**: None. All checks passed.
+
+**Integration**: n/a — template verification task. Templates are used by `/spec` when creating new specs.
+
+**ALL TASKS COMPLETE**: T-1 through T-22 are now Status: completed, Wired: yes/n/a, Verified: yes. The spec-plugin-v3-enhancements spec is fully implemented.

@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 1 |
+| Pending | 0 |
 | In Progress | 0 |
-| Completed | 21 |
+| Completed | 22 |
 | Wired | 0 |
-| Verified | 19 |
+| Verified | 20 |
 
 ---
 
@@ -606,9 +606,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-22: Verify enhanced init.sh template and requirements.md template
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-4, US-5
 - **Description**: Verify the two updated templates:
   1. `bash templates/init.sh`: exits 0 with no output (all lines commented)

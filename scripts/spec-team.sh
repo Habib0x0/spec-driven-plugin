@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 SPEC_NAME=""
+USE_WORKTREE=true
 MAX_ITERATIONS=50
 
 # parse args
@@ -15,9 +18,13 @@ while [[ $# -gt 0 ]]; do
       MAX_ITERATIONS="$2"
       shift 2
       ;;
+    --no-worktree)
+      USE_WORKTREE=false
+      shift
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-team.sh [--spec-name <name>] [--max-iterations <n>]"
+      echo "Usage: spec-team.sh [--spec-name <name>] [--max-iterations <n>] [--no-worktree]"
       exit 1
       ;;
   esac
@@ -94,6 +101,18 @@ for f in requirements.md design.md tasks.md; do
   fi
 done
 
+# source shared libraries
+source "$SCRIPT_DIR/lib/deps.sh"
+source "$SCRIPT_DIR/lib/worktree.sh"
+source "$SCRIPT_DIR/lib/checkpoint.sh"
+
+# check cross-spec dependencies before any worktree creation
+check_dependencies "$SPEC_NAME"
+
+# setup worktree (sets WORK_DIR)
+setup_worktree "$SPEC_NAME" "$USE_WORKTREE"
+cd "$WORK_DIR"
+
 # create progress.md if it doesn't exist
 if [ ! -f "$SPEC_DIR/progress.md" ]; then
   echo "# Progress Log: $SPEC_NAME" > "$SPEC_DIR/progress.md"
@@ -106,12 +125,7 @@ fi
 # build the team lead prompt
 PROMPT_FILE=$(mktemp)
 
-# clean up temp files and metadata on exit
-cleanup() {
-  rm -f "$PROMPT_FILE"
-  rm -f "$TEAM_META_FILE"
-}
-trap cleanup EXIT
+# cleanup is set up later alongside OUTPUT_FILE
 
 {
   echo "# Spec-Driven Agent Team"
@@ -235,5 +249,30 @@ cat > "$TEAM_META_FILE" << METAEOF
 {"pid": $$, "team": "$TEAM_NAME", "project": "$(pwd)", "spec": "$SPEC_NAME", "started": "$TIMESTAMP"}
 METAEOF
 
-# Run with agent teams enabled
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"
+# create pre-execution checkpoint
+create_checkpoint 1 "$WORK_DIR"
+
+OUTPUT_FILE=$(mktemp)
+# update cleanup to also remove output file
+cleanup() {
+  rm -f "$PROMPT_FILE"
+  rm -f "$OUTPUT_FILE"
+  rm -f "$TEAM_META_FILE"
+}
+trap cleanup EXIT
+
+# run with agent teams enabled, capture exit code
+set +e
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)" | tee "$OUTPUT_FILE"
+CLAUDE_EXIT=${PIPESTATUS[0]}
+set -e
+
+# handle checkpoint recovery on failure
+handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" 1 "$WORK_DIR"
+
+# check for completion and suggest PR
+if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
+  echo ""
+  echo "All tasks complete and verified!"
+  print_pr_suggestion "$SPEC_NAME"
+fi

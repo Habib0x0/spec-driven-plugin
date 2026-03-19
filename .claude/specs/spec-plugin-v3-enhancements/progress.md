@@ -320,3 +320,46 @@
 **Integration**: spec-loop.sh now sources all three library files. Flow: parse args -> validate spec -> check dependencies (fast fail) -> setup worktree -> cd into WORK_DIR -> loop { checkpoint -> build prompt -> invoke claude (set +e/PIPESTATUS) -> recover on failure -> check progress -> check COMPLETE/max-iter }. All existing behavior (--max-iterations, --progress-tail, auto-detect, progress.md fallback) preserved.
 
 **Next**: T-12 (wire into spec-team.sh), T-13 (spec-status deps), T-14 (preset selection), T-15 (spec-retro wiring), T-16 (version bump).
+
+---
+
+## Session 12 — 2026-03-19
+
+### Task: T-12 — Wire lib/worktree.sh, lib/checkpoint.sh, and lib/deps.sh into spec-team.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Added `SCRIPT_DIR` after `set -e` for library sourcing
+- Added `USE_WORKTREE=true` default and `--no-worktree` flag to argument parser
+- Updated usage string to include `--no-worktree`
+- Sourced all three libraries (deps.sh, worktree.sh, checkpoint.sh) after file validation
+- Added `check_dependencies "$SPEC_NAME"` before worktree creation (fast fail)
+- Added `setup_worktree "$SPEC_NAME" "$USE_WORKTREE"` and `cd "$WORK_DIR"` before prompt building
+- Added single pre-execution checkpoint: `create_checkpoint 1 "$WORK_DIR"` before Claude invocation
+- Replaced direct `claude` invocation with `set +e` / `PIPESTATUS` pattern to capture exit code
+- Added output capture via `tee "$OUTPUT_FILE"` to detect COMPLETE marker
+- Added `handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" 1 "$WORK_DIR"` after invocation
+- Added COMPLETE detection with `print_pr_suggestion` call
+- Consolidated cleanup function to handle PROMPT_FILE, OUTPUT_FILE, and TEAM_META_FILE
+
+**Key difference from spec-loop.sh**: spec-team.sh has a single Claude invocation (no bash loop), so only one checkpoint at iteration "1" is created. The `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` env var is preserved.
+
+**Testing** (13 scenarios verified):
+1. Syntax check passes (bash -n)
+2. `--no-worktree` flag parsed correctly
+3. Unknown arg produces updated usage with `--no-worktree`
+4. All library functions available after sourcing
+5. Dependency check passes for spec with no deps
+6. Worktree created at correct path on correct branch
+7. `use_worktree=false` sets WORK_DIR to pwd
+8. Checkpoint created with uncommitted changes (correct message, SHA captured)
+9. Checkpoint skipped when no uncommitted changes
+10. Rollback on non-zero exit restores tracked file changes to checkpoint state
+11. No rollback on zero exit (changes preserved)
+12. Incomplete dependency blocks execution with descriptive error
+13. PR suggestion and .gitignore entry correct
+
+**Integration**: spec-team.sh now sources all three library files. Flow: parse args -> validate spec -> generate team name -> clean stale teams -> validate files -> source libs -> check dependencies (fast fail) -> setup worktree -> cd into WORK_DIR -> create progress.md -> build prompt -> write team metadata -> create checkpoint -> invoke Claude (set +e/PIPESTATUS) -> recover on failure -> check COMPLETE. All existing behavior (--max-iterations, team metadata, CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1, auto-detect) preserved.
+
+**Next**: T-13 (spec-status deps display), T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump).

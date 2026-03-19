@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 13 |
+| Pending | 12 |
 | In Progress | 0 |
-| Completed | 9 |
+| Completed | 10 |
 | Wired | 0 |
 | Verified | 9 |
 
@@ -307,9 +307,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-10: Wire lib/worktree.sh and lib/deps.sh into spec-exec.sh
 
-- **Status**: pending
-- **Wired**: no
-- **Verified**: no
+- **Status**: completed
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-1, US-5
 - **Description**: Modify `scripts/spec-exec.sh` to source and use `lib/worktree.sh` and `lib/deps.sh`:
   1. Add `SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"` immediately after `set -e`

@@ -246,3 +246,36 @@
 **Integration**: This is a slash command definition file. It will be discovered by the plugin system via `commands/` directory auto-discovery. Wired=no because it requires plugin loading to be reachable (not a standalone executable).
 
 **Next**: T-10 (wire worktree + deps into spec-exec.sh), T-11 (wire into spec-loop.sh), T-12 (wire into spec-team.sh), T-13 (spec-status deps display), T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump) — all have their dependencies met.
+
+## Session 10 — 2026-03-19
+
+### Task: T-10 — Wire lib/worktree.sh and lib/deps.sh into spec-exec.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Added `SCRIPT_DIR` variable after `set -e` for library sourcing
+- Added `USE_WORKTREE=true` default and `--no-worktree` flag to argument parser
+- Updated usage string to include `--no-worktree`
+- Sourced `lib/deps.sh` and `lib/worktree.sh` after spec validation
+- Added `check_dependencies "$SPEC_NAME"` call before worktree creation (fast fail on unmet deps)
+- Added `setup_worktree "$SPEC_NAME" "$USE_WORKTREE"` and `cd "$WORK_DIR"` before prompt building
+- Added output capture via `tee "$OUTPUT_FILE"` and COMPLETE marker detection
+- Added `print_pr_suggestion "$SPEC_NAME"` call when COMPLETE detected
+- No checkpoint logic (per US-2 AC-6: single-shot execution)
+
+**Testing** (10 scenarios verified):
+1. `--no-worktree` flag parsed correctly, no error
+2. Unknown arg produces updated usage with `--no-worktree`
+3. Libraries source correctly, all functions available
+4. Dependency check passes for spec with no deps (spec-plugin-v3-enhancements)
+5. `use_worktree=false` sets WORK_DIR to pwd
+6. `use_worktree=true` creates worktree at correct path on correct branch
+7. Worktree reuse is idempotent (no error on second call)
+8. PR suggestion outputs correct `gh pr create` command
+9. .gitignore contains worktree entry (exactly once)
+10. Incomplete dependency exits 1 with descriptive error message
+
+**Integration**: spec-exec.sh now sources lib/worktree.sh and lib/deps.sh. When invoked, it checks dependencies first, then creates/reuses a worktree, cd's into it, builds the prompt, and invokes Claude. On COMPLETE, it prints the PR suggestion. All existing behavior (--spec-name, auto-detect, file validation) preserved.
+
+**Next**: T-11 (wire libraries into spec-loop.sh), T-12 (wire into spec-team.sh), T-13 (spec-status deps), T-14 (preset selection), T-15 (spec-retro wiring), T-16 (version bump).

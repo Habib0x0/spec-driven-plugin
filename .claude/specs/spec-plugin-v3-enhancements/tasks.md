@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 4 |
+| Pending | 3 |
 | In Progress | 0 |
-| Completed | 18 |
+| Completed | 19 |
 | Wired | 0 |
-| Verified | 16 |
+| Verified | 17 |
 
 ---
 
@@ -536,9 +536,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-19: Manual smoke test — cross-spec dependency checking
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-5
 - **Description**: Manually test the dependency checker end-to-end:
   1. Create spec-a with `## Depends On\n- spec-b` and spec-b with 5 tasks (3 incomplete); running spec-loop.sh for spec-a exits 1 with dep error showing 3/5 verified

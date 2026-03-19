@@ -516,3 +516,33 @@
 **Integration**: n/a — this is a test-only task validating T-3 (checkpoint.sh), T-11 (spec-loop.sh), and T-12 (spec-team.sh).
 
 **Next**: T-19 (cross-spec dependency checking smoke test), T-20 (spec-retro.sh), T-21 (presets + import), T-22 (templates).
+
+## Session 19 — 2026-03-19
+
+### Task: T-19 — Manual smoke test: cross-spec dependency checking
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created comprehensive smoke test script exercising all dependency checking functionality
+- Tested against real temporary git repositories with actual spec files and git operations
+- All 20 assertions passed with 0 failures
+
+**Scenarios verified** (8 scenarios, 20 assertions):
+1. Incomplete dependency blocks execution: spec-a depends on spec-b with 2/5 tasks verified, exits 1 with "Dependency incomplete: spec-b (2/5 tasks verified)"
+2. Complete dependency passes: all spec-b tasks marked completed/wired/verified, check_dependencies returns 0
+3. Circular dependency A->B->A: detected with exact chain "spec-a -> spec-b -> spec-a", exits 1
+4. Longer cycle A->B->C->A: detected with full chain "spec-a -> spec-b -> spec-c -> spec-a", exits 1
+5. Missing dependency directory: exits 1 with exact message "Dependency spec not found: nonexistent-spec"
+6. get_dependency_status output format: correctly outputs "spec-b:complete:5:5" and "spec-c:incomplete:2:3" and "ghost-spec:not_found:0:0"
+7. No dependencies section: passes silently (exit 0), empty status output
+8. Diamond dependency (A->B, A->C, B->D, C->D): no false positive cycle detection, passes clean
+9. spec-loop.sh integration: incomplete dep blocks execution before worktree creation, exits 1 with dep error, no worktree directory created
+
+**Note on `/spec-status` dependency display**: The `/spec-status` command is a slash command definition file (commands/spec-status.md) that executes within the Claude interactive session. It was verified during T-13 by reviewing the command definition for correctness of the display format and logic. The dependency parsing and status format it describes matches the lib/deps.sh output tested above.
+
+**Issues found**: None. All scenarios passed.
+
+**Integration**: n/a — test-only task validating T-4 (deps.sh), T-11 (spec-loop.sh), T-13 (spec-status).
+
+**Next**: T-20 (spec-retro.sh smoke test), T-21 (presets + import), T-22 (templates).

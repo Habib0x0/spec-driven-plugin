@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 6 |
+| Pending | 5 |
 | In Progress | 0 |
-| Completed | 16 |
+| Completed | 17 |
 | Wired | 0 |
-| Verified | 14 |
+| Verified | 15 |
 
 ---
 
@@ -487,9 +487,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-17: Manual smoke test — worktree creation and reuse
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1
 - **Description**: Manually test worktree creation and the `--no-worktree` flag across all three execution scripts using a real git repository. Verify the following scenarios:
   1. `spec-exec.sh` (default): worktree created at `.claude/specs/.worktrees/<spec-name>/` on branch `spec/<spec-name>`

@@ -454,3 +454,34 @@
 **Integration**: n/a — version metadata only. These fields are read by the plugin system for display/identification purposes.
 
 **Next**: T-17 through T-22 are manual smoke tests requiring real execution against a git repository. These are the final tasks before the spec can be marked COMPLETE.
+
+## Session 17 — 2026-03-19
+
+### Task: T-17 — Manual smoke test: worktree creation and reuse
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created a comprehensive 17-scenario test script exercising all worktree functionality across all three execution scripts
+- Tested against a real temporary git repository (/tmp/spec-wt-test)
+- All 23 assertions passed with 0 failures
+
+**Scenarios verified**:
+1. `setup_worktree(name, true)` creates worktree at `.claude/specs/.worktrees/<name>/` with valid `.git` marker, on branch `spec/<name>`, sets WORK_DIR correctly
+2. Second call with same name reuses existing worktree (prints "Reusing existing worktree"), branch unchanged
+3. `setup_worktree(name, false)` sets WORK_DIR to pwd, no worktree directory created
+4. `.gitignore` contains `.claude/specs/.worktrees/` after first run, not duplicated on subsequent runs
+5. `print_pr_suggestion` outputs correct `gh pr create --head spec/<name>` command
+6. All three scripts (spec-exec.sh, spec-loop.sh, spec-team.sh) accept `--no-worktree` flag without parsing errors
+7. spec-exec.sh default creates worktree; `--no-worktree` does not
+8. spec-loop.sh default creates worktree; `--no-worktree` does not
+9. spec-team.sh default creates worktree; `--no-worktree` does not
+10. spec-exec.sh reuses existing worktree on second run (idempotent)
+11. spec-loop.sh reuses existing worktree on second run (idempotent)
+12. COMPLETE marker detection triggers PR suggestion output
+
+**Issues found**: None. All scenarios passed on first run.
+
+**Integration**: n/a — this is a test-only task validating existing integrations from T-10, T-11, T-12.
+
+**Next**: T-18 (checkpoint and rollback smoke test), T-19 (dependency checking), T-20 (spec-retro.sh), T-21 (presets + import), T-22 (templates).

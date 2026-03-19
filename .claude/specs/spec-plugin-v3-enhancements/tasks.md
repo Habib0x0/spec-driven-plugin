@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 7 |
+| Pending | 6 |
 | In Progress | 0 |
-| Completed | 15 |
+| Completed | 16 |
 | Wired | 0 |
 | Verified | 14 |
 
@@ -468,9 +468,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-16: Update plugin.json version to 3.0.0
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-8
 - **Description**: Update two version fields:
   1. In `.claude-plugin/plugin.json`, change `"version": "2.2.0"` to `"version": "3.0.0"`

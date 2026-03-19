@@ -435,3 +435,22 @@
 **Integration**: `spec-retro.sh` is now fully documented in CLAUDE.md alongside the other post-implementation scripts. The script was already executable and standalone. Wired=yes because it is discoverable through CLAUDE.md documentation (the standard way users find and use scripts).
 
 **Next**: T-16 (version bump to 3.0.0), then T-17 through T-22 (manual smoke tests).
+
+## Session 16 — 2026-03-19
+
+### Task: T-16 — Update plugin.json version to 3.0.0
+
+**Status**: Completed and verified
+
+**What was done**:
+- Updated `.claude-plugin/plugin.json` version from `"2.2.0"` to `"3.0.0"`
+- Updated `skills/spec-workflow/SKILL.md` frontmatter version from `1.0.0` to `3.0.0`
+- No other fields or content changed in either file (verified via git diff)
+
+**Verification** (2 acceptance criteria checked):
+1. `.claude-plugin/plugin.json` contains `"version": "3.0.0"` — confirmed, no other fields changed
+2. `skills/spec-workflow/SKILL.md` frontmatter has `version: 3.0.0` — confirmed
+
+**Integration**: n/a — version metadata only. These fields are read by the plugin system for display/identification purposes.
+
+**Next**: T-17 through T-22 are manual smoke tests requiring real execution against a git repository. These are the final tasks before the spec can be marked COMPLETE.

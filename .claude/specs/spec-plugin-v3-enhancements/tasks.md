@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 14 |
+| Pending | 13 |
 | In Progress | 0 |
-| Completed | 8 |
+| Completed | 9 |
 | Wired | 0 |
-| Verified | 8 |
+| Verified | 9 |
 
 ---
 
@@ -258,9 +258,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-9: Create commands/spec-import.md slash command
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-7
 - **Description**: Create `commands/spec-import.md` as a new slash command definition following the format of `commands/spec.md`. The file must:
 

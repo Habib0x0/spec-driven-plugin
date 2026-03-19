@@ -219,3 +219,30 @@
 **Integration**: n/a — this is a template file. When `/spec` copies templates to create a new spec, the generated requirements.md will include the `## Depends On` stub. Parsed by `lib/deps.sh` (T-4).
 
 **Next**: T-9 (spec-import command), T-16 (version bump), T-10/T-11/T-12 (wire libraries into execution scripts — depends on T-2, T-3, T-4 which are complete), T-13 (spec-status deps — depends on T-4 which is complete), T-14 (preset selection — depends on T-7 which is complete), T-15 (wire spec-retro — depends on T-5 which is complete).
+
+## Session 9 — 2026-03-19
+
+### Task: T-9 — Create commands/spec-import.md slash command
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created `commands/spec-import.md` as a new slash command definition
+- YAML frontmatter with name, description, argument-hint, and allowed-tools (Read, Write, Glob, Grep, Task, AskUserQuestion)
+- 6-step workflow: parse arguments, validate source file, read content, create spec directory, delegate to spec-planner agent, post-import summary
+- Explicit error handling: file-not-found exits without creating directory, non-markdown extension prints warning and continues
+- Delegates to spec-planner agent (Opus) via Task tool with detailed conversion instructions
+- Post-import suggests `/spec-refine` for review before proceeding to design
+- Only generates requirements.md (no design.md or tasks.md)
+
+**Verification** (6 acceptance criteria checked):
+1. File exists at `commands/spec-import.md` with valid YAML frontmatter
+2. Workflow covers all required steps from task description
+3. Allowed tools list matches exactly: Read, Write, Glob, Grep, Task, AskUserQuestion
+4. File-not-found path explicitly described — no directory created on missing file
+5. Non-markdown warning explicitly described
+6. Post-import message references `/spec-refine`
+
+**Integration**: This is a slash command definition file. It will be discovered by the plugin system via `commands/` directory auto-discovery. Wired=no because it requires plugin loading to be reachable (not a standalone executable).
+
+**Next**: T-10 (wire worktree + deps into spec-exec.sh), T-11 (wire into spec-loop.sh), T-12 (wire into spec-team.sh), T-13 (spec-status deps display), T-14 (preset selection in /spec), T-15 (wire spec-retro.sh), T-16 (version bump) — all have their dependencies met.

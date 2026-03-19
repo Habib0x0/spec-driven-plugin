@@ -117,3 +117,35 @@
 **Integration**: Not yet wired into execution scripts — that happens in T-10, T-11, T-12. Also used by T-13 (`/spec-status` dependency display).
 
 **Next**: T-5 (spec-retro.sh), T-6 (init.sh), T-7 (presets), T-8 (requirements template), T-9 (spec-import command), or T-16 (version bump) — all have no unmet dependencies.
+
+## Session 5 — 2026-03-19
+
+### Task: T-5 — Create scripts/spec-retro.sh
+
+**Status**: Completed and verified
+
+**What was done**:
+- Created `scripts/spec-retro.sh` following the exact structural pattern of `scripts/spec-accept.sh`
+- Argument parsing: `--spec-name <name>` only, unknown args print usage and exit 1
+- Auto-detection: single spec auto-detects, multiple specs exits 1 with list
+- Validates spec directory exists and requires requirements.md, design.md, tasks.md
+- progress.md is optional: if missing, prompt notes absence (no error)
+- Prompt includes: header, all spec files, progress.md (or absence note), git log (last 20 commits), detailed instructions for retrospective analysis
+- Instructions cover: iteration count, debugging cycles, commit patterns, what went well, friction points, root causes, action items
+- Output format: writes `retro.md` to spec directory
+- Completion marker: `<promise>RETRO_COMPLETE</promise>`
+- Invocation: `claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"` matching spec-accept.sh pattern
+- Made executable with `chmod +x`
+
+**Testing** (7 scenarios verified):
+1. `--spec-name nonexistent`: exits 1 with "Spec directory not found"
+2. `--bogus`: exits 1 with usage message
+3. Auto-detection with single spec: correctly detects spec-plugin-v3-enhancements
+4. Auto-detection with multiple specs: exits 1, lists both specs
+5. Missing progress.md: script proceeds without error, prompt notes absence
+6. Full dry run with all files present: exits 0, prompt contains all required sections
+7. Prompt content verification: RETRO_COMPLETE, retro.md, Git History, git log --oneline all present
+
+**Integration**: Not yet wired into CLAUDE.md — that happens in T-15. Script is standalone and executable.
+
+**Next**: T-6 (init.sh), T-7 (presets), T-8 (requirements template), T-9 (spec-import command), T-16 (version bump) — all have no unmet dependencies.

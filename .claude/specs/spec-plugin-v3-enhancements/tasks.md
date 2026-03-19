@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 18 |
+| Pending | 17 |
 | In Progress | 0 |
-| Completed | 4 |
+| Completed | 5 |
 | Wired | 0 |
-| Verified | 4 |
+| Verified | 5 |
 
 ---
 
@@ -139,9 +139,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-5: Create scripts/spec-retro.sh
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-3
 - **Description**: Create `scripts/spec-retro.sh` following the exact structural pattern of `scripts/spec-accept.sh`:
   - `#!/bin/bash` and `set -e`

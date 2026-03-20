@@ -16,9 +16,11 @@ This plugin guides you through three phases:
 |---------|-------------|
 | `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
 | `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
+| `/spec-import` | Import a markdown/PRD file and convert to EARS requirements |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |
-| `/spec-status` | Show spec progress and task completion |
+| `/spec-status` | Show spec progress, task completion, and dependency status |
+| `/spec-sync` | Sync tasks.md status back to Claude Code task list |
 | `/spec-validate` | Validate spec completeness and consistency |
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
@@ -38,10 +40,29 @@ This plugin guides you through three phases:
 ```
 
 This will:
-1. Create `.claude/specs/user-authentication/` directory
-2. Guide you through Requirements phase (EARS notation)
-3. Guide you through Design phase (architecture docs)
-4. Generate Tasks and sync to Claude Code todos
+1. Ask if you want to start from a **preset** (REST API, React Page, CLI Tool) or from scratch
+2. Create `.claude/specs/user-authentication/` directory
+3. Guide you through Requirements phase (EARS notation)
+4. Guide you through Design phase (architecture docs)
+5. Generate Tasks and sync to Claude Code todos
+
+### Importing from an Existing PRD
+
+```
+/spec-import my-feature --file /path/to/prd.md
+```
+
+Reads a markdown document (PRD, RFC, design doc) and converts it to EARS requirements. Review the output, then proceed to design with `/spec-refine`.
+
+### Spec Presets
+
+When creating a new spec, you can choose a preset template:
+
+- **REST API** - CRUD operations, validation, auth, error handling, pagination
+- **React Page** - Components, routing, state, API integration, responsive layout
+- **CLI Tool** - Argument parsing, subcommands, output formats, error handling
+
+Presets pre-fill requirements with common user stories. The spec-planner agent customizes them based on your answers.
 
 ### Spec Files Location
 
@@ -52,6 +73,19 @@ Specs are stored in `.claude/specs/<feature-name>/`:
 ├── design.md         # Architecture and implementation plan
 └── tasks.md          # Trackable implementation tasks
 ```
+
+### Cross-Spec Dependencies
+
+Specs can declare dependencies on other specs via a `## Depends On` section in requirements.md:
+
+```markdown
+## Depends On
+
+- auth-system
+- database-migrations
+```
+
+Execution scripts check dependencies before running. A dependency is considered complete when all its tasks are verified. `/spec-status` shows dependency status.
 
 ## Execution
 
@@ -70,13 +104,33 @@ spec-team.sh --spec-name user-authentication
 
 Scripts live in the plugin's `scripts/` directory. If only one spec exists, `--spec-name` is auto-detected.
 
+### Git Worktree Isolation
+
+By default, execution scripts create a **git worktree** for each spec:
+
+- Branch: `spec/<spec-name>`
+- Path: `.claude/specs/.worktrees/<spec-name>/`
+- Main branch stays clean while the spec is implemented
+- Multiple specs can run in parallel on separate worktrees
+- On completion, a `gh pr create` command is suggested
+
+Use `--no-worktree` to commit directly to the current branch (v2.x behavior).
+
+### Crash Recovery
+
+`spec-loop.sh` and `spec-team.sh` create checkpoint commits before each iteration. If Claude crashes or exits non-zero, the branch is rolled back to the last checkpoint automatically.
+
+### Task Sync
+
+After running execution scripts, use `/spec-sync` to update the Claude Code task list from tasks.md. The subprocess can't call TaskUpdate directly, so this reconciliation step keeps the two in sync.
+
 ### Agent Team Mode
 
 Use `spec-team.sh` when you need reliable verification. It spawns 4 specialized agents:
-- **Implementer** — writes code
-- **Tester** — verifies with Playwright/tests (only they can mark Verified: yes)
-- **Reviewer** — checks code quality, security, architecture (uses Opus)
-- **Debugger** — fixes issues when Tester or Reviewer reject
+- **Implementer** -- writes code
+- **Tester** -- verifies with Playwright/tests (only they can mark Verified: yes)
+- **Reviewer** -- checks code quality, security, architecture (uses Opus)
+- **Debugger** -- fixes issues when Tester or Reviewer reject
 
 This costs more tokens but prevents tasks from being marked complete without real testing.
 
@@ -102,6 +156,9 @@ spec-verify.sh --spec-name user-authentication --url https://staging.example.com
 
 # quick health check only
 spec-verify.sh --spec-name user-authentication --url https://prod.example.com --scope quick
+
+# retrospective analysis
+spec-retro.sh --spec-name user-authentication
 ```
 
 ### CI/CD Integration
@@ -114,6 +171,14 @@ Example CI stage:
 ```bash
 spec-verify.sh --url "$STAGING_URL" --scope quick || exit 1
 ```
+
+## Spec-Loop Performance
+
+The loop script includes optimizations for long-running specs:
+- **Progress tail**: Only the last 20 progress entries are included in the prompt (configurable via `--progress-tail`)
+- **Lightweight Step 1**: Iterations 2+ skip full environment checks
+- **Spec reference**: Requirements and design are referenced by path (not inlined) after iteration 1
+- **Timing**: Each iteration prints elapsed time
 
 ## Auto-Context
 
@@ -161,7 +226,7 @@ Then restart Claude Code.
 This plugin was inspired by [Kiro](https://kiro.dev)'s spec-driven development functionality. Kiro introduced the concept of structured specification workflows that guide developers through requirements gathering, design, and task breakdown before implementation.
 
 Key concepts borrowed from Kiro:
-- **Three-phase workflow**: Requirements → Design → Tasks
+- **Three-phase workflow**: Requirements -> Design -> Tasks
 - **EARS notation**: Structured acceptance criteria format
 - **Spec file organization**: Dedicated spec directories with separate documents for each phase
 - **Task traceability**: Linking implementation tasks back to requirements

@@ -5,3 +5,4 @@
 .claude/*.local.md
 .claude/*.local.json
 .claude/specs/.worktrees/
+site/

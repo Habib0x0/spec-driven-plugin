@@ -102,3 +102,4 @@ nav:
     - Cross-Spec Dependencies: advanced/cross-spec-deps.md
     - CI/CD Integration: advanced/ci-cd.md
     - Extending the Plugin: advanced/extending.md
+  - Privacy Policy: privacy.md

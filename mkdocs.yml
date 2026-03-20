@@ -1,0 +1,104 @@
+site_name: Spec-Driven Development Plugin
+site_description: A structured workflow plugin for Claude Code that transforms feature ideas into formal specifications before implementation
+site_url: https://habib0x0.github.io/spec-driven-plugin
+repo_url: https://github.com/Habib0x0/spec-driven-plugin
+repo_name: Habib0x0/spec-driven-plugin
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - Core Concepts: getting-started/concepts.md
+  - Workflow:
+    - Overview: workflow/overview.md
+    - Brainstorming: workflow/brainstorming.md
+    - Requirements: workflow/requirements.md
+    - Design: workflow/design.md
+    - Tasks: workflow/tasks.md
+    - Execution: workflow/execution.md
+    - Post-Implementation: workflow/post-implementation.md
+  - Commands:
+    - commands/index.md
+    - /spec: commands/spec.md
+    - /spec-brainstorm: commands/spec-brainstorm.md
+    - /spec-import: commands/spec-import.md
+    - /spec-refine: commands/spec-refine.md
+    - /spec-tasks: commands/spec-tasks.md
+    - /spec-status: commands/spec-status.md
+    - /spec-sync: commands/spec-sync.md
+    - /spec-validate: commands/spec-validate.md
+    - /spec-exec: commands/spec-exec.md
+    - /spec-loop: commands/spec-loop.md
+    - /spec-team: commands/spec-team.md
+    - /spec-accept: commands/spec-accept.md
+    - /spec-docs: commands/spec-docs.md
+    - /spec-release: commands/spec-release.md
+    - /spec-verify: commands/spec-verify.md
+    - /spec-retro: commands/spec-retro.md
+  - Agents:
+    - agents/index.md
+    - Planner: agents/spec-planner.md
+    - Tasker: agents/spec-tasker.md
+    - Implementer: agents/spec-implementer.md
+    - Tester: agents/spec-tester.md
+    - Reviewer: agents/spec-reviewer.md
+    - Debugger: agents/spec-debugger.md
+    - Validator: agents/spec-validator.md
+    - Consultant: agents/spec-consultant.md
+    - Acceptor: agents/spec-acceptor.md
+    - Documenter: agents/spec-documenter.md
+  - Reference:
+    - EARS Notation: reference/ears-notation.md
+    - Design Patterns: reference/design-patterns.md
+    - Task Breakdown: reference/task-breakdown.md
+    - Templates: reference/templates.md
+  - Advanced:
+    - Git Worktree Isolation: advanced/worktrees.md
+    - Crash Recovery: advanced/crash-recovery.md
+    - Cross-Spec Dependencies: advanced/cross-spec-deps.md
+    - CI/CD Integration: advanced/ci-cd.md
+    - Extending the Plugin: advanced/extending.md

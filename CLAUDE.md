@@ -35,6 +35,7 @@ templates/                  - Document scaffolding for specs
 | `/spec-release` | Generate release notes, changelog, and deployment checklist |
 | `/spec-verify` | Run post-deployment smoke tests against a live environment |
 | `/spec-retro` | Run a retrospective to capture lessons learned |
+| `/spec-sync` | Sync tasks.md status back to Claude Code task list |
 
 ## Model Routing
 

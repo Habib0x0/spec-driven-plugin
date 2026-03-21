@@ -4,7 +4,7 @@ The requirements phase captures what the system must do. Every requirement is wr
 
 ## Starting requirements
 
-Run `/spec <feature-name>` to start. The spec-planner (Opus) will:
+Run `/spec <feature-name>` to start. The spec-planner (Opus 4.6) will:
 
 1. Ask clarifying questions about feature scope
 2. Identify user roles and their goals

@@ -51,7 +51,7 @@ Implementer writes code
       |
 Tester verifies (Playwright / test suite)
       |
-  PASS -> Reviewer checks quality and security (Opus)
+  PASS -> Reviewer checks quality and security (Opus 4.6)
                |
            APPROVE -> commit
            REJECT  -> Debugger fixes -> back to Tester

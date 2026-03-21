@@ -44,19 +44,19 @@ The plugin automatically uses the optimal model for each phase:
 | Agent | Model | Phase | Rationale |
 |-------|-------|-------|-----------|
 | spec-planner | Opus 4.6 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
-| spec-tasker | Sonnet | Task breakdown | Fast, structured decomposition |
-| spec-validator | Sonnet | Validation | Checklist-based verification |
-| spec-implementer | Sonnet | Implementation | Writes code for tasks |
-| spec-tester | Sonnet | Testing | Verifies with Playwright/tests |
-| spec-reviewer | Opus | Review | Code quality, security, architecture |
-| spec-consultant | Sonnet | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
-| spec-acceptor | Sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
-| spec-documenter | Sonnet | Documentation | Generates docs from spec and code |
-| spec-debugger | Sonnet | Debugging | Fixes issues when rejected |
+| spec-tasker | Sonnet 4.6 | Task breakdown | Fast, structured decomposition |
+| spec-validator | Sonnet 4.6 | Validation | Checklist-based verification |
+| spec-implementer | Sonnet 4.6 | Implementation | Writes code for tasks |
+| spec-tester | Sonnet 4.6 | Testing | Verifies with Playwright/tests |
+| spec-reviewer | Opus 4.6 | Review | Code quality, security, architecture |
+| spec-consultant | Sonnet 4.6 | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
+| spec-acceptor | Sonnet 4.6 | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
+| spec-documenter | Sonnet 4.6 | Documentation | Generates docs from spec and code |
+| spec-debugger | Sonnet 4.6 | Debugging | Fixes issues when rejected |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
 
-For implementation after spec completion, Sonnet is recommended — the spec provides all the context needed for accurate code generation.
+For implementation after spec completion, Sonnet 4.6 is recommended — the spec provides all the context needed for accurate code generation.
 
 ## Key Concepts
 

@@ -9,21 +9,21 @@ Each agent is assigned the model that best fits its task. Reasoning-heavy phases
 | Agent | Model | Phase | Why |
 |-------|-------|-------|-----|
 | [spec-planner](spec-planner.md) | Opus 4.6 | Requirements + Design | Deep reasoning for edge cases, security, and architectural tradeoffs |
-| [spec-tasker](spec-tasker.md) | Sonnet | Task breakdown | Fast, structured decomposition from a completed design |
-| [spec-validator](spec-validator.md) | Sonnet | Validation | Checklist-based verification across all three spec documents |
-| [spec-implementer](spec-implementer.md) | Sonnet | Implementation | Writes code and wires it into the running application |
-| [spec-tester](spec-tester.md) | Sonnet | Testing | Verifies features end-to-end using Playwright and test suites |
+| [spec-tasker](spec-tasker.md) | Sonnet 4.6 | Task breakdown | Fast, structured decomposition from a completed design |
+| [spec-validator](spec-validator.md) | Sonnet 4.6 | Validation | Checklist-based verification across all three spec documents |
+| [spec-implementer](spec-implementer.md) | Sonnet 4.6 | Implementation | Writes code and wires it into the running application |
+| [spec-tester](spec-tester.md) | Sonnet 4.6 | Testing | Verifies features end-to-end using Playwright and test suites |
 | [spec-reviewer](spec-reviewer.md) | Opus 4.6 | Code review | Catches security issues, architectural drift, and subtle bugs |
-| [spec-debugger](spec-debugger.md) | Sonnet | Debugging | Fixes issues identified by the Tester or Reviewer |
-| [spec-consultant](spec-consultant.md) | Sonnet | Brainstorm consultation | Domain expert analysis during `/spec-brainstorm` sessions |
-| [spec-acceptor](spec-acceptor.md) | Sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
-| [spec-documenter](spec-documenter.md) | Sonnet | Documentation | Generates API refs, user guides, and ADRs from spec and code |
+| [spec-debugger](spec-debugger.md) | Sonnet 4.6 | Debugging | Fixes issues identified by the Tester or Reviewer |
+| [spec-consultant](spec-consultant.md) | Sonnet 4.6 | Brainstorm consultation | Domain expert analysis during `/spec-brainstorm` sessions |
+| [spec-acceptor](spec-acceptor.md) | Sonnet 4.6 | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
+| [spec-documenter](spec-documenter.md) | Sonnet 4.6 | Documentation | Generates API refs, user guides, and ADRs from spec and code |
 
 ## Agent Roles
 
 ### Planning pipeline
 
-**[spec-planner](spec-planner.md)** runs during `/spec` to produce `requirements.md` and `design.md`. It uses Opus to reason carefully about edge cases, security implications, and architectural tradeoffs before a single line of code is written.
+**[spec-planner](spec-planner.md)** runs during `/spec` to produce `requirements.md` and `design.md`. It uses Opus 4.6 to reason carefully about edge cases, security implications, and architectural tradeoffs before a single line of code is written.
 
 **[spec-tasker](spec-tasker.md)** picks up after the planner and breaks the design into discrete, trackable tasks organized across five phases: Setup, Core Implementation, Integration, Testing, and Polish. It syncs tasks to Claude Code's todo system.
 

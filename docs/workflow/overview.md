@@ -18,7 +18,7 @@ See [Brainstorming](brainstorming.md).
 
 ## Stage 1: Requirements
 
-`/spec <feature-name>` starts the three-phase workflow. The spec-planner agent (Opus) guides you through:
+`/spec <feature-name>` starts the three-phase workflow. The spec-planner agent (Opus 4.6) guides you through:
 
 - Identifying user roles and their goals
 - Writing user stories in standard format
@@ -46,7 +46,7 @@ See [Design](design.md).
 
 ## Stage 3: Tasks
 
-The spec-tasker agent (Sonnet) breaks the design into discrete, trackable tasks:
+The spec-tasker agent (Sonnet 4.6) breaks the design into discrete, trackable tasks:
 
 - Five phases: Setup, Core Implementation, Integration, Testing, Polish
 - Each task has status, wired, and verified fields

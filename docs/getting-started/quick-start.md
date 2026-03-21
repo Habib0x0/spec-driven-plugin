@@ -10,7 +10,7 @@ Run the `/spec` command with a feature name:
 /spec user-authentication
 ```
 
-The spec-planner agent (Opus) will ask if you want to start from a preset template or from scratch. For a new authentication feature, you might choose the preset to get pre-filled user stories covering common scenarios.
+The spec-planner agent (Opus 4.6) will ask if you want to start from a preset template or from scratch. For a new authentication feature, you might choose the preset to get pre-filled user stories covering common scenarios.
 
 The agent then guides you through two phases interactively:
 

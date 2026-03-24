@@ -223,15 +223,27 @@ Append a `---` delimiter followed by a session entry. This MUST happen every ite
 1. Make a git commit with a descriptive message.
 2. The commit should leave the codebase in a clean, working state.
 
-### Completion
-- If ALL tasks have Status: completed AND Wired: yes/n/a AND Verified: yes, output <promise>COMPLETE</promise>
-- Otherwise, just complete your one task and exit cleanly.
+### Completion — Integration Sweep (MANDATORY before declaring COMPLETE)
+- If ALL tasks have Status: completed AND Wired: yes/n/a AND Verified: yes, run a FULL INTEGRATION SWEEP before outputting <promise>COMPLETE</promise>:
+  1. Start the application (if not already running)
+  2. Navigate through EVERY user-facing feature from the main entry point
+  3. For each feature: verify it renders real content (not stubs), responds to interaction, and shows real data
+  4. Check that navigation between features works (sidebar links, breadcrumbs, back buttons)
+  5. Run the full test suite if one exists
+  6. If ANY feature is broken, stubbed, or unreachable:
+     - Do NOT output <promise>COMPLETE</promise>
+     - Fix the issue as your ONE task for this iteration
+     - Mark the affected task's Verified back to "no" in tasks.md
+     - Log the regression in progress.md
+  7. Only output <promise>COMPLETE</promise> after the sweep passes with zero issues
+- If NOT all tasks are complete, just complete your one task and exit cleanly.
 
 CRITICAL RULES:
-- Only work on ONE task per session.
+- Only work on ONE task per session (exception: the final integration sweep).
 - Never mark Verified: yes without actually testing end-to-end.
 - Never mark Wired: yes without confirming the feature is reachable from the app.
 - Never create code in isolation — always wire it into the application.
+- Never create stubs or placeholders — every feature must be fully functional.
 - Never edit task descriptions — only Status, Wired, and Verified fields.
 - Always append to progress.md, never edit previous entries.
 - Always leave the codebase in a working state.

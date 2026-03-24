@@ -10,9 +10,7 @@ Run the `/spec` command with a feature name:
 /spec user-authentication
 ```
 
-The spec-planner agent (Opus 4.6) will ask if you want to start from a preset template or from scratch. For a new authentication feature, you might choose the preset to get pre-filled user stories covering common scenarios.
-
-The agent then guides you through two phases interactively:
+The command will ask you 2-3 rounds of questions about scope, user roles, key behaviors, edge cases, and non-functional requirements. Then the spec-planner agent (Opus 4.6) writes formal requirements and design:
 
 1. **Requirements** — It asks clarifying questions, identifies user roles, and writes user stories with EARS acceptance criteria
 2. **Design** — It defines the architecture, data models, and key sequences based on your requirements

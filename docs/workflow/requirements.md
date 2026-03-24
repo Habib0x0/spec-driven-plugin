@@ -13,7 +13,7 @@ Run `/spec <feature-name>` to start. The spec-planner (Opus 4.6) will:
 5. Document out-of-scope items explicitly
 6. List open questions for resolution
 
-If you have a feature brief from `/spec-brainstorm`, provide it as context. If your feature matches a common pattern, choose a preset (REST API, React Page, or CLI Tool) to start with pre-filled user stories.
+If you have a feature brief from `/spec-brainstorm`, provide it as context.
 
 ## User story format
 

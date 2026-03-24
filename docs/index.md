@@ -19,7 +19,6 @@ Instead of jumping straight to implementation, the plugin establishes a clear pl
 - Git worktree isolation so each spec runs on its own branch
 - Crash recovery via checkpoint commits before each iteration
 - Cross-spec dependency tracking with circular dependency detection
-- Preset templates for REST API, React Page, and CLI Tool features
 - Post-implementation pipeline: accept, docs, release, verify, retro
 
 ## Get started

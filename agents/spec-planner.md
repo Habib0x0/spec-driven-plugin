@@ -109,3 +109,15 @@ For design patterns, read `${CLAUDE_PLUGIN_ROOT}/skills/spec-workflow/references
 - Every requirement must be traceable through design
 - Security considerations must be explicit, not assumed
 - Use your deep reasoning to challenge assumptions and find gaps
+
+**Anti-Stub Specificity Rule:**
+
+Acceptance criteria must be specific enough that a stub or placeholder implementation would clearly FAIL them. For every WHEN/SHALL criterion, describe the concrete content, data, and interactions — not just that something "renders" or "works."
+
+BAD: "WHEN the user navigates to the dashboard THE SYSTEM SHALL display the dashboard page"
+GOOD: "WHEN the user navigates to the dashboard THE SYSTEM SHALL display: summary statistics (total users, active sessions, error rate), an activity chart for the last 7 days, and a table of recent events showing timestamp, user, action, and status"
+
+BAD: "WHEN the user submits the form THE SYSTEM SHALL save the data"
+GOOD: "WHEN the user submits the settings form THE SYSTEM SHALL call PUT /api/settings with the form data, display a success notification, and reflect the updated values on page reload"
+
+If the spec references an existing system (e.g., "match the Spacebot dashboard"), enumerate the specific pages, components, and behaviors that must be reproduced. Do not assume the implementer knows what the existing system looks like.

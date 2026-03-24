@@ -198,14 +198,17 @@ If Debugger fails twice on the same issue:
 - Move to next task
 - Continue making progress on other tasks
 
-## Completion
+## Completion — Integration Sweep (MANDATORY)
 
-When ALL tasks have:
-- Status: completed
-- Wired: yes (or n/a for infrastructure tasks)
-- Verified: yes
+When ALL tasks have Status: completed, Wired: yes/n/a, and Verified: yes, run a FULL INTEGRATION SWEEP before declaring complete:
 
-Output: <promise>COMPLETE</promise>
+1. Spawn Tester with: "Run a full integration sweep. Navigate through EVERY user-facing feature from the main entry point. For each feature: verify it renders real content (not stubs), responds to interaction, and shows real data. Check navigation between features works. Run the full test suite. Report any broken, stubbed, or unreachable features."
+2. If Tester reports issues:
+   - Mark affected tasks' Verified back to "no"
+   - Spawn Debugger to fix each issue
+   - Re-test affected tasks
+   - Re-run the sweep
+3. Only output <promise>COMPLETE</promise> after the sweep passes with zero issues
 
 ## Your Commands
 

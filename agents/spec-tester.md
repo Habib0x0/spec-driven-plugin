@@ -120,6 +120,44 @@ Functional Issues:
 Recommend: [Debugger investigate / Implementer fix wiring / specific area]
 ```
 
+## Step 2: Stub/Placeholder Check (MANDATORY)
+
+After the integration check passes, verify the implementation is REAL, not a placeholder:
+
+1. Does the feature render actual data or content, or just placeholder text ("Coming soon", "TODO", empty divs)?
+2. Are interactive elements functional (buttons trigger actions, forms submit, data loads)?
+3. Does the UI match what the acceptance criteria describe, or is it a minimal skeleton?
+4. For API endpoints: does the response contain real business logic results, or hardcoded dummy data?
+
+**If stub/placeholder detected, stop and report:**
+```
+TASK T-X STUB DETECTED
+
+The implementation exists but is a placeholder, not a real feature:
+- [Specific stub: e.g., "Dashboard page only renders 'Dashboard' heading with no actual content"]
+- [What's missing: e.g., "Acceptance criteria require data table, charts, and filters -- none are implemented"]
+
+Recommend: Send back to Implementer for full implementation.
+```
+
+## Step 3: Regression Smoke Test
+
+After verifying the current task, do a quick smoke test of recently completed features (last 3-5 verified tasks):
+
+1. Read tasks.md to find the most recent verified tasks
+2. For each: navigate to the feature and confirm it still renders and responds to basic interaction
+3. This is a quick check (30 seconds per feature), not a full re-test
+4. If a regression is found, report it immediately:
+```
+REGRESSION DETECTED
+
+Task T-X (previously verified) is now broken:
+- [What's broken: e.g., "Settings page returns 404 after T-15 changes to router"]
+- [Likely cause: current task T-15 modified shared code]
+
+Recommend: Debugger investigate before proceeding.
+```
+
 ## Reporting Success
 
 When tests pass, update tasks.md:
@@ -131,6 +169,8 @@ Then message the Lead:
 TASK T-X VERIFIED
 
 Integration: Feature reachable via [navigation path / API route]
+Stub check: Real implementation confirmed (not placeholder)
+Regression check: [N] recent tasks still working
 All acceptance criteria passed.
 Evidence: [screenshots taken / test output]
 Ready for review.

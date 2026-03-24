@@ -127,12 +127,31 @@ The **Wired** field tracks whether code is connected to the application:
 ### 5. Task Quality Rules
 
 - **Single Responsibility** -- Each task does one thing
-- **Testable** -- Clear acceptance criteria
+- **Testable** -- Clear acceptance criteria that describe SPECIFIC content and behavior (see below)
 - **Traceable** -- Every task links to at least one requirement
 - **Sequenced** -- Dependencies are explicit and form a valid DAG
 - **Complete** -- Every requirement has at least one corresponding task
 - **Integrated** -- Every user-facing feature has explicit integration tasks
 - **Wirable** -- Integration tasks specify EXACTLY what to connect and where
+- **Concrete** -- Acceptance criteria must be specific enough to prevent stub implementations
+
+### 5.1 Anti-Stub Acceptance Criteria
+
+Acceptance criteria MUST describe the specific content, data, and interactions -- not just that something "renders" or "exists."
+
+**BAD acceptance criteria (leads to stubs):**
+- "Dashboard page renders" -- implementer creates empty page with a heading
+- "Settings form works" -- implementer creates a form with no fields
+- "User list displays" -- implementer creates a static list with hardcoded items
+- "API endpoint returns data" -- implementer returns `{ data: [] }`
+
+**GOOD acceptance criteria (prevents stubs):**
+- "Dashboard page shows: (1) summary cards with user count, active sessions, error rate; (2) activity chart with last 7 days; (3) recent events table with columns: time, user, action, status"
+- "Settings form includes fields: display name (text), email (email, validated), timezone (dropdown with IANA zones), notifications (toggle). Submit calls PUT /api/settings and shows success toast"
+- "User list fetches from GET /api/users, renders table with columns: name, email, role, last active. Supports sort by column header click. Shows 'No users found' when empty"
+- "GET /api/dashboard returns { users: number, sessions: number, errorRate: number, recentEvents: Event[] } with real data from the database"
+
+For EVERY task, ask: "If an implementer created the minimal possible thing that technically satisfies this criteria, would it be a real feature or a stub?" If a stub could pass, make the criteria more specific.
 
 ### 6. Integration Task Acceptance Criteria
 

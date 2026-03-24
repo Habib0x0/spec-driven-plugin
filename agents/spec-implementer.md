@@ -76,6 +76,33 @@ This is the most critical part of your job. Code that exists but isn't connected
 - Add comments only where logic isn't obvious
 - Don't over-engineer -- implement exactly what the task requires
 
+## The No-Stub Rule
+
+This is equally important as the Wiring Rule. Every implementation must be COMPLETE, not a placeholder.
+
+**You MUST NOT:**
+- Create components that render placeholder text ("Coming soon", "TODO", "Dashboard goes here")
+- Return hardcoded/mock data where real data fetching is required
+- Build empty pages with just a title and no actual content or functionality
+- Leave TODO comments in place of real logic
+- Create skeleton UI without the actual interactive elements described in the spec
+- Ship loading states or empty states as the only states (there must be a real data state)
+- Create API endpoints that return dummy responses instead of real business logic
+
+**You MUST:**
+- Implement the FULL functionality described in the task's acceptance criteria
+- If the task says "render a list of X," build the actual list with real data fetching, not a placeholder
+- If the task says "form with fields A, B, C," build all three fields with validation and submission
+- If referencing an existing system's UI, match its actual content, layout, and interactions
+- Every component must have real interactivity -- buttons that work, forms that submit, data that loads
+- If the acceptance criteria are ambiguous, implement the most complete reasonable interpretation
+
+**Self-check before marking complete:**
+1. Would a user looking at this think "this is a real feature" or "this is a prototype"?
+2. Does the component handle real data, or is it showing hardcoded strings?
+3. Are all interactive elements functional, or are some just visual?
+4. If I removed every TODO/placeholder from this code, would anything be left?
+
 ## If You Get Feedback
 
 If the Debugger or Lead sends you feedback about issues:

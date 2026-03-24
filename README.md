@@ -40,11 +40,10 @@ This plugin guides you through three phases:
 ```
 
 This will:
-1. Ask if you want to start from a **preset** (REST API, React Page, CLI Tool) or from scratch
-2. Create `.claude/specs/user-authentication/` directory
-3. Guide you through Requirements phase (EARS notation)
-4. Guide you through Design phase (architecture docs)
-5. Generate Tasks and sync to Claude Code todos
+1. Create `.claude/specs/user-authentication/` directory
+2. Gather requirements interactively (2-3 rounds of questions)
+3. Guide you through Design phase (architecture docs)
+4. Generate Tasks and sync to Claude Code todos
 
 ### Importing from an Existing PRD
 
@@ -53,16 +52,6 @@ This will:
 ```
 
 Reads a markdown document (PRD, RFC, design doc) and converts it to EARS requirements. Review the output, then proceed to design with `/spec-refine`.
-
-### Spec Presets
-
-When creating a new spec, you can choose a preset template:
-
-- **REST API** - CRUD operations, validation, auth, error handling, pagination
-- **React Page** - Components, routing, state, API integration, responsive layout
-- **CLI Tool** - Argument parsing, subcommands, output formats, error handling
-
-Presets pre-fill requirements with common user stories. The spec-planner agent customizes them based on your answers.
 
 ### Spec Files Location
 

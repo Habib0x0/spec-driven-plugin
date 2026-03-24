@@ -18,9 +18,7 @@ Start a new spec-driven development workflow for a feature. This command guides 
 
 1. **Creates the spec directory** at `.claude/specs/<feature-name>/` with three files: `requirements.md`, `design.md`, and `tasks.md`.
 
-2. **Offers preset templates** — choose from REST API, React Page, or CLI Tool to start with pre-filled user stories, or start from scratch.
-
-3. **Gathers requirements interactively** — asks about feature scope, user roles, key behaviors, edge cases, security concerns, non-functional requirements, and what is explicitly out of scope. Runs in 2-3 conversational rounds rather than asking everything at once.
+2. **Gathers requirements interactively** — asks about feature scope, user roles, key behaviors, edge cases, security concerns, non-functional requirements, and what is explicitly out of scope. Runs in 2-3 conversational rounds rather than asking everything at once.
 
 4. **Writes requirements and design** — produces `requirements.md` with EARS-notation acceptance criteria and `design.md` covering architecture, components, and data models.
 

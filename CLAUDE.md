@@ -35,6 +35,8 @@ templates/                  - Document scaffolding for specs
 | `/spec-release` | Generate release notes, changelog, and deployment checklist |
 | `/spec-verify` | Run post-deployment smoke tests against a live environment |
 | `/spec-retro` | Run a retrospective to capture lessons learned |
+| `/spec-scan` | Explicitly trigger a full codebase scan and update project profile |
+| `/spec-debug` | Diagnose and fix bugs with spec context awareness and regression tracking |
 | `/spec-sync` | Sync tasks.md status back to Claude Code task list |
 
 ## Model Routing
@@ -53,6 +55,7 @@ The plugin automatically uses the optimal model for each phase:
 | spec-acceptor | Sonnet 4.6 | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
 | spec-documenter | Sonnet 4.6 | Documentation | Generates docs from spec and code |
 | spec-debugger | Sonnet 4.6 | Debugging | Fixes issues when rejected |
+| spec-scanner | Sonnet 4.6 | Phase 0 Scan | Fast multi-file reading; reasoning depth not critical |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
 
@@ -74,6 +77,19 @@ Specs are created in the target project at `.claude/specs/<feature-name>/`:
 - `requirements.md` - User stories with EARS acceptance criteria
 - `design.md` - Architecture, components, data models
 - `tasks.md` - Implementation tasks synced to Claude Code todos
+
+### Project Profile
+
+The project profile (`_project-profile.md`) captures codebase intelligence that agents use to wire new code correctly. Located at `.claude/specs/_project-profile.md`, it contains six sections:
+
+1. **Stack** - Framework, language, backend, database, styling
+2. **Patterns** - Detected code patterns with confidence levels (high/medium/low)
+3. **Entity Registry** - Table of domain entities and their CRUD implementation status
+4. **Registration Points** - Specific `file:line` locations where new artifacts must be registered
+5. **Regression Markers** - Bug fixes with affected files and regression check descriptions
+6. **Manual Overrides** - User-editable section preserved across rescans
+
+The profile is auto-created on the first `/spec` run (Phase 0 auto-scan) and can be manually updated via `/spec-scan`. For large codebases or monorepos, the scanner may split profiles by domain into `_profile-<domain>.md` files with a `_profile-index.md` listing.
 
 ### Task Synchronization
 Tasks in `tasks.md` sync to Claude Code's todo system via TaskCreate/TaskUpdate. Task phases: Setup, Core Implementation, Integration, Testing, Polish.
@@ -103,7 +119,7 @@ Templates use `{{PLACEHOLDER}}` syntax for substitution during spec creation.
 After completing the spec workflow (Requirements, Design, Tasks), use the execution scripts to implement autonomously:
 
 - `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
-- `spec-loop.sh` - Loops until all tasks complete or max iterations reached
+- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-parallel` flag to force sequential task execution
 
 Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
 

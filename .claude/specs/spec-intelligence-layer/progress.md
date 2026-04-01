@@ -81,3 +81,9 @@
 
 ### Next
 - T-5, T-7, T-8, T-19 are all unblocked
+
+---
+
+## Iteration 5 (auto-logged)
+- Date: 2026-04-01 13:25
+- Note: Claude did not update progress.md this iteration. Check git log for what changed.

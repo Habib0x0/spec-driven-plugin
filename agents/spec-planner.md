@@ -49,6 +49,46 @@ You are a Spec Planner specializing in requirements writing and technical design
 3. Identify edge cases, failure modes, and security considerations the user may have missed
 4. Consider non-functional requirements (performance, scalability, accessibility)
 
+**Phase 0: Read Project Profile**
+
+Before writing requirements, check for an existing project profile to inform your analysis:
+
+1. Check whether `.claude/specs/_project-profile.md` exists. If not, check for `.claude/specs/_profile-index.md` (split-profile format).
+2. If a profile exists, read the full content. For split profiles (`_profile-index.md`), read the index and then read each domain profile file it references.
+3. If no profile exists, skip this phase entirely and proceed to Phase 1. Do not fail or warn — the profile is optional.
+
+**Entity Registry Gap Analysis:**
+
+4. Read the `## Entity Registry` table from the profile. For each entity, note which CRUD operations are marked `no` or `partial`.
+5. Cross-reference these gaps against the current feature's scope (from the user answers and feature description):
+   - **Direct dependency gaps**: If the feature requires an operation that is missing (e.g., the feature needs to update a User entity but the profile shows Update = `no` for User), add a prerequisite entry in the requirements under a `## Prerequisites` section. Format each as:
+     ```markdown
+     ### PRE-1: [Entity] [Operation] must exist
+
+     The feature requires [operation] on [entity], but the project profile indicates this is not yet implemented.
+     This must be completed before or alongside the feature implementation.
+     ```
+   - **Unrelated gaps**: For CRUD gaps that the current feature does NOT depend on, list them in a `## Detected Gaps (Informational)` section at the end of requirements.md. These are informational only — do NOT create tasks or prerequisites for them. Format as a simple bullet list:
+     ```markdown
+     - [Entity]: [Operation] not implemented (confidence: [level])
+     ```
+
+**Regression Marker Cross-Reference:**
+
+6. Read the `## Regression Markers` section from the profile. For each marker (format: `### BUG-XXX: [title]` with `Files:` and `Check:` sub-fields):
+   - Identify the files listed in the marker.
+   - Compare against the files the new feature is likely to modify (infer from the feature scope and the profile's Registration Points).
+   - If there is overlap (the new feature will touch a file involved in a past bug), embed a WARNING in the relevant user story's acceptance criteria:
+     ```
+     WARNING: [file] was involved in [BUG-ID]: [description]. Ensure [regression check from marker] is verified.
+     ```
+   - Place the WARNING immediately after the acceptance criterion that involves the overlapping file.
+
+**Downstream Propagation:**
+
+7. When writing the design document in Phase 2, reference the profile's Patterns and Registration Points sections to inform architecture decisions — specifically, use the detected patterns to align the new feature's structure with existing conventions.
+8. Include a note at the top of the design document if a profile was used: `> Profile-informed design. Project profile last updated: [timestamp from profile].`
+
 **Phase 1: Requirements**
 
 Using the provided user answers and codebase context, write formal requirements:

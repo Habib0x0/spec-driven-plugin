@@ -265,7 +265,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-9
 - **Description**: Modify `commands/spec.md` to add an automated validate-fix loop after the spec-tasker completes (new step 4.5, before the summary). The loop must: (1) invoke the spec-validator agent via Task tool, passing the spec directory; (2) parse the validator's output for errors and warnings; (3) if errors or warnings exist, route fixes to the appropriate agent: requirements/design issues go to spec-planner (with the validator report and instruction to make targeted fixes only), task issues go to spec-tasker (with the validator report and instruction to fix specific tasks); (4) after fix agent completes, re-invoke the validator; (5) repeat up to 3 cycles; (6) if issues remain after 3 cycles, include them in the summary as "X warnings remaining"; (7) if all issues are resolved, include "Spec validated: PASS" in the summary. The fix prompts must explicitly say "Fix ONLY the specific issues listed. Do not rewrite sections that passed validation." to prevent unnecessary rewrites.
 - **Acceptance**: `commands/spec.md` contains a "Step 4.5: Auto-Validate and Fix" section after the tasker step and before the summary. The section describes the 3-cycle loop with validator invocation and fix routing. The fix routing logic is explicit: req/design issues → planner, task issues → tasker. The max-3-cycles cap is stated. The summary step references validation status ("Spec validated: PASS" or warning count). The fix agent prompt includes the "targeted fixes only" instruction.

@@ -488,3 +488,23 @@
 ### Next
 - T-23: Add validate-fix loop to /spec command
 - T-24: Write test for validate-fix loop
+
+---
+
+## Session 23 -- 2026-04-01
+
+### Worked On
+- T-23: Add validate-fix loop to /spec command
+
+### Completed
+- T-23 was marked completed but NOT IMPLEMENTED. Added Step 4.5 Auto-Validate and Fix section to commands/spec.md between step 4 (Tasks) and step 5 (Summary).
+- 3-cycle loop with validator invocation and fix routing (req/design to planner, tasks to tasker).
+- Both fix prompts include targeted fixes only instruction. Exit conditions: PASS or remaining count.
+- Updated Summary step to display validation status.
+- Verified all 6 acceptance criteria. Marked Verified: yes.
+
+### Integration Status
+- Wired: n/a (command instruction file, active when /spec is executed)
+
+### Next
+- T-24: Write test for validate-fix loop (last remaining unverified task)

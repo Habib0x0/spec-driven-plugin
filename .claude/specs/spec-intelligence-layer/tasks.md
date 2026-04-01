@@ -39,7 +39,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1
 - **Description**: Create `commands/spec-scan.md` as a new slash command. The command: (1) checks for existing `_project-profile.md` and extracts any `## Manual Overrides` and `## Regression Markers` sections before scanning, (2) invokes the `spec-scanner` agent via the Task tool passing the project root, (3) merges new scan output with the preserved Manual Overrides and Regression Markers sections, (4) writes the merged profile, (5) prints a summary: number of patterns detected, confidence breakdown (high/medium/low counts), entities found, registration points mapped. Frontmatter must include `allowed-tools: [Read, Write, Glob, Grep, Task, AskUserQuestion]`.
 - **Acceptance**: `commands/spec-scan.md` exists with YAML frontmatter declaring name `spec-scan` and allowed-tools including Read, Write, Glob, Grep, Task. The command body describes all five steps above. The merge logic section explicitly states that `## Manual Overrides` and `## Regression Markers` are preserved verbatim across rescans. The summary output lists pattern count, confidence breakdown, entity count, and registration point count.
@@ -49,7 +49,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-4
 - **Description**: Create `scripts/lib/verify.sh` as a new bash library. It must define exactly two functions: `run_verification_gate(spec_dir, task_id, work_dir)` and `run_debugger_fix(spec_dir, task_id, gap_description, work_dir)`. `run_verification_gate` must: read the project profile from `$spec_dir/../_project-profile.md` (or `_profile-index.md`), read the git diff for changes since the last commit in `work_dir`, build a short Claude prompt that lists registration points and the diff and asks whether new files/exports are registered, invoke `claude --dangerously-skip-permissions -p` with that prompt, return exit code 0 on pass and 1 on failure with the gap description printed to stdout. `run_debugger_fix` must: build a prompt containing the wiring gap description and invoke the debugger agent to fix it, return exit code 0 on success and 1 on failure. Both functions must handle the case where no profile exists (return 0 with a log message "No project profile -- verification gate skipped.").
 - **Acceptance**: `scripts/lib/verify.sh` exists and is a valid bash file (passes `bash -n`). It defines `run_verification_gate` and `run_debugger_fix` functions. Calling `run_verification_gate` when no profile exists prints "No project profile -- verification gate skipped." and exits 0. The function builds a prompt using the profile's Registration Points section content. The function calls `claude --dangerously-skip-permissions`.
@@ -59,7 +59,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-6
 - **Description**: Create `scripts/lib/parallel.sh` as a new bash library. **Prerequisite**: this library depends on `scripts/lib/worktree.sh` for creating per-task git worktrees — `launch_parallel_task` must call worktree functions from `lib/worktree.sh` to create isolated branches. It must define: `parse_dependency_graph(tasks_file)` outputs one line per task in format `task_id:dep1,dep2` (or `task_id:none`); `get_ready_tasks(tasks_file)` returns task IDs whose status is `pending` and all listed dependencies have status `completed`; `launch_parallel_task(task_id, spec_dir, work_dir, log_dir, iteration)` creates a git worktree for the task (via `lib/worktree.sh`), builds a task-specific implementer prompt, launches `claude --dangerously-skip-permissions -p` in the background writing stdout to `$log_dir/iteration-$iteration-task-$task_id.log`, and returns the PID; `wait_for_batch(pids_array)` waits for all PIDs and returns their exit codes; `consolidate_parallel_results(spec_dir, completed_tasks, work_dir)` merges each task's worktree branch into the main spec branch sequentially, detects `git merge` conflicts (non-zero exit), re-queues conflicting tasks by setting their status back to `pending` in tasks.md (with a re-queue counter — if same task conflicts 3 times, mark for sequential execution), and logs conflicts to progress.md.
 - **Acceptance**: `scripts/lib/parallel.sh` exists and passes `bash -n`. It defines all five functions: `parse_dependency_graph`, `get_ready_tasks`, `launch_parallel_task`, `wait_for_batch`, `consolidate_parallel_results`. `get_ready_tasks` correctly identifies tasks with `none` or all-completed dependencies. `launch_parallel_task` creates a per-task log file at the specified path. `consolidate_parallel_results` handles merge conflicts by resetting the conflicting task status to `pending` and writing a conflict entry to progress.md.
@@ -69,7 +69,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-5
 - **Description**: Create `commands/spec-debug.md` as a new slash command. Frontmatter: name `spec-debug`, allowed-tools Read/Write/Edit/Glob/Grep/Bash/Task/AskUserQuestion. The command body must describe the full debug workflow: (1) collect bug description from the user via AskUserQuestion (symptom, error message or stack trace, affected area), (2) invoke the spec-debugger agent via Task tool passing the bug description, (3) after the debugger returns, read the `fix.md` it produced, (4) check whether a regression marker was appended to `_project-profile.md`, (5) if the fix touched 3+ files or the debugger signals `RETRO_RECOMMENDED`, auto-invoke `/spec-retro`, otherwise append a note to `progress.md` suggesting the user run `/spec-retro`, (6) print a summary: bug ID, files modified, regression check description, whether retro was triggered. The spec-matching algorithm (scan tasks.md files for file overlap, fall back to `debug-<slug>/`) must be documented in the command body.
 - **Acceptance**: `commands/spec-debug.md` exists with correct frontmatter. The command body describes all six workflow steps. The spec-matching algorithm section explains that the debugger scans `tasks.md` files for file reference overlap and falls back to `debug-<slug>/`. The retro-trigger condition (3+ files or `RETRO_RECOMMENDED`) is explicitly stated. The `debug-<slug>/` creation path (kebab-case from first 3-4 words of bug description) is documented.
@@ -83,7 +83,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1, US-2
 - **Description**: Write the full agent instruction body in `agents/spec-scanner.md` (the file created in T-1). The instructions must walk through the complete scan algorithm: Step 1 read manifest files to detect framework/language; Step 2 use Glob `**/router.*`, `**/routes.*`, `**/app.*`, `**/*routes*` to find router files, read 2-3 examples, describe the route registration pattern in natural language; Step 3 use Glob `**/nav*`, `**/sidebar*`, `**/menu*`, `**/layout*` to find navigation components, read examples, describe how new links are added; Step 4 use Glob `**/handler*`, `**/controller*`, `**/api/**` to find endpoint files, read examples, describe endpoint registration; Step 5 use Glob `**/model*`, `**/schema*`, `**/entity*`, `**/migration*` to find models, for each entity search for Create/Read/Update/Delete implementations, populate the Entity Registry table; Step 6 compile everything into the profile format. Must include explicit instructions to never read/include `.env*`, `*.key`, `*.pem`, `*.secret`, credential files, or `.aws`/`.gcp`/`.ssh` directories. Must include the idempotency requirement: same codebase = same output.
 - **Acceptance**: The agent instructions in `agents/spec-scanner.md` contain numbered scan steps covering all six areas. Each step names the Glob patterns to use. The Entity Registry build step names specific CRUD search patterns (e.g., `CREATE`, `INSERT`, `save(`, `update(`, `delete(`). The security section lists all prohibited file patterns. The output section specifies writing `_project-profile.md` with a timestamp comment `> Auto-generated by spec-scanner. Last updated: YYYY-MM-DD HH:MM`. Reading the agent instructions, an implementer would know exactly what files to glob, what to read, and what to write without any ambiguity.
@@ -93,7 +93,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-2
 - **Description**: Create `templates/_project-profile.md` as the canonical template for the project profile format. It must contain all six sections with placeholder content showing exactly what goes in each: (1) Stack section with framework/language/backend/database/styling fields; (2) Patterns section with 2-3 example pattern entries each labeled `[confidence: high|medium|low]`; (3) Entity Registry section with the markdown table (Entity | Create | Read | Update | Delete | Notes); (4) Registration Points section with bullet list in `file:line — description` format; (5) Regression Markers section initialized to `(none)`; (6) Manual Overrides section initialized to `(user-editable — preserved across rescans)`. Also create `templates/_profile-index.md` for the split-profile index format showing the expected structure when profiles are split by domain.
 - **Acceptance**: `templates/_project-profile.md` exists with all six sections. The Entity Registry shows the complete table header row (`| Entity | Create | Read | Update | Delete | Notes |`) and a sample data row showing `yes`, `no`, `partial` values. `templates/_profile-index.md` exists and shows the expected listing format: a table with columns Domain, File, Summary. Each template has the `> Auto-generated by spec-scanner. Last updated:` timestamp comment at the top.
@@ -103,7 +103,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-5, US-7
 - **Description**: Modify `agents/spec-debugger.md` to add a "Standalone Debug Mode (/spec-debug)" section. This section must describe: (1) reading the bug description; (2) investigation by reading source files, searching for error patterns, tracing call chains; (3) the spec-matching algorithm: scan all `.claude/specs/*/tasks.md` files and count file reference overlaps with affected files, use the highest-overlap spec's directory, fall back to `debug-<slug>/` if overlap is 0; (4) writing `diagnosis.md` in the format: Bug ID (BUG-NNN), Reported date, Symptom, Root Cause, Affected Files with `file:line` and description for each, Related Spec, Fix Strategy; (5) applying the fix; (6) writing `fix.md` in the format: Bug ID, Fixed date, Files Modified with change description, Regression Check description, Attempts count, Retro field (`auto-triggered` or `suggested`); (7) appending a regression marker to `_project-profile.md` under `## Regression Markers` in the format shown in the design; (8) outputting `RETRO_RECOMMENDED` if fix touched 3+ files or required multiple attempts; (9) redacting credentials/keys/tokens with `[REDACTED]` in all output files. Also add a sequential bug ID increment rule: scan existing `diagnosis.md` for the highest BUG-NNN before assigning a new ID.
 - **Acceptance**: `agents/spec-debugger.md` contains a "Standalone Debug Mode" section. The diagnosis.md format is specified with all seven fields (Bug ID, Reported, Symptom, Root Cause, Affected Files, Related Spec, Fix Strategy). The fix.md format is specified with all six fields. The regression marker format matches the design specification (`### BUG-XXX: [title] (YYYY-MM-DD)` with Files and Check sub-fields). The `RETRO_RECOMMENDED` trigger condition (3+ files or multiple attempts) is explicitly stated. The `[REDACTED]` rule for credentials is present.
@@ -113,7 +113,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: no
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-2, US-7, US-8
 - **Description**: Modify `agents/spec-planner.md` to add profile-aware instructions. Add a new "Phase 0: Read Project Profile" step before requirements writing that instructs the planner to: (1) check for `_project-profile.md` (or `_profile-index.md` for split profiles) in `.claude/specs/`; (2) if found, read the full profile; (3) read the Entity Registry and identify any CRUD gaps that the current feature directly depends on -- for each such gap, add a prerequisite user story or task note in the requirements under `## Prerequisites`; (4) for CRUD gaps not related to the current feature, add an informational section `## Detected Gaps (Informational)`; (5) read the Regression Markers section and cross-reference against files the new feature is likely to modify -- for each overlap, embed a warning in the relevant user story acceptance criteria: `WARNING: [file] was involved in [BUG-ID]: [description]. Ensure [regression check] is verified.`; (6) pass the profile content to any downstream instructions for wiring guidance.
 - **Acceptance**: `agents/spec-planner.md` has a "Phase 0: Read Project Profile" section before the requirements gathering steps. The section contains numbered instructions covering all six steps above. The `## Prerequisites` injection rule specifies that gap tasks are added when the feature directly depends on the missing operation. The `## Detected Gaps (Informational)` rule specifies it's informational-only with no auto-task creation. The regression marker cross-reference rule specifies the WARNING format. Reading the agent, an implementer knows exactly when to add prerequisites vs. informational notes.
@@ -122,8 +122,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-10: Enhance spec-implementer agent for profile-aware wiring
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: n/a
+- **Verified**: yes
 - **Requirements**: US-2, US-3
 - **Description**: Modify `agents/spec-implementer.md` to add profile-aware wiring instructions. Add a new step 0 (before the current step 1) titled "Read Project Profile": the implementer must check for `_project-profile.md` in `.claude/specs/`, read the Registration Points section, and build an internal map of `artifact_type → file:line`. Then modify the existing "Wire it in" step to: first check this internal map for a matching registration point, use that specific `file:line` location, and verify by reading the modified file after each registration. Replace the static wiring checklist with a dynamic instruction: "For each new artifact, look up its type in the Registration Points map. If found, wire at that exact location. If not found, fall back to the generic checklist below." Keep the generic checklist as a verbatim fallback block. Add a profile self-check: after all wiring, re-read each registration-point file that was modified and confirm the new artifact appears correctly before setting `Wired: yes`. Add a fallback warning log instruction: if no profile exists, write to progress.md "No project profile available -- using generic wiring checklist."
 - **Acceptance**: `agents/spec-implementer.md` has a "Step 0: Read Project Profile" section as the first step in the Implementation Process. The section instructs reading `_project-profile.md`'s Registration Points section. The "Wire it in" step references the profile map before the generic checklist. The generic checklist is still present as a fallback. The profile self-check (re-read registration files after modification) is a distinct sub-step. The fallback warning log instruction is present.

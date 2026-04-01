@@ -56,3 +56,28 @@
 
 ### Next
 - T-4, T-5, T-7, T-8 are all unblocked
+
+
+---
+
+## Session 4 - 2026-04-01
+
+### Worked On
+- T-4: Create scripts/lib/parallel.sh
+
+### Completed
+- Created scripts/lib/parallel.sh with all five required functions:
+  - parse_dependency_graph: reads tasks.md, outputs task_id:dep1,dep2 per line
+  - get_ready_tasks: identifies pending tasks whose deps are all completed
+  - launch_parallel_task: creates per-task worktree via lib/worktree.sh, builds implementer prompt, launches claude in background, returns PID
+  - wait_for_batch: waits for all PIDs, reports success/failure per task
+  - consolidate_parallel_results: merges task branches sequentially, handles conflicts with re-queue logic (3 strikes = sequential), logs to progress.md
+- Internal helpers: _get_task_status (bash 3.x compatible, no associative arrays), _set_task_status, _get_requeue_count, _set_requeue_count
+- Passes bash -n syntax validation
+- Tested parse_dependency_graph and get_ready_tasks with sample tasks.md
+
+### Integration Status
+- Library file (sourced, not executed). Wired: n/a. Wiring into spec-loop.sh is T-14.
+
+### Next
+- T-5, T-7, T-8, T-19 are all unblocked

@@ -176,8 +176,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-15: Wire spec-debug command to spec-debugger agent
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-5, US-7
 - **Description**: The `/spec-debug` command in `commands/spec-debug.md` must explicitly wire its workflow to the enhanced `agents/spec-debugger.md`. The command body must: (1) name the agent as `spec-debugger` in the Task tool invocation; (2) pass the full bug context (symptom, error/stack trace, affected area) collected from the user via AskUserQuestion to the agent; (3) after the agent returns, read `diagnosis.md` from the directory the agent wrote to (the agent will output the path); (4) read `fix.md` from the same directory; (5) check `_project-profile.md` to confirm the regression marker was appended; (6) if marker is missing, add it manually using the format from the design; (7) check `fix.md`'s Attempts count and Files Modified count -- if Attempts > 1 or Files count >= 3, invoke `/spec-retro` automatically; (8) print a final summary with bug ID, root cause summary, files changed, regression check description, and whether retro was triggered.
 - **Acceptance**: `commands/spec-debug.md` references `spec-debugger` by name in the Task tool invocation instruction. The command reads both `diagnosis.md` and `fix.md` after the agent completes. The regression marker verification step is described (check profile, add if missing). The retro auto-trigger condition (Attempts > 1 OR Files >= 3) is explicitly stated. The final summary output lists: bug ID, root cause, files changed, regression check, retro status. Running `/spec-debug` in a project with no `.claude/specs/` directory is handled (creates `debug-<slug>/`).

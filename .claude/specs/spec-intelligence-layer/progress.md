@@ -35,3 +35,24 @@
 
 ### Next
 - T-3, T-4, T-5, T-7, T-8 are all unblocked (no incomplete dependencies)
+
+
+---
+
+## Session 3 - 2026-04-01
+
+### Worked On
+- T-3: Create scripts/lib/verify.sh
+
+### Completed
+- Created scripts/lib/verify.sh with two functions: run_verification_gate and run_debugger_fix.
+- run_verification_gate: reads _project-profile.md (or _profile-index.md), extracts Registration Points via awk, gets git diff, builds Claude prompt to check wiring, returns 0 on pass / 1 on failure with gap description.
+- run_debugger_fix: builds prompt with gap description and invokes Claude for minimal wiring fix.
+- Both handle missing profile gracefully (return 0, log message).
+- Passes bash -n syntax validation.
+
+### Integration Status
+- Library file (sourced, not executed). Wired: n/a. Wiring into spec-loop.sh is T-13.
+
+### Next
+- T-4, T-5, T-7, T-8 are all unblocked

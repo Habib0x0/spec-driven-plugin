@@ -166,8 +166,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-14: Wire parallel.sh into spec-loop.sh (parallel execution)
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-6
 - **Description**: Modify `scripts/spec-loop.sh` to source `lib/parallel.sh` and replace the sequential per-iteration loop with the parallel batch scheduler. Add `source "$SCRIPT_DIR/lib/parallel.sh"` at the top. Replace the main while-loop body with the parallel pseudocode from the design: call `get_ready_tasks`, determine batch size, if batch size is 1 or `$NO_PARALLEL=true` use existing sequential logic, otherwise cap batch at 4, call `launch_parallel_task` for each, call `wait_for_batch`, call `consolidate_parallel_results`, then run verification gates for each completed task in the batch. The LOG_DIR must be set to `.claude/specs/$SPEC_NAME/logs/` and created with `mkdir -p`. Add deadlock detection: if `get_ready_tasks` returns empty but `all_tasks_complete` returns false, log "DEADLOCK: no ready tasks but not all complete" and exit.
 - **Acceptance**: `scripts/spec-loop.sh` contains `source "$SCRIPT_DIR/lib/parallel.sh"`. The main loop calls `get_ready_tasks` to determine the ready batch. Batches larger than 1 call `launch_parallel_task` up to 4 times. Each task's log file path is `.claude/specs/$SPEC_NAME/logs/iteration-N-task-T.log`. The `--no-parallel` flag causes the loop to use sequential execution regardless of batch size. Deadlock detection logs the correct message and exits. Verification gates run after `consolidate_parallel_results` for each task in the completed batch.

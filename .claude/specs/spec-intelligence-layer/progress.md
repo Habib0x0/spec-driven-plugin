@@ -252,3 +252,27 @@
 
 ### Next
 - T-13: Wire verify.sh into spec-loop.sh (verification gates) -- next unverified task
+
+
+---
+
+## Session 14 -- 2026-04-01
+
+### Worked On
+- T-13: Wire verify.sh into spec-loop.sh (verification gates)
+
+### Completed
+- T-13 was marked completed but NOT IMPLEMENTED. Added all required changes to scripts/spec-loop.sh:
+  - Added source lib/verify.sh at line 85 (after other source statements)
+  - Added NO_PARALLEL=false variable initialization
+  - Added --no-parallel flag to argument parser (sets NO_PARALLEL=true)
+  - Added verification gate block after Claude output processing (lines 288-332)
+  - Gate extracts last completed task ID, calls run_verification_gate, retries with run_debugger_fix up to 2 times on failure, logs Gate Failure to progress.md on continued failure
+- Verified all 7 acceptance criteria pass
+- Bash syntax validation passes
+
+### Integration Status
+- Wired: yes -- verify.sh is sourced by spec-loop.sh and called after each iteration
+
+### Next
+- T-14: Wire parallel.sh into spec-loop.sh (parallel execution)

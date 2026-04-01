@@ -156,8 +156,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-13: Wire verify.sh into spec-loop.sh (verification gates)
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-4
 - **Description**: Modify `scripts/spec-loop.sh` to source `lib/verify.sh` and run verification gates after each completed task. At the top of the script, add `source "$SCRIPT_DIR/lib/verify.sh"`. After the main Claude invocation completes each iteration (after the block that reads Claude output and detects task completion), insert the verification gate block from the design: check if a profile exists, extract the last completed task ID from tasks.md, call `run_verification_gate`, on failure call `run_debugger_fix` up to 2 times, on continued failure log to progress.md and continue. Also add a `--no-parallel` flag to the argument parser (sets `NO_PARALLEL=true`). For this task, the parallel execution logic is NOT yet added -- only the verification gate integration.
 - **Acceptance**: `scripts/spec-loop.sh` contains `source "$SCRIPT_DIR/lib/verify.sh"` near the top (after other source statements). The verification gate block appears after the Claude output processing section. The gate block checks for profile existence before running. The retry loop runs at most 2 fix attempts. Gate failures are appended to `progress.md` with the format `## Gate Failure: <task_id>`. The `--no-parallel` flag is parsed and sets `NO_PARALLEL=true`. Running spec-loop on a project without a profile produces the log line "No project profile -- verification gate skipped." and continues normally.

@@ -7,6 +7,7 @@ SPEC_NAME=""
 USE_WORKTREE=true
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
+NO_PARALLEL=false
 
 # parse args
 while [[ $# -gt 0 ]]; do
@@ -27,9 +28,13 @@ while [[ $# -gt 0 ]]; do
       USE_WORKTREE=false
       shift
       ;;
+    --no-parallel)
+      NO_PARALLEL=true
+      shift
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree] [--no-parallel]"
       exit 1
       ;;
   esac
@@ -78,6 +83,7 @@ done
 source "$SCRIPT_DIR/lib/deps.sh"
 source "$SCRIPT_DIR/lib/worktree.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
+source "$SCRIPT_DIR/lib/verify.sh"
 
 # check cross-spec dependencies before any worktree creation
 check_dependencies "$SPEC_NAME"
@@ -277,6 +283,52 @@ EOF
     echo "- Date: $(date '+%Y-%m-%d %H:%M')" >> "$SPEC_DIR/progress.md"
     echo "- Note: Claude did not update progress.md this iteration. Check git log for what changed." >> "$SPEC_DIR/progress.md"
     echo "WARNING: progress.md was not updated by iteration $ITERATION — fallback entry appended."
+  fi
+
+  # --- Verification Gate ---
+  # After each iteration, check if newly completed tasks have proper wiring
+  LAST_COMPLETED_TASK=$(grep -B2 'Status.*completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | tail -1 | sed 's/^### \(T-[0-9]*\).*/\1/' || echo "")
+
+  if [ -n "$LAST_COMPLETED_TASK" ]; then
+    echo "Running verification gate for $LAST_COMPLETED_TASK..."
+    GATE_OUTPUT=$(run_verification_gate "$SPEC_DIR" "$LAST_COMPLETED_TASK" "$WORK_DIR" 2>&1)
+    GATE_EXIT=$?
+
+    if [ $GATE_EXIT -ne 0 ]; then
+      echo "Verification gate FAILED for $LAST_COMPLETED_TASK: $GATE_OUTPUT"
+      FIX_SUCCESS=false
+
+      for FIX_ATTEMPT in 1 2; do
+        echo "Debugger fix attempt $FIX_ATTEMPT/2 for $LAST_COMPLETED_TASK..."
+        run_debugger_fix "$SPEC_DIR" "$LAST_COMPLETED_TASK" "$GATE_OUTPUT" "$WORK_DIR"
+        FIX_EXIT=$?
+
+        if [ $FIX_EXIT -eq 0 ]; then
+          # re-run verification gate to confirm fix
+          RECHECK_OUTPUT=$(run_verification_gate "$SPEC_DIR" "$LAST_COMPLETED_TASK" "$WORK_DIR" 2>&1)
+          RECHECK_EXIT=$?
+          if [ $RECHECK_EXIT -eq 0 ]; then
+            echo "Verification gate PASSED after fix attempt $FIX_ATTEMPT."
+            FIX_SUCCESS=true
+            break
+          fi
+          GATE_OUTPUT="$RECHECK_OUTPUT"
+        fi
+      done
+
+      if [ "$FIX_SUCCESS" = false ]; then
+        echo "Verification gate still failing after 2 fix attempts. Logging and continuing."
+        {
+          echo ""
+          echo "## Gate Failure: $LAST_COMPLETED_TASK"
+          echo "- Date: $(date '+%Y-%m-%d %H:%M')"
+          echo "- Gap: $GATE_OUTPUT"
+          echo "- Fix attempts: 2 (both failed)"
+        } >> "$SPEC_DIR/progress.md"
+      fi
+    else
+      echo "Verification gate PASSED for $LAST_COMPLETED_TASK."
+    fi
   fi
 
   if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then

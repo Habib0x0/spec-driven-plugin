@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 19 |
+| Pending | 16 |
 | In Progress | 0 |
-| Completed | 5 |
+| Completed | 8 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -67,8 +67,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-5: Create /spec-debug command file
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-5
 - **Description**: Create `commands/spec-debug.md` as a new slash command. Frontmatter: name `spec-debug`, allowed-tools Read/Write/Edit/Glob/Grep/Bash/Task/AskUserQuestion. The command body must describe the full debug workflow: (1) collect bug description from the user via AskUserQuestion (symptom, error message or stack trace, affected area), (2) invoke the spec-debugger agent via Task tool passing the bug description, (3) after the debugger returns, read the `fix.md` it produced, (4) check whether a regression marker was appended to `_project-profile.md`, (5) if the fix touched 3+ files or the debugger signals `RETRO_RECOMMENDED`, auto-invoke `/spec-retro`, otherwise append a note to `progress.md` suggesting the user run `/spec-retro`, (6) print a summary: bug ID, files modified, regression check description, whether retro was triggered. The spec-matching algorithm (scan tasks.md files for file overlap, fall back to `debug-<slug>/`) must be documented in the command body.
@@ -81,8 +81,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-6: Implement spec-scanner agent instructions
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-1, US-2
 - **Description**: Write the full agent instruction body in `agents/spec-scanner.md` (the file created in T-1). The instructions must walk through the complete scan algorithm: Step 1 read manifest files to detect framework/language; Step 2 use Glob `**/router.*`, `**/routes.*`, `**/app.*`, `**/*routes*` to find router files, read 2-3 examples, describe the route registration pattern in natural language; Step 3 use Glob `**/nav*`, `**/sidebar*`, `**/menu*`, `**/layout*` to find navigation components, read examples, describe how new links are added; Step 4 use Glob `**/handler*`, `**/controller*`, `**/api/**` to find endpoint files, read examples, describe endpoint registration; Step 5 use Glob `**/model*`, `**/schema*`, `**/entity*`, `**/migration*` to find models, for each entity search for Create/Read/Update/Delete implementations, populate the Entity Registry table; Step 6 compile everything into the profile format. Must include explicit instructions to never read/include `.env*`, `*.key`, `*.pem`, `*.secret`, credential files, or `.aws`/`.gcp`/`.ssh` directories. Must include the idempotency requirement: same codebase = same output.
@@ -91,7 +91,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-7: Implement project profile template
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-2

@@ -186,8 +186,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-16: Register spec-scanner in plugin manifest
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-1
 - **Description**: Read `.claude-plugin/plugin.json` and add the `spec-scanner` agent and `spec-scan` command to the appropriate sections. The scanner agent entry must include its name, description, model, and file path matching the format of existing entries. The spec-scan command entry must include its name, description, and file path. Also add `spec-debug` command to the commands section.
 - **Acceptance**: `.claude-plugin/plugin.json` contains an entry for `spec-scanner` in the agents section with `model: claude-sonnet-4-6`. The commands section contains entries for both `spec-scan` and `spec-debug`. The file paths for all three entries point to the correct files (`agents/spec-scanner.md`, `commands/spec-scan.md`, `commands/spec-debug.md`). The JSON is valid (passes `jq .`).

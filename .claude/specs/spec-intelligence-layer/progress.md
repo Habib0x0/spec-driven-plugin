@@ -383,3 +383,29 @@
 
 ### Next
 - T-18: Write integration tests for spec-scanner agent output format
+
+
+---
+
+## Session 19 -- 2026-04-01
+
+### Worked On
+- T-18: Write integration tests for spec-scanner agent output format
+
+### Completed
+- Created tests/test-scanner-output.sh with 6 test groups, 25 assertions total:
+  - Test 1: Validates all 6 required sections (Stack, Patterns, Entity Registry, Registration Points, Regression Markers, Manual Overrides)
+  - Test 2: Checks confidence labels (high/medium/low) on all pattern headings
+  - Test 3: Validates Entity Registry table format (header, separator, CRUD values yes/no/partial)
+  - Test 4: Checks for credential/secret leaks (.env, PEM, passwords, API keys)
+  - Test 5: Self-scan expected output checklist for this repo (commands/, agents/, scripts/ as expected detections). Automated checks run when a real profile path is passed; full expected output documented as printed checklist.
+  - Test 6: 200-line split trigger (creates 238-line mock profile, validates _profile-index.md format and domain profile structure with all 6 sections)
+- Fixed bash 3.x compatibility (replaced ${var^} with tr for case conversion)
+- All 25 tests PASS. Script passes bash -n.
+
+### Integration Status
+- Wired: n/a (test file, not wired into application)
+- Runnable via: ./tests/test-scanner-output.sh [optional-profile-path]
+
+### Next
+- T-19: Write tests for parallel execution and conflict handling

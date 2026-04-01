@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 21 |
+| Pending | 20 |
 | In Progress | 0 |
-| Completed | 3 |
+| Completed | 4 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -57,8 +57,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-4: Create scripts/lib/parallel.sh
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-6
 - **Description**: Create `scripts/lib/parallel.sh` as a new bash library. **Prerequisite**: this library depends on `scripts/lib/worktree.sh` for creating per-task git worktrees — `launch_parallel_task` must call worktree functions from `lib/worktree.sh` to create isolated branches. It must define: `parse_dependency_graph(tasks_file)` outputs one line per task in format `task_id:dep1,dep2` (or `task_id:none`); `get_ready_tasks(tasks_file)` returns task IDs whose status is `pending` and all listed dependencies have status `completed`; `launch_parallel_task(task_id, spec_dir, work_dir, log_dir, iteration)` creates a git worktree for the task (via `lib/worktree.sh`), builds a task-specific implementer prompt, launches `claude --dangerously-skip-permissions -p` in the background writing stdout to `$log_dir/iteration-$iteration-task-$task_id.log`, and returns the PID; `wait_for_batch(pids_array)` waits for all PIDs and returns their exit codes; `consolidate_parallel_results(spec_dir, completed_tasks, work_dir)` merges each task's worktree branch into the main spec branch sequentially, detects `git merge` conflicts (non-zero exit), re-queues conflicting tasks by setting their status back to `pending` in tasks.md (with a re-queue counter — if same task conflicts 3 times, mark for sequential execution), and logs conflicts to progress.md.

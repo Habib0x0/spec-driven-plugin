@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 16 |
+| Pending | 15 |
 | In Progress | 0 |
-| Completed | 8 |
+| Completed | 9 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -101,8 +101,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-8: Enhance spec-debugger agent for standalone debug mode
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-5, US-7
 - **Description**: Modify `agents/spec-debugger.md` to add a "Standalone Debug Mode (/spec-debug)" section. This section must describe: (1) reading the bug description; (2) investigation by reading source files, searching for error patterns, tracing call chains; (3) the spec-matching algorithm: scan all `.claude/specs/*/tasks.md` files and count file reference overlaps with affected files, use the highest-overlap spec's directory, fall back to `debug-<slug>/` if overlap is 0; (4) writing `diagnosis.md` in the format: Bug ID (BUG-NNN), Reported date, Symptom, Root Cause, Affected Files with `file:line` and description for each, Related Spec, Fix Strategy; (5) applying the fix; (6) writing `fix.md` in the format: Bug ID, Fixed date, Files Modified with change description, Regression Check description, Attempts count, Retro field (`auto-triggered` or `suggested`); (7) appending a regression marker to `_project-profile.md` under `## Regression Markers` in the format shown in the design; (8) outputting `RETRO_RECOMMENDED` if fix touched 3+ files or required multiple attempts; (9) redacting credentials/keys/tokens with `[REDACTED]` in all output files. Also add a sequential bug ID increment rule: scan existing `diagnosis.md` for the highest BUG-NNN before assigning a new ID.

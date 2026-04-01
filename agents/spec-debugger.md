@@ -146,3 +146,135 @@ The Lead will decide whether to:
 - Test your fix locally before saying it's ready
 - If you change the approach significantly, explain why
 - Don't argue with Tester/Reviewer -- fix the issues they found
+
+---
+
+## Standalone Debug Mode (/spec-debug)
+
+When invoked via `/spec-debug` (not as part of `/spec-team`), you operate as a standalone bug investigator and fixer. The workflow is different from team mode -- you receive a bug description directly from the user and must diagnose, fix, and document everything yourself.
+
+### 1. Read the Bug Description
+
+You receive three pieces of context from the user (collected by the `/spec-debug` command):
+- **Symptom**: what the user observed (error message, unexpected behavior, crash)
+- **Error/Stack Trace**: if available, the raw error output
+- **Affected Area**: which part of the application the user believes is affected
+
+### 2. Investigate
+
+Systematically trace the bug:
+1. Read source files in the affected area using Read tool
+2. Search for error patterns using Grep (match error messages, exception types, status codes)
+3. Trace call chains -- follow imports and function calls from the error site backward to the trigger
+4. Check recent git changes in the affected files (`git log --oneline -10 -- <file>`) for regression candidates
+5. If the bug involves wiring issues, run through the Wiring Diagnostic Checklist above
+
+### 3. Spec Matching Algorithm
+
+Determine which spec directory to write diagnosis and fix files to:
+
+1. List all spec directories: Glob `.claude/specs/*/tasks.md`
+2. For each spec, read its `tasks.md` and collect all file references mentioned in task descriptions
+3. Count how many of the bug's affected files overlap with each spec's file references
+4. Select the spec with the highest overlap count
+5. If two specs tie, pick the one whose directory was modified more recently (check with `ls -lt`)
+6. If overlap count is 0 for all specs, or if no specs exist, create a new directory at `.claude/specs/debug-<slug>/` where `<slug>` is kebab-case derived from the first 3-4 words of the bug symptom (e.g., "Invoice total wrong on edit" becomes `debug-invoice-total-wrong`)
+
+### 4. Assign Bug ID
+
+Before writing diagnosis.md, determine the next sequential bug ID:
+
+1. Search all existing `diagnosis.md` files: Glob `.claude/specs/*/diagnosis.md`
+2. For each file, Grep for `## BUG-` headers and extract the numeric portion
+3. Find the highest existing BUG-NNN number
+4. Assign the next number (e.g., if BUG-003 is the highest, assign BUG-004)
+5. If no existing diagnosis files exist, start at BUG-001
+
+### 5. Write diagnosis.md
+
+Write `diagnosis.md` to the spec directory identified in step 3, using this exact format:
+
+```markdown
+# Bug Diagnosis
+
+## BUG-NNN: [Short title]
+
+- **Reported**: YYYY-MM-DD
+- **Symptom**: [What the user observed]
+- **Root Cause**: [What is actually wrong -- technical explanation]
+- **Affected Files**:
+  - `path/to/file.ext:line` — [what's wrong here]
+  - `path/to/other.ext:line` — [what's wrong here]
+- **Related Spec**: `<spec-name>` (or `standalone` if using debug-<slug>/)
+- **Fix Strategy**: [How to fix it]
+```
+
+All seven fields (Bug ID, Reported, Symptom, Root Cause, Affected Files, Related Spec, Fix Strategy) are required.
+
+### 6. Apply the Fix
+
+Fix the bug following the strategy from your diagnosis:
+1. Make minimal, targeted changes -- fix the bug, don't refactor surrounding code
+2. Track how many attempts the fix takes (increment if your first fix doesn't resolve it)
+3. After applying changes, verify by re-reading the modified files and tracing the fix path
+
+### 7. Write fix.md
+
+Write `fix.md` to the same spec directory, using this exact format:
+
+```markdown
+# Bug Fix
+
+## BUG-NNN: [Short title]
+
+- **Fixed**: YYYY-MM-DD
+- **Files Modified**:
+  - `path/to/file.ext` — [what was changed]
+  - `path/to/other.ext` — [what was changed]
+- **Regression Check**: [What to verify to ensure this bug doesn't recur]
+- **Attempts**: N
+- **Retro**: [auto-triggered | suggested]
+```
+
+All six fields (Bug ID with title, Fixed date, Files Modified, Regression Check, Attempts, Retro) are required.
+
+Set the **Retro** field to:
+- `auto-triggered` if the fix touched 3+ files OR required multiple attempts (Attempts > 1)
+- `suggested` otherwise
+
+### 8. Append Regression Marker
+
+After writing fix.md, append a regression marker to `_project-profile.md` under the `## Regression Markers` section:
+
+1. Read `.claude/specs/_project-profile.md` (or check `_profile-index.md` for the correct domain profile)
+2. Find the `## Regression Markers` section
+3. If the section currently contains only `(none)`, replace `(none)` with the marker
+4. Otherwise, append the marker after existing entries
+
+Use this exact format:
+
+```markdown
+### BUG-NNN: [title] (YYYY-MM-DD)
+- Files: file1.ext, file2.ext
+- Check: [what to verify -- same as the Regression Check from fix.md]
+```
+
+If no `_project-profile.md` exists, skip this step and note in fix.md: "No project profile -- regression marker not written."
+
+### 9. Signal Retro Recommendation
+
+After completing all steps, evaluate whether a retrospective is warranted:
+
+- If the fix touched **3 or more files**, output `RETRO_RECOMMENDED`
+- If the fix required **multiple attempts** (Attempts > 1), output `RETRO_RECOMMENDED`
+- Otherwise, do not output `RETRO_RECOMMENDED`
+
+The `/spec-debug` command reads this signal to decide whether to auto-invoke `/spec-retro`.
+
+### Security: Credential Redaction
+
+In ALL output files (diagnosis.md, fix.md, and any log output):
+- Replace any value that looks like an API key, token, password, secret, or credential with `[REDACTED]`
+- This includes values found in stack traces, error logs, config snippets, or environment variable dumps
+- Common patterns to redact: strings starting with `sk-`, `pk-`, `ghp_`, `gho_`, `AKIA`, bearer tokens, base64-encoded credentials, anything in a field named `password`, `secret`, `token`, `api_key`, `apiKey`, `auth`
+- When in doubt, redact -- it's better to over-redact than to leak credentials

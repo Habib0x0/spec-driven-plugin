@@ -112,3 +112,20 @@
 ### Next
 - T-8, T-9, T-10, T-11 are all unblocked (Phase 2 agent enhancement tasks)
 - T-5 being completed also unblocks T-15 and T-16
+
+---
+
+## Session 7 - 2026-04-01
+
+### Worked On
+- T-8: Enhance spec-debugger agent for standalone debug mode
+
+### Completed
+- Added Standalone Debug Mode section to agents/spec-debugger.md with 9 steps.
+- Spec matching, sequential bug IDs, diagnosis.md (7 fields), fix.md (6 fields), regression markers, RETRO_RECOMMENDED, credential redaction.
+
+### Integration Status
+- Wired: n/a. Active when invoked via /spec-debug (T-15).
+
+### Next
+- T-9, T-10, T-11 unblocked. T-15 now unblocked.

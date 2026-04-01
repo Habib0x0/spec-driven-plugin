@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 22 |
+| Pending | 21 |
 | In Progress | 0 |
-| Completed | 2 |
+| Completed | 3 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -47,8 +47,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-3: Create scripts/lib/verify.sh
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-4
 - **Description**: Create `scripts/lib/verify.sh` as a new bash library. It must define exactly two functions: `run_verification_gate(spec_dir, task_id, work_dir)` and `run_debugger_fix(spec_dir, task_id, gap_description, work_dir)`. `run_verification_gate` must: read the project profile from `$spec_dir/../_project-profile.md` (or `_profile-index.md`), read the git diff for changes since the last commit in `work_dir`, build a short Claude prompt that lists registration points and the diff and asks whether new files/exports are registered, invoke `claude --dangerously-skip-permissions -p` with that prompt, return exit code 0 on pass and 1 on failure with the gap description printed to stdout. `run_debugger_fix` must: build a prompt containing the wiring gap description and invoke the debugger agent to fix it, return exit code 0 on success and 1 on failure. Both functions must handle the case where no profile exists (return 0 with a log message "No project profile -- verification gate skipped.").

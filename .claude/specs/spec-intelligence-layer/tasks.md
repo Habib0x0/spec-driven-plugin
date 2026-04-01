@@ -15,11 +15,11 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 14 |
+| Pending | 0 |
 | In Progress | 0 |
-| Completed | 10 |
+| Completed | 24 |
 | Wired | 0 |
-| Verified | 0 |
+| Verified | 24 |
 
 ---
 
@@ -275,7 +275,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-9
 - **Description**: Create a test case in `tests/test-validate-fix.md` (checklist format) that verifies the validate-fix loop behavior: (1) after running `/spec` on a test feature, the generated spec should have zero validator warnings without needing a manual `/spec-validate` run; (2) intentionally introduce a known issue (e.g., a vague term in requirements or a missing requirement ID in tasks) and verify the loop catches and fixes it within 3 cycles; (3) verify that the summary output includes the validation status line; (4) verify that a clean spec (no issues) exits the loop after 1 cycle (no unnecessary re-runs).
 - **Acceptance**: `tests/test-validate-fix.md` exists with at least four test scenarios. The "known issue" test describes a specific reproducible issue and expected fix behavior. The "early exit" test verifies the loop doesn't waste cycles on clean specs. The test is runnable by a human following the checklist.

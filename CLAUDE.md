@@ -38,6 +38,7 @@ templates/                  - Document scaffolding for specs
 | `/spec-scan` | Explicitly trigger a full codebase scan and update project profile |
 | `/spec-debug` | Diagnose and fix bugs with spec context awareness and regression tracking |
 | `/spec-sync` | Sync tasks.md status back to Claude Code task list |
+| `/spec-complete` | Run full post-completion pipeline (accept -> docs -> release -> retro) |
 
 ## Model Routing
 
@@ -119,15 +120,16 @@ Templates use `{{PLACEHOLDER}}` syntax for substitution during spec creation.
 After completing the spec workflow (Requirements, Design, Tasks), use the execution scripts to implement autonomously:
 
 - `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
-- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-parallel` flag to force sequential task execution
+- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-parallel` flag to force sequential task execution and `--no-complete` to skip auto-triggering the post-completion pipeline
+- `spec-complete.sh` - Full post-completion pipeline: accept -> docs -> release -> retro. Auto-triggered by `spec-loop.sh` on completion (disable with `--no-complete`)
 
 Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
 
-Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
+Completion is detected via `<promise>COMPLETE</promise>` in Claude's output. When detected, `spec-loop.sh` automatically chains into `spec-complete.sh` which runs the full post-completion pipeline. If UAT rejects the spec, the pipeline halts.
 
 ### Post-Implementation Scripts
 
-After all tasks are complete, these scripts handle the remaining SDLC phases:
+After all tasks are complete, these scripts handle the remaining SDLC phases (or run automatically via `spec-complete.sh`):
 
 - `spec-accept.sh` - User acceptance testing against requirements (outputs `ACCEPTED`/`REJECTED`)
 - `spec-docs.sh` - Generate documentation from spec + code (API ref, user guide, ADR, runbook)

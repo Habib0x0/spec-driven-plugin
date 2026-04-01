@@ -8,6 +8,7 @@ USE_WORKTREE=true
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
 NO_PARALLEL=false
+AUTO_COMPLETE=true
 
 # parse args
 while [[ $# -gt 0 ]]; do
@@ -32,9 +33,13 @@ while [[ $# -gt 0 ]]; do
       NO_PARALLEL=true
       shift
       ;;
+    --no-complete)
+      AUTO_COMPLETE=false
+      shift
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree] [--no-parallel]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree] [--no-parallel] [--no-complete]"
       exit 1
       ;;
   esac
@@ -388,6 +393,13 @@ EOF
       echo ""
       echo "All tasks complete and verified!"
       print_pr_suggestion "$SPEC_NAME"
+
+      if [ "$AUTO_COMPLETE" = true ]; then
+        echo ""
+        echo "Starting post-completion pipeline..."
+        bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
+      fi
+
       break
     fi
 

@@ -1,6 +1,6 @@
 {
   "name": "spec-driven",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Spec-driven development workflow with structured requirements, design, and task phases",
   "author": {
     "name": "habib0x"
@@ -37,6 +37,7 @@
     "./commands/spec-scan.md",
     "./commands/spec-debug.md",
     "./commands/spec-sync.md",
-    "./commands/spec-import.md"
+    "./commands/spec-import.md",
+    "./commands/spec-complete.md"
   ]
 }

@@ -464,3 +464,27 @@
 
 ### Next
 - T-21: Add error handling and edge cases to spec-scanner agent (next unverified task)
+
+
+---
+
+## Session 22 -- 2026-04-01
+
+### Worked On
+- T-21: Verification of error handling and edge cases in spec-scanner agent
+- T-22: Add backward compatibility guard to spec-loop.sh
+
+### Completed
+- T-21: Verified all 6 acceptance criteria against existing implementation. Updated Wired: n/a, Verified: yes.
+- T-22: Was NOT IMPLEMENTED. Added defensive guards to scripts/spec-loop.sh:
+  - verify.sh: conditional source + no-op stubs if not loaded
+  - parallel.sh: conditional source + type check, sets NO_PARALLEL=true if not loaded
+  - bash -n syntax validation passes
+
+### Integration Status
+- T-21: Wired n/a (agent instruction file)
+- T-22: Wired n/a (defensive guard in existing spec-loop.sh)
+
+### Next
+- T-23: Add validate-fix loop to /spec command
+- T-24: Write test for validate-fix loop

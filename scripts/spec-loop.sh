@@ -83,8 +83,25 @@ done
 source "$SCRIPT_DIR/lib/deps.sh"
 source "$SCRIPT_DIR/lib/worktree.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
-source "$SCRIPT_DIR/lib/verify.sh"
-source "$SCRIPT_DIR/lib/parallel.sh"
+
+# source verify.sh with defensive guard
+if [ -f "$SCRIPT_DIR/lib/verify.sh" ]; then
+  source "$SCRIPT_DIR/lib/verify.sh"
+fi
+if ! type run_verification_gate &>/dev/null; then
+  echo "WARNING: verify.sh not loaded -- verification gates disabled."
+  run_verification_gate() { return 0; }
+  run_debugger_fix() { return 0; }
+fi
+
+# source parallel.sh with defensive guard
+if [ -f "$SCRIPT_DIR/lib/parallel.sh" ]; then
+  source "$SCRIPT_DIR/lib/parallel.sh"
+fi
+type get_ready_tasks &>/dev/null || {
+  echo "WARNING: parallel.sh not loaded -- forcing sequential execution."
+  NO_PARALLEL=true
+}
 
 # check cross-spec dependencies before any worktree creation
 check_dependencies "$SPEC_NAME"

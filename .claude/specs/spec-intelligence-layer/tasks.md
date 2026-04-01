@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 20 |
+| Pending | 19 |
 | In Progress | 0 |
-| Completed | 4 |
+| Completed | 5 |
 | Wired | 0 |
 | Verified | 0 |
 

@@ -29,7 +29,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1, US-2
 - **Description**: Create `agents/spec-scanner.md` as a new agent definition. The agent uses model `claude-sonnet-4-6`, tools Read/Glob/Grep/Write. It must include: (1) an ordered scan strategy (manifest files → router files → nav files → API handler files → model/entity files), (2) a confidence heuristic (3+ examples = high, 1-2 = medium, 0 inferred = low), (3) a security skip list (`.env*`, `*.key`, `*.pem`, `*.secret`, `*credentials*`, `.aws/`, `.gcp/`, `.ssh/`, `node_modules/`, `vendor/`, `.git/`), (4) the exact three-section profile format (Stack, Patterns, Entity Registry, Registration Points, Regression Markers, Manual Overrides) with the markdown table for Entity Registry, (5) instructions on when to split into domain files vs single file (>200 lines), and (6) error handling for unrecognized frameworks (emit minimal profile with `confidence: low` and prompt user for Manual Overrides).
 - **Acceptance**: `agents/spec-scanner.md` exists with frontmatter (name, description, model, tools). The file contains a scan strategy section with numbered steps covering manifests, router, nav, API, and model files. A "Confidence Heuristic" section defines high/medium/low. A "Security" section lists all skip patterns. A "Profile Format" section shows the exact markdown structure. A "Split Strategy" section explains domain splitting at 200 lines.

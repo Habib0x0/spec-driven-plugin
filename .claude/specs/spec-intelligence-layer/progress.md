@@ -434,3 +434,33 @@
 
 ### Next
 - T-20: Write tests for verification gate logic
+
+
+---
+
+## Session 21 -- 2026-04-01
+
+### Worked On
+- T-20: Write tests for verification gate logic
+
+### Completed
+- Created tests/test-verify.sh with 8 test groups, 14 assertions:
+  - Test 1: run_verification_gate with no profile -- exits 0, prints skip message
+  - Test 2: run_verification_gate with profile + registered artifact (mock GATE_PASS) -- exits 0
+  - Test 3: run_verification_gate with profile + unregistered artifact (mock GATE_FAIL) -- exits 1, gap description
+  - Test 4: run_verification_gate with profile missing Registration Points section -- exits 0, skips
+  - Test 5: run_debugger_fix with FIX_APPLIED mock -- exits 0
+  - Test 6: run_debugger_fix with failed mock -- exits 1
+  - Test 7: run_debugger_fix prompt inspection -- verifies gap description and task ID in Claude prompt
+  - Test 8: run_verification_gate with no git diff -- exits 0, skips
+- Used PATH override technique with mock claude scripts in temp bin dir
+- Fixed set -e interaction with non-zero exit codes using || exit_code=$? pattern
+- Fixed test isolation using mktemp for unique repo dirs per test
+- All 14 tests PASS. Script passes bash -n.
+
+### Integration Status
+- Wired: n/a (test file, not wired into application)
+- Runnable via: ./tests/test-verify.sh
+
+### Next
+- T-21: Add error handling and edge cases to spec-scanner agent (next unverified task)

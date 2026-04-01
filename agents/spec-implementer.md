@@ -56,13 +56,50 @@ This is the most critical part of your job. Code that exists but isn't connected
 
 ## Implementation Process
 
+### Step 0: Read Project Profile
+
+Before doing anything else, check for a project profile to guide wiring decisions:
+
+1. Check whether `.claude/specs/_project-profile.md` exists (or `.claude/specs/_profile-index.md` for split profiles).
+2. If found, read the `## Registration Points` section. Build an internal map of `artifact_type → file:line` from the bullet entries. For example:
+   - `src/components/Sidebar.tsx:23 — Add <NavLink> for new pages` → nav link artifacts go to `src/components/Sidebar.tsx:23`
+   - `app/api/ — Create <resource>/route.ts` → API endpoint artifacts go to `app/api/`
+3. Also read the `## Patterns` section to understand how the project registers new routes, components, and endpoints.
+4. If **no profile exists**, log a note to progress.md: "No project profile available -- using generic wiring checklist." Then proceed using only the generic checklist in step 6 below.
+
+### Step 1: Read and Plan
+
 1. Read the assigned task from tasks.md
 2. Read requirements.md and design.md for context
 3. Check existing code patterns in the codebase
-4. **Map the wiring path**: Before writing code, identify exactly where and how the new code connects to existing code
+4. **Map the wiring path**: Before writing code, identify exactly where and how the new code connects to existing code. If a profile map was built in Step 0, consult it for the exact registration locations.
+
+### Step 2: Implement
+
 5. Write the implementation
-6. **Wire it in**: Add imports, register routes, update navigation, connect API calls
-7. **Self-check wiring**: Read the files you modified to confirm the chain is complete from entry point to new code
+
+### Step 3: Wire It In
+
+6. **Wire it in** — For each new artifact (route, component, endpoint, model, etc.):
+   - **First**, check the Registration Points map from Step 0. If a matching registration point exists, wire the artifact at that exact `file:line` location.
+   - **If no matching registration point** is found in the profile (or no profile exists), fall back to the generic checklist below:
+     1. New route added to router config
+     2. New page linked in navigation/sidebar/menu
+     3. New API endpoint registered in server
+     4. New component imported and rendered where needed
+     5. New service instantiated and injected where needed
+     6. Form submissions connected to API calls
+     7. API responses rendered in the UI
+     8. Error states handled and displayed to user
+
+### Step 4: Profile Self-Check
+
+7. **Self-check wiring against profile**: After all wiring is done, re-read each registration-point file that was modified and confirm the new artifact appears correctly at or near the indicated line. This is a distinct verification step — do not skip it.
+   - If the artifact is not visible in the registration file after your edit, the wiring failed. Fix it before proceeding.
+   - If no profile was used, do the generic self-check: read the files you modified to confirm the chain is complete from entry point to new code.
+
+### Step 5: Update and Report
+
 8. Update tasks.md:
    - Set Status to "completed"
    - Set Wired to "yes" (only if you confirmed the wiring chain)

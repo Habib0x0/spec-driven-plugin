@@ -173,3 +173,29 @@
 
 ### Next
 - Continue verification of remaining tasks (T-2 through T-24)
+
+
+---
+
+## Session 10 — 2026-04-01
+
+### Worked On
+- Verification sweep for T-2 through T-10
+
+### Completed
+- T-2 (spec-scan command): Verified all acceptance criteria. Marked Verified: yes.
+- T-3 (verify.sh): Verified syntax, functions, no-profile skip, prompt building. Marked Verified: yes.
+- T-4 (parallel.sh): Verified syntax, 5 functions, dep handling, conflict re-queue. Marked Verified: yes.
+- T-5 (spec-debug command): Verified frontmatter, 6 steps, spec-matching, retro trigger. Marked Verified: yes.
+- T-6 (spec-scanner instructions): Verified scan steps, glob patterns, CRUD patterns, security. Marked Verified: yes.
+- T-7 (profile templates): Verified both templates, 6 sections, Entity Registry table. Marked Verified: yes.
+- T-8 (spec-debugger standalone mode): Verified diagnosis/fix formats, regression markers, RETRO signal. Marked Verified: yes.
+- T-9 (spec-planner profile awareness): Verified Phase 0, gap analysis, regression warnings. Marked Verified: yes.
+- T-10 (spec-implementer profile-aware wiring): FOUND NOT IMPLEMENTED. Added Step 0 (Read Project Profile), profile-aware Wire It In, generic checklist fallback, Profile Self-Check, fallback warning. Verified. Marked Wired: n/a, Verified: yes.
+
+### Integration Status
+- T-2 through T-9: Verified as-is (already implemented)
+- T-10: Was missing — added profile-aware wiring instructions to agents/spec-implementer.md
+
+### Next
+- Continue verification of T-11 through T-24

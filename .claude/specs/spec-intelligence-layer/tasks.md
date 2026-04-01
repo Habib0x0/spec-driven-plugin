@@ -197,7 +197,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-1, US-2, US-5, US-6
 - **Description**: Modify `CLAUDE.md` to document the three new additions: (1) add `spec-scanner` to the Model Routing table with model `Sonnet 4.6`, phase `Phase 0 Scan`, and rationale `Fast multi-file reading; reasoning depth not critical`; (2) add `/spec-scan` to the Commands table with purpose "Explicitly trigger a full codebase scan and update project profile"; (3) add `/spec-debug` to the Commands table with purpose "Diagnose and fix bugs with spec context awareness and regression tracking"; (4) add a new "Project Profile" section explaining `_project-profile.md`, its location, its six sections, and when it is created/updated; (5) note the `--no-parallel` flag for spec-loop.
 - **Acceptance**: `CLAUDE.md` Commands table includes rows for `/spec-scan` and `/spec-debug`. The Model Routing table includes `spec-scanner` with Sonnet 4.6. A "Project Profile" section exists describing `_project-profile.md` location (`.claude/specs/_project-profile.md`), its six sections by name, and that it is auto-created on first `/spec` run and updatable via `/spec-scan`. The spec-loop entry mentions `--no-parallel` flag.

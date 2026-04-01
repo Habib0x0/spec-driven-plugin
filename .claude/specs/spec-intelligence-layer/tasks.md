@@ -221,7 +221,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-6, NFR-4
 - **Description**: Create `tests/test-parallel.sh` that validates the `parallel.sh` library functions in isolation. Tests must cover: (1) `parse_dependency_graph` on a sample tasks.md with 5 tasks (some with deps, some without) -- verify each task appears on one output line with correct dependency list; (2) `get_ready_tasks` on a sample tasks.md where T-1 is completed and T-2 depends on T-1, T-3 has no deps, T-4 depends on T-2 (pending) -- verify only T-3 is returned; (3) `get_ready_tasks` when T-1 completes and T-2's dependency is now satisfied -- verify T-2 is returned; (4) `consolidate_parallel_results` conflict scenario: create two branches that modify the same line in a test file, call consolidate, verify the second branch task is re-queued (status set back to pending) and progress.md contains a conflict log entry.
 - **Acceptance**: `tests/test-parallel.sh` exists and is valid bash (passes `bash -n`). It contains at least four test cases with clear PASS/FAIL output. The `get_ready_tasks` test uses a real temp tasks.md file with realistic content (not just mock strings). The conflict resolution test creates actual git branches and calls `consolidate_parallel_results`, verifying the conflicting task's status in tasks.md is reset to `pending`.

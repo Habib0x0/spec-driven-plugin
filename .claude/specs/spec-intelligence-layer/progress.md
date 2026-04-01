@@ -409,3 +409,28 @@
 
 ### Next
 - T-19: Write tests for parallel execution and conflict handling
+
+
+---
+
+## Session 20 -- 2026-04-01
+
+### Worked On
+- T-19: Write tests for parallel execution and conflict handling
+
+### Completed
+- Created tests/test-parallel.sh with 6 test groups, 28 assertions total:
+  - Test 1: parse_dependency_graph on 5-task sample -- verifies each task appears with correct deps
+  - Test 2: get_ready_tasks (initial state) -- T-1 completed, verifies T-2 and T-3 ready, T-4/T-5 blocked
+  - Test 3: get_ready_tasks (after T-2/T-3 complete) -- verifies T-4 and T-5 become ready
+  - Test 4: consolidate_parallel_results conflict -- creates real git repo with divergent branches, verifies T-2 merges clean, T-3 re-queued to pending, progress.md logs conflict, requeue count is 1
+  - Test 5: _get_task_status and _set_task_status helpers -- verifies read/write/isolation
+  - Test 6: _get_requeue_count and _set_requeue_count helpers -- verifies initial 0, set, update
+- All 28 tests PASS. Script passes bash -n.
+
+### Integration Status
+- Wired: n/a (test file, not wired into application)
+- Runnable via: ./tests/test-parallel.sh
+
+### Next
+- T-20: Write tests for verification gate logic

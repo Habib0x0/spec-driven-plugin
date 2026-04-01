@@ -112,7 +112,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-9: Enhance spec-planner agent for profile awareness
 
 - **Status**: completed
-- **Wired**: no
+- **Wired**: n/a
 - **Verified**: yes
 - **Requirements**: US-2, US-7, US-8
 - **Description**: Modify `agents/spec-planner.md` to add profile-aware instructions. Add a new "Phase 0: Read Project Profile" step before requirements writing that instructs the planner to: (1) check for `_project-profile.md` (or `_profile-index.md` for split profiles) in `.claude/specs/`; (2) if found, read the full profile; (3) read the Entity Registry and identify any CRUD gaps that the current feature directly depends on -- for each such gap, add a prerequisite user story or task note in the requirements under `## Prerequisites`; (4) for CRUD gaps not related to the current feature, add an informational section `## Detected Gaps (Informational)`; (5) read the Regression Markers section and cross-reference against files the new feature is likely to modify -- for each overlap, embed a warning in the relevant user story acceptance criteria: `WARNING: [file] was involved in [BUG-ID]: [description]. Ensure [regression check] is verified.`; (6) pass the profile content to any downstream instructions for wiring guidance.
@@ -132,7 +132,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-11: Enhance spec-tester agent for profile-aware verification
 
 - **Status**: completed
-- **Wired**: no
+- **Wired**: n/a
 - **Verified**: yes
 - **Requirements**: US-2, US-7
 - **Description**: Modify `agents/spec-tester.md` to add profile-aware integration checking. In the "Step 0: Integration Check" section, add a new sub-section "Profile-Based Registration Check" that runs before the existing generic checks: (1) read `_project-profile.md`'s Registration Points section; (2) for each new file or export created by the current task (identified from the task description and changed files), look up the matching registration point in the profile; (3) read that registration point file and confirm the new artifact is present at or near the indicated line; (4) if the artifact is missing from any expected registration point, immediately report `INTEGRATION CHECK FAILED` with the specific file:line where it was expected but not found. Also add a "Regression Marker Check" sub-section: (5) read the `## Regression Markers` section of the profile; (6) for any marker whose affected files overlap with files modified by the current task, include the marker's regression check description as an explicit verification step alongside the task's normal acceptance criteria.
@@ -244,8 +244,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-21: Add error handling and edge cases to spec-scanner agent
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: n/a
+- **Verified**: yes
 - **Requirements**: US-1, NFR-2, NFR-7
 - **Description**: Update `agents/spec-scanner.md` to add comprehensive error handling: (1) if no recognizable manifest file is found, write a minimal profile with `confidence: low` for all patterns and an empty Entity Registry, then add a suggestion in the profile: "No framework detected. Add your stack details to ## Manual Overrides."; (2) if a file read fails, skip it and append `[skipped: permission denied]` to the affected pattern entry; (3) monorepo detection: use Glob to find manifest files (`package.json`, `go.mod`, `Cargo.toml`, `pyproject.toml`) in subdirectories -- if 2+ manifests found in distinct subdirectories (not just root), create `_project-profile-<app-name>.md` for each app root and a `_profile-index.md` listing them; (4) performance guardrail: if the initial Glob for router files returns more than 20 results, sample the first 5 and note "sampled 5 of N" in the profile; (5) the `## Manual Overrides` section must always be present in the output profile even when empty (initialized to `(user-editable -- preserved across rescans)`).
 - **Acceptance**: `agents/spec-scanner.md` error-handling section addresses all five cases. The no-framework path specifies writing `confidence: low` for all patterns. The monorepo detection criteria (2+ manifest files in distinct subdirectories) is explicitly stated. The sampling guardrail names the threshold (>20 router file results → sample 5). The Manual Overrides initialization is specified as always-present. The file-skip pattern names the exact string `[skipped: permission denied]`.
@@ -255,7 +255,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: NFR-6
 - **Description**: Ensure `scripts/spec-loop.sh` remains fully functional when no project profile and no parallel.sh functions are available. Add defensive guards: (1) after sourcing `lib/parallel.sh`, check if `get_ready_tasks` is defined -- if not (in case parallel.sh is missing or partially loaded), set `NO_PARALLEL=true` and log a warning; (2) after sourcing `lib/verify.sh`, check if `run_verification_gate` is defined -- if not, define a no-op stub that always returns 0; (3) ensure the `--no-worktree` flag (pre-existing flag in spec-loop.sh, not introduced by this spec) and all existing flags still work correctly alongside the new `--no-parallel` flag; (4) the sequential fallback path (existing single-task-per-iteration logic) must remain unchanged and be the default when `NO_PARALLEL=true`.
 - **Acceptance**: `scripts/spec-loop.sh` has a guard after `source lib/parallel.sh` that checks `type get_ready_tasks &>/dev/null || { NO_PARALLEL=true; ... }`. A no-op stub is defined for `run_verification_gate` if verify.sh is missing. The `--no-worktree` flag still works. The existing `--max-iterations` and `--progress-tail` flags are unaffected. A test that removes `lib/parallel.sh` and runs spec-loop with `--no-parallel` confirms the script exits cleanly without errors.
@@ -264,7 +264,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-23: Add validate-fix loop to /spec command
 
 - **Status**: completed
-- **Wired**: no
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-9
 - **Description**: Modify `commands/spec.md` to add an automated validate-fix loop after the spec-tasker completes (new step 4.5, before the summary). The loop must: (1) invoke the spec-validator agent via Task tool, passing the spec directory; (2) parse the validator's output for errors and warnings; (3) if errors or warnings exist, route fixes to the appropriate agent: requirements/design issues go to spec-planner (with the validator report and instruction to make targeted fixes only), task issues go to spec-tasker (with the validator report and instruction to fix specific tasks); (4) after fix agent completes, re-invoke the validator; (5) repeat up to 3 cycles; (6) if issues remain after 3 cycles, include them in the summary as "X warnings remaining"; (7) if all issues are resolved, include "Spec validated: PASS" in the summary. The fix prompts must explicitly say "Fix ONLY the specific issues listed. Do not rewrite sections that passed validation." to prevent unnecessary rewrites.

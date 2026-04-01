@@ -231,7 +231,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 - **Status**: completed
 - **Wired**: n/a
-- **Verified**: no
+- **Verified**: yes
 - **Requirements**: US-4, NFR-3
 - **Description**: Create `tests/test-verify.sh` that validates the `verify.sh` library. Tests must cover: (1) `run_verification_gate` when no profile exists -- verify it exits 0 and prints "No project profile -- verification gate skipped."; (2) `run_verification_gate` with a minimal profile containing one registration point and a git diff that shows the new file IS registered at that point -- verify exit 0; (3) `run_verification_gate` with a minimal profile containing one registration point and a git diff that shows the new file is NOT registered -- verify exit 1 and stdout contains a gap description; (4) `run_debugger_fix` basic invocation -- verify it calls claude with a prompt containing the gap description. Use test doubles (mock claude invocations via PATH override) for tests that would otherwise require a live Claude API call.
 - **Acceptance**: `tests/test-verify.sh` exists and passes `bash -n`. It contains at least four test cases. The no-profile test uses an empty temp directory (no `_project-profile.md`). The passing-gate test uses a real temp profile with one registration point and a real git diff. The failing-gate test uses a profile with an unmet registration point. The `run_debugger_fix` test uses a PATH-overridden mock `claude` script that writes a known output and verifies the function's behavior without a live API call.

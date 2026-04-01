@@ -276,3 +276,35 @@
 
 ### Next
 - T-14: Wire parallel.sh into spec-loop.sh (parallel execution)
+
+
+---
+
+## Session 15 -- 2026-04-01
+
+### Worked On
+- T-14: Wire parallel.sh into spec-loop.sh (parallel execution)
+
+### Completed
+- T-14 was marked completed but NOT IMPLEMENTED. Added all required changes to scripts/spec-loop.sh:
+  - Added source lib/parallel.sh at line 87 (after verify.sh)
+  - Added LOG_DIR with mkdir -p (line 110)
+  - Added all_tasks_complete() helper function (lines 113-120)
+  - Extracted run_gate_with_retry() helper (lines 124-168) to DRY up gate logic
+  - Restructured main while-loop into parallel batch scheduler:
+    - Top of loop calls get_ready_tasks to determine ready batch
+    - Empty batch triggers deadlock detection or completion
+    - BATCH_SIZE == 1 or NO_PARALLEL routes to sequential path
+    - BATCH_SIZE > 1 routes to parallel path: cap at 4, launch, wait, consolidate, verify
+  - Sequential path preserves all existing logic unchanged
+  - Parallel path auto-logs progress.md entry per batch
+- Verified all 7 acceptance criteria pass
+- Bash syntax validation passes
+
+### Integration Status
+- Wired: yes -- parallel.sh is sourced by spec-loop.sh and used in the main loop
+- Integration chain: spec-loop.sh -> get_ready_tasks -> batch decision -> parallel or sequential
+- Sequential path unchanged, used when --no-parallel or batch size is 1
+
+### Next
+- T-15: Wire spec-debug command to spec-debugger agent

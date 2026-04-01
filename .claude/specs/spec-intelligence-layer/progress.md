@@ -129,3 +129,23 @@
 
 ### Next
 - T-9, T-10, T-11 unblocked. T-15 now unblocked.
+
+
+---
+
+## Session 8 - 2026-04-01
+
+### Worked On
+- T-9: Enhance spec-planner agent for profile awareness
+
+### Completed
+- Added Phase 0: Read Project Profile section to agents/spec-planner.md, inserted before Phase 1.
+- 8 numbered instructions: profile detection, Entity Registry gap analysis (prerequisite vs informational), Regression Marker cross-referencing with WARNING format, downstream propagation to Phase 2.
+- Prerequisites format (PRE-1, PRE-2...) for direct dependency CRUD gaps.
+- Detected Gaps (Informational) for unrelated gaps -- no auto-task creation.
+
+### Integration Status
+- Wired: n/a. Agent instruction enhancement, active when spec-planner is invoked by /spec.
+
+### Next
+- T-10, T-11 unblocked (remaining Phase 2 agent enhancements)

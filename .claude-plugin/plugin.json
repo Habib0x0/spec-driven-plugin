@@ -6,6 +6,37 @@
     "name": "habib0x"
   },
   "keywords": ["specs", "requirements", "design", "planning", "workflow", "EARS"],
-  "agents": ["./agents/"],
-  "commands": ["./commands/"]
+  "agents": [
+    "./agents/spec-planner.md",
+    "./agents/spec-tasker.md",
+    "./agents/spec-validator.md",
+    "./agents/spec-implementer.md",
+    "./agents/spec-tester.md",
+    "./agents/spec-reviewer.md",
+    "./agents/spec-consultant.md",
+    "./agents/spec-acceptor.md",
+    "./agents/spec-documenter.md",
+    "./agents/spec-debugger.md",
+    "./agents/spec-scanner.md"
+  ],
+  "commands": [
+    "./commands/spec.md",
+    "./commands/spec-brainstorm.md",
+    "./commands/spec-refine.md",
+    "./commands/spec-tasks.md",
+    "./commands/spec-status.md",
+    "./commands/spec-validate.md",
+    "./commands/spec-exec.md",
+    "./commands/spec-loop.md",
+    "./commands/spec-team.md",
+    "./commands/spec-accept.md",
+    "./commands/spec-docs.md",
+    "./commands/spec-release.md",
+    "./commands/spec-verify.md",
+    "./commands/spec-retro.md",
+    "./commands/spec-scan.md",
+    "./commands/spec-debug.md",
+    "./commands/spec-sync.md",
+    "./commands/spec-import.md"
+  ]
 }

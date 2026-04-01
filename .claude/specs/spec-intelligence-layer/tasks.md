@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 23 |
+| Pending | 22 |
 | In Progress | 0 |
-| Completed | 1 |
+| Completed | 2 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -37,8 +37,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-2: Create /spec-scan command file
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-1
 - **Description**: Create `commands/spec-scan.md` as a new slash command. The command: (1) checks for existing `_project-profile.md` and extracts any `## Manual Overrides` and `## Regression Markers` sections before scanning, (2) invokes the `spec-scanner` agent via the Task tool passing the project root, (3) merges new scan output with the preserved Manual Overrides and Regression Markers sections, (4) writes the merged profile, (5) prints a summary: number of patterns detected, confidence breakdown (high/medium/low counts), entities found, registration points mapped. Frontmatter must include `allowed-tools: [Read, Write, Glob, Grep, Task, AskUserQuestion]`.

@@ -334,3 +334,30 @@
 
 ### Next
 - T-16: Register spec-scanner in plugin manifest (next unverified task)
+
+
+---
+
+## Session 17 -- 2026-04-01
+
+### Worked On
+- T-16: Register spec-scanner in plugin manifest
+
+### Completed
+- plugin.json previously had no agents or commands sections -- only basic metadata (name, version, description, author, keywords)
+- Added agents section with spec-scanner entry (name, description, model: claude-sonnet-4-6, file: agents/spec-scanner.md)
+- Added commands section with spec-scan and spec-debug entries (name, description, file path)
+- Verified all acceptance criteria:
+  1. spec-scanner in agents section with model: claude-sonnet-4-6 -- PASS
+  2. spec-scan in commands section -- PASS
+  3. spec-debug in commands section -- PASS
+  4. File paths correct (all 3 files verified to exist on disk) -- PASS
+  5. JSON valid (passes jq .) -- PASS
+- Marked Wired: yes, Verified: yes
+
+### Integration Status
+- Wired: yes -- plugin.json is the discovery manifest that the plugin system reads
+- Integration chain: plugin system reads .claude-plugin/plugin.json -> discovers spec-scanner agent, spec-scan command, spec-debug command -> makes them available to users
+
+### Next
+- T-17: Update CLAUDE.md to document new commands and agents

@@ -112,6 +112,34 @@ Tell the spec-tasker agent:
 - To read the completed requirements.md and design.md
 - To generate tasks and sync to Claude Code todos
 
+### 4.5. Auto-Validate and Fix
+
+After the spec-tasker completes (and before the summary), run an automated validate-fix loop to catch and resolve spec issues without requiring a manual `/spec-validate` run.
+
+**Loop (up to 3 cycles):**
+
+1. **Invoke spec-validator**: Use the Task tool to invoke the `spec-validator` agent (subagent_type: `spec-validator`), passing the spec directory path. The validator checks requirements (EARS notation, no vague terms), design (covers all requirements), and tasks (traceability, valid dependencies, no cycles).
+
+2. **Parse validator output**: Read the validator's response for errors and warnings. If the validator reports zero issues, exit the loop immediately — no further cycles needed.
+
+3. **Route fixes to the appropriate agent**:
+   - **Requirements or design issues** (e.g., vague acceptance criteria, missing EARS notation, design gaps): invoke the `spec-planner` agent via Task tool, passing:
+     - The spec directory path
+     - The full validator report
+     - The PROJECT_PROFILE content (if available)
+     - Explicit instruction: **"Fix ONLY the specific issues listed below. Do not rewrite sections that passed validation."**
+   - **Task issues** (e.g., missing requirement IDs, invalid dependencies, traceability gaps): invoke the `spec-tasker` agent via Task tool, passing:
+     - The spec directory path
+     - The full validator report
+     - Explicit instruction: **"Fix ONLY the specific issues listed below. Do not rewrite sections that passed validation."**
+   - If both requirement/design and task issues exist, fix requirement/design issues first (since task fixes may depend on corrected requirements), then fix task issues.
+
+4. **Re-invoke validator**: After the fix agent completes, go back to step 1 and re-validate.
+
+5. **Exit conditions**:
+   - **All issues resolved**: Set `VALIDATION_STATUS` to `"Spec validated: PASS"` and exit loop.
+   - **3 cycles exhausted with remaining issues**: Set `VALIDATION_STATUS` to `"X errors and Y warnings remaining after 3 validation cycles"` (with actual counts) and exit loop.
+
 ### 5. Summary
 
 After all agents complete, provide a summary:
@@ -119,8 +147,10 @@ After all agents complete, provide a summary:
 - Number of user stories created
 - Number of tasks created
 - Key architectural decisions made
+- **Validation status**: Display the `VALIDATION_STATUS` from step 4.5 (either `"Spec validated: PASS"` or the remaining issue count)
 - Model usage: user interaction inline, Opus for spec writing, Sonnet for tasks
-- Next steps: suggest running `/spec-validate` before implementation
+- If validation passed: suggest running `/spec-exec` or `/spec-loop` for implementation
+- If warnings remain: suggest running `/spec-validate` manually to review remaining issues before implementation
 - Remind user: for implementation, use `/spec-exec` (single task) or `/spec-loop` (all tasks)
 
 ## Example Usage

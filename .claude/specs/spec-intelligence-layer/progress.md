@@ -220,3 +220,9 @@
 
 ### Next
 - Continue verification of T-12 through T-24
+
+---
+
+## Iteration 12 (auto-logged)
+- Date: 2026-04-01 14:16
+- Note: Claude did not update progress.md this iteration. Check git log for what changed.

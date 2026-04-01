@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 15 |
+| Pending | 14 |
 | In Progress | 0 |
-| Completed | 9 |
+| Completed | 10 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -111,7 +111,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-9: Enhance spec-planner agent for profile awareness
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-2, US-7, US-8
@@ -121,7 +121,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-10: Enhance spec-implementer agent for profile-aware wiring
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-2, US-3
@@ -131,7 +131,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-11: Enhance spec-tester agent for profile-aware verification
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-2, US-7
@@ -145,7 +145,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-12: Wire spec-scanner into /spec command (Phase 0 auto-scan)
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-1, US-2
@@ -155,7 +155,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-13: Wire verify.sh into spec-loop.sh (verification gates)
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-4
@@ -165,7 +165,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-14: Wire parallel.sh into spec-loop.sh (parallel execution)
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-6
@@ -175,7 +175,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-15: Wire spec-debug command to spec-debugger agent
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-5, US-7
@@ -185,7 +185,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-16: Register spec-scanner in plugin manifest
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-1
@@ -195,7 +195,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-17: Update CLAUDE.md to document new commands and agents
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-1, US-2, US-5, US-6
@@ -209,7 +209,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-18: Write integration tests for spec-scanner agent output format
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-1, US-2, NFR-5
@@ -219,7 +219,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-19: Write tests for parallel execution and conflict handling
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-6, NFR-4
@@ -229,7 +229,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-20: Write tests for verification gate logic
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-4, NFR-3
@@ -243,7 +243,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-21: Add error handling and edge cases to spec-scanner agent
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-1, NFR-2, NFR-7
@@ -253,7 +253,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-22: Add backward compatibility guard to spec-loop.sh
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: NFR-6
@@ -263,7 +263,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-23: Add validate-fix loop to /spec command
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: no
 - **Verified**: no
 - **Requirements**: US-9
@@ -273,7 +273,7 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-24: Write test for validate-fix loop
 
-- **Status**: pending
+- **Status**: completed
 - **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-9

@@ -361,3 +361,25 @@
 
 ### Next
 - T-17: Update CLAUDE.md to document new commands and agents
+
+
+---
+
+## Session 18 -- 2026-04-01
+
+### Worked On
+- T-17: Update CLAUDE.md to document new commands and agents
+
+### Completed
+- T-17 was marked completed but NOT IMPLEMENTED. Added all four required changes to CLAUDE.md:
+  1. Added /spec-scan and /spec-debug to Commands table
+  2. Added spec-scanner to Model Routing table with Sonnet 4.6, Phase 0 Scan
+  3. Added Project Profile section under Key Concepts describing _project-profile.md
+  4. Added --no-parallel flag mention to spec-loop.sh entry
+- Verified all 4 acceptance criteria pass. Marked Verified: yes.
+
+### Integration Status
+- Wired: n/a (documentation file, no code integration needed)
+
+### Next
+- T-18: Write integration tests for spec-scanner agent output format

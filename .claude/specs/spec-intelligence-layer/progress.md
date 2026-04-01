@@ -308,3 +308,29 @@
 
 ### Next
 - T-15: Wire spec-debug command to spec-debugger agent
+
+
+---
+
+## Session 16 -- 2026-04-01
+
+### Worked On
+- T-15: Wire spec-debug command to spec-debugger agent (verification)
+
+### Completed
+- Verified T-15 against all 6 acceptance criteria:
+  1. spec-debug.md references `spec-debugger` by name in Task tool invocation (Step 2: "Agent: `spec-debugger`") -- PASS
+  2. Command reads both diagnosis.md and fix.md after agent completes (Step 3) -- PASS
+  3. Regression marker verification step described with check-and-add-if-missing logic (Step 4) -- PASS
+  4. Retro auto-trigger condition (Attempts > 1 OR Files >= 3) explicitly stated (Step 5) -- PASS
+  5. Final summary lists bug ID, root cause, files changed, regression check, retro status (Step 6) -- PASS
+  6. No .claude/specs/ directory edge case handled (Edge Cases section: creates debug-<slug>/) -- PASS
+- Confirmed integration chain: /spec-debug command -> spec-debugger agent (name match verified in both files)
+- Marked Wired: yes, Verified: yes
+
+### Integration Status
+- Wired: yes -- command references agent by exact name, agent has Standalone Debug Mode section
+- Integration chain: user runs /spec-debug -> commands/spec-debug.md -> AskUserQuestion -> Task tool invokes spec-debugger -> agent writes diagnosis.md + fix.md -> command reads output -> verifies regression marker -> evaluates retro trigger -> prints summary
+
+### Next
+- T-16: Register spec-scanner in plugin manifest (next unverified task)

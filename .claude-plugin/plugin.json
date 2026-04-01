@@ -5,5 +5,25 @@
   "author": {
     "name": "habib0x"
   },
-  "keywords": ["specs", "requirements", "design", "planning", "workflow", "EARS"]
+  "keywords": ["specs", "requirements", "design", "planning", "workflow", "EARS"],
+  "agents": [
+    {
+      "name": "spec-scanner",
+      "description": "Scans a codebase to detect framework, patterns, entities, and registration points. Produces a persistent project profile.",
+      "model": "claude-sonnet-4-6",
+      "file": "agents/spec-scanner.md"
+    }
+  ],
+  "commands": [
+    {
+      "name": "spec-scan",
+      "description": "Trigger a full codebase scan and update the project profile",
+      "file": "commands/spec-scan.md"
+    },
+    {
+      "name": "spec-debug",
+      "description": "Diagnose and fix bugs with spec context awareness and regression tracking",
+      "file": "commands/spec-debug.md"
+    }
+  ]
 }

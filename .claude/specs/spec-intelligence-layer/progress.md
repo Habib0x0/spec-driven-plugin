@@ -199,3 +199,24 @@
 
 ### Next
 - Continue verification of T-11 through T-24
+
+
+---
+
+## Session 11 -- 2026-04-01
+
+### Worked On
+- T-11: Enhance spec-tester agent for profile-aware verification
+
+### Completed
+- T-11 was NOT YET IMPLEMENTED. Added two new sub-sections to agents/spec-tester.md Step 0:
+  - Profile-Based Registration Check (7 steps): reads _project-profile.md Registration Points, matches new artifacts by type, verifies presence at file:line (within 20 lines), reports INTEGRATION CHECK FAILED if missing. Runs BEFORE generic wiring checks. Skips if no profile exists.
+  - Regression Marker Check (5 steps): reads Regression Markers section, cross-references affected files against task modified files, adds marker regression check as explicit verification step alongside normal acceptance criteria. Skips if no profile or markers are none.
+- Verified all 4 acceptance criteria pass. Marked Verified: yes.
+
+### Integration Status
+- Wired: no (agent instruction enhancement -- active when spec-tester is invoked by /spec-team or /spec-exec)
+- The profile-based checks layer on top of existing generic UI/API/backend checks
+
+### Next
+- Continue verification of T-12 through T-24

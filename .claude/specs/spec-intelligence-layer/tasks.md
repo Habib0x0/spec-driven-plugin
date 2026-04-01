@@ -15,9 +15,9 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 | Status | Count |
 |--------|-------|
-| Pending | 24 |
+| Pending | 23 |
 | In Progress | 0 |
-| Completed | 0 |
+| Completed | 1 |
 | Wired | 0 |
 | Verified | 0 |
 
@@ -27,8 +27,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 
 ### T-1: Create spec-scanner agent file
 
-- **Status**: pending
-- **Wired**: no
+- **Status**: completed
+- **Wired**: n/a
 - **Verified**: no
 - **Requirements**: US-1, US-2
 - **Description**: Create `agents/spec-scanner.md` as a new agent definition. The agent uses model `claude-sonnet-4-6`, tools Read/Glob/Grep/Write. It must include: (1) an ordered scan strategy (manifest files → router files → nav files → API handler files → model/entity files), (2) a confidence heuristic (3+ examples = high, 1-2 = medium, 0 inferred = low), (3) a security skip list (`.env*`, `*.key`, `*.pem`, `*.secret`, `*credentials*`, `.aws/`, `.gcp/`, `.ssh/`, `node_modules/`, `vendor/`, `.git/`), (4) the exact three-section profile format (Stack, Patterns, Entity Registry, Registration Points, Regression Markers, Manual Overrides) with the markdown table for Entity Registry, (5) instructions on when to split into domain files vs single file (>200 lines), and (6) error handling for unrecognized frameworks (emit minimal profile with `confidence: low` and prompt user for Manual Overrides).

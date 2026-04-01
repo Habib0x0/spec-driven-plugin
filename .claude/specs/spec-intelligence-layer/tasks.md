@@ -146,8 +146,8 @@ Verified: Has it been tested end-to-end as a user would interact with it?
 ### T-12: Wire spec-scanner into /spec command (Phase 0 auto-scan)
 
 - **Status**: completed
-- **Wired**: no
-- **Verified**: no
+- **Wired**: yes
+- **Verified**: yes
 - **Requirements**: US-1, US-2
 - **Description**: Modify `commands/spec.md` to integrate Phase 0 auto-scan. After step 1 (Initialize Spec Directory) and before step 2 (Interactive Requirements Gathering), add a new step titled "Phase 0: Project Profile Check": (1) check whether `.claude/specs/_project-profile.md` or `.claude/specs/_profile-index.md` exists; (2) if neither exists, invoke the `spec-scanner` agent via Task tool (passing the project root as cwd), and wait for it to write the profile; (3) if the profile already exists, read it; (4) store the profile content as a variable to pass downstream. Then modify step 3 (Requirements + Design Writing) to pass the profile content to the spec-planner agent. Modify step 4 (Tasks Phase) to pass the profile content to the spec-tasker agent. The existing workflow for steps 2-5 is otherwise unchanged. Update the Model Routing table to include spec-scanner (Sonnet 4.6, Phase 0 scan).
 - **Acceptance**: `commands/spec.md` contains a "Phase 0: Project Profile Check" step between step 1 and step 2. The step has a conditional: "if profile does not exist → invoke spec-scanner agent". The spec-planner invocation in step 3 mentions passing profile content. The spec-tasker invocation in step 4 mentions passing profile content. The Model Routing table includes spec-scanner. Running `/spec <name>` in a project without a profile will trigger the scanner before asking the user any questions.

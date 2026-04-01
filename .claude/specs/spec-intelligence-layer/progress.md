@@ -508,3 +508,34 @@
 
 ### Next
 - T-24: Write test for validate-fix loop (last remaining unverified task)
+
+
+---
+
+## Session 24 -- 2026-04-01
+
+### Worked On
+- T-24: Write test for validate-fix loop
+
+### Completed
+- Created tests/test-validate-fix.md with 6 test scenarios (markdown checklist format):
+  - Test 1: Clean spec early exit (validator runs once, no fix agents invoked)
+  - Test 2: Vague requirement triggers fix cycle (intentional "quickly" term, routed to planner)
+  - Test 3: Task traceability gap triggers tasker fix (missing US-3 references)
+  - Test 4: Mixed issues fix requirements before tasks (ordering verification)
+  - Test 5: Persistent issues cap at 3 cycles (exhaustion behavior)
+  - Test 6: Validation status always appears in summary (both pass and fail cases)
+- Verified all acceptance criteria:
+  - 6 test scenarios (requires 4+): PASS
+  - Known issue test with specific reproducible issue (Test 2: "quickly", Test 3: US-3 removal): PASS
+  - Early exit test (Test 1): PASS
+  - Runnable by human following checklist: PASS
+- Marked T-24 Verified: yes
+- Updated Summary: 24/24 completed, 24/24 verified
+
+### Integration Status
+- Wired: n/a (test checklist file, not wired into application)
+
+### ALL TASKS COMPLETE
+- All 24 tasks are Status: completed, Verified: yes
+- Integration sweep needed before declaring COMPLETE

@@ -22,10 +22,11 @@ Create a new specification for a feature using the 3-phase spec-driven workflow.
 
 | Phase | Who | Model | Why |
 |-------|-----|-------|-----|
+| Phase 0 Scan | spec-scanner agent | Sonnet 4.6 | Fast multi-file reading; reasoning depth not critical |
 | Requirements Gathering | /spec command (inline) | Current model | Interactive — needs AskUserQuestion |
-| Requirements + Design Writing | spec-planner agent | Opus 4.5 | Deep reasoning for edge cases and architecture |
-| Tasks | spec-tasker agent | Sonnet | Fast, structured task generation |
-| Validation | spec-validator agent | Sonnet | Checklist-based verification |
+| Requirements + Design Writing | spec-planner agent | Opus 4.6 | Deep reasoning for edge cases and architecture |
+| Tasks | spec-tasker agent | Sonnet 4.6 | Fast, structured task generation |
+| Validation | spec-validator agent | Sonnet 4.6 | Checklist-based verification |
 
 ## Arguments
 
@@ -45,6 +46,23 @@ Create the spec directory structure:
 ```
 
 Use templates from `${CLAUDE_PLUGIN_ROOT}/templates/` as starting points. Copy each template to the spec directory.
+
+### 1.5. Phase 0: Project Profile Check
+
+Before gathering requirements, check for (or create) a project profile so that downstream agents have codebase context.
+
+1. **Check for existing profile**: Use Glob to look for `.claude/specs/_project-profile.md` or `.claude/specs/_profile-index.md` in the project root.
+
+2. **If neither exists — invoke spec-scanner**:
+   - Use the Task tool to invoke the `spec-scanner` agent (subagent_type: `spec-scanner`).
+   - Pass the project root as the working directory.
+   - The scanner will analyze the codebase and write `.claude/specs/_project-profile.md` (or split files + `_profile-index.md` for large projects).
+   - Wait for the scanner to complete before proceeding.
+
+3. **If a profile already exists — read it**:
+   - Read the full content of `_project-profile.md` (or for split profiles, read `_profile-index.md` and then each referenced domain file).
+
+4. **Store profile content**: Keep the profile content available as `PROJECT_PROFILE` context to pass to the spec-planner and spec-tasker agents in subsequent steps.
 
 ### 2. Interactive Requirements Gathering (inline — NOT delegated)
 
@@ -74,6 +92,7 @@ Pass the agent ALL of the following context:
 - The spec directory path
 - **The complete user answers from step 2** (formatted clearly)
 - **Relevant codebase context** (existing patterns, tech stack, conventions you discovered)
+- **The PROJECT_PROFILE content from Phase 0** (if available — this gives the planner Entity Registry, Registration Points, Regression Markers, and stack details for profile-aware requirements and design)
 - Instruction to write both requirements.md (with EARS notation) and design.md
 - Instruction to NOT ask clarifying questions — all user input has already been gathered
 
@@ -89,6 +108,7 @@ After the spec-planner completes, delegate to the **spec-tasker** agent using th
 Tell the spec-tasker agent:
 - The feature name
 - The spec directory path
+- **The PROJECT_PROFILE content from Phase 0** (if available — this gives the tasker Registration Points and Patterns context for generating wiring-aware tasks)
 - To read the completed requirements.md and design.md
 - To generate tasks and sync to Claude Code todos
 

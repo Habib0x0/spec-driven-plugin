@@ -226,3 +226,29 @@
 ## Iteration 12 (auto-logged)
 - Date: 2026-04-01 14:16
 - Note: Claude did not update progress.md this iteration. Check git log for what changed.
+
+
+---
+
+## Session 13 -- 2026-04-01
+
+### Worked On
+- T-12: Wire spec-scanner into /spec command (Phase 0 auto-scan) -- verification
+
+### Completed
+- Verified T-12 against all 6 acceptance criteria:
+  1. Phase 0 Project Profile Check step at 1.5 (between step 1 and step 2) -- PASS
+  2. Conditional: if profile does not exist invoke spec-scanner agent -- PASS
+  3. spec-planner invocation in step 3 passes PROJECT_PROFILE content -- PASS
+  4. spec-tasker invocation in step 4 passes PROJECT_PROFILE content -- PASS
+  5. Model Routing table includes spec-scanner (Sonnet 4.6, Phase 0 Scan) -- PASS
+  6. Scanner runs before user interaction (Step 1.5 before Step 2) -- PASS
+- Confirmed integration chain: /spec command Phase 0 spec-scanner agent (agents/spec-scanner.md exists with matching name)
+- Marked Wired: yes, Verified: yes
+
+### Integration Status
+- T-12 wires the spec-scanner agent into the /spec command workflow as Phase 0
+- Integration chain: user runs /spec Step 1.5 checks for _project-profile.md invokes spec-scanner if missing profile content passed to spec-planner (Step 3) and spec-tasker (Step 4)
+
+### Next
+- T-13: Wire verify.sh into spec-loop.sh (verification gates) -- next unverified task

@@ -56,7 +56,7 @@ _check_spec_complete() {
 
   while IFS= read -r line; do
     # detect task header (### T-N: ...)
-    if [[ "$line" =~ ^###\ T-[0-9]+ ]]; then
+    if [[ "$line" =~ ^###\ T-[0-9]+(\.[0-9]+)? ]]; then
       # check previous task if we were tracking one
       if $in_task; then
         total=$((total + 1))

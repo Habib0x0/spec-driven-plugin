@@ -384,7 +384,7 @@ EOF
     fi
 
     # verification gate for last completed task
-    LAST_COMPLETED_TASK=$(grep -B2 'Status.*completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | tail -1 | sed 's/^### \(T-[0-9]*\).*/\1/' || echo "")
+    LAST_COMPLETED_TASK=$(grep -B2 'Status.*completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | tail -1 | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' || echo "")
     if [ -n "$LAST_COMPLETED_TASK" ]; then
       run_gate_with_retry "$LAST_COMPLETED_TASK"
     fi

@@ -20,7 +20,7 @@ parse_dependency_graph() {
   local current_task=""
   while IFS= read -r line; do
     # match task headers like "### T-1: ..."
-    if [[ "$line" =~ ^###\ (T-[0-9]+): ]]; then
+    if [[ "$line" =~ ^###\ (T-[0-9]+(\.[0-9]+)?): ]]; then
       current_task="${BASH_REMATCH[1]}"
     fi
 

@@ -84,6 +84,12 @@ for f in requirements.md design.md tasks.md; do
   fi
 done
 
+# parallel requires worktrees — force sequential if worktrees disabled
+if [ "$USE_WORKTREE" = false ] && [ "$NO_PARALLEL" = false ]; then
+  echo "Note: --no-worktree implies --no-parallel (parallel requires isolated worktrees)."
+  NO_PARALLEL=true
+fi
+
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
 source "$SCRIPT_DIR/lib/worktree.sh"
@@ -133,12 +139,19 @@ LOG_DIR=".claude/specs/$SPEC_NAME/logs"
 mkdir -p "$LOG_DIR"
 
 # all_tasks_complete(tasks_file)
-# Returns 0 if every task in the file has status "completed", 1 otherwise.
+# Returns 0 if every task is completed, wired, AND verified. Matches the documented completion bar.
 all_tasks_complete() {
   local tasks_file="$1"
   local has_pending
-  has_pending=$(grep -c '^\- \*\*Status\*\*: pending\|^\- \*\*Status\*\*: in_progress' "$tasks_file" 2>/dev/null || echo "0")
-  [ "$has_pending" -eq 0 ]
+  has_pending=$(grep -cE '^\- \*\*Status\*\*: (pending|in_progress)' "$tasks_file" 2>/dev/null || true)
+  has_pending=${has_pending:-0}
+  local has_unverified
+  has_unverified=$(grep -c '^\- \*\*Verified\*\*: no' "$tasks_file" 2>/dev/null || true)
+  has_unverified=${has_unverified:-0}
+  local has_unwired
+  has_unwired=$(grep -c '^\- \*\*Wired\*\*: no' "$tasks_file" 2>/dev/null || true)
+  has_unwired=${has_unwired:-0}
+  [ "$has_pending" -eq 0 ] && [ "$has_unverified" -eq 0 ] && [ "$has_unwired" -eq 0 ]
 }
 
 ITERATION=0
@@ -194,22 +207,63 @@ while true; do
   ITER_START=$(date +%s)
   echo "=== Spec Loop: Iteration $ITERATION / $MAX_ITERATIONS ==="
 
-  # --- Parallel batch scheduling ---
-  READY_TASKS=$(get_ready_tasks "$SPEC_DIR/tasks.md")
-  BATCH_SIZE=$(echo "$READY_TASKS" | wc -w | tr -d ' ')
-  # handle empty string from wc
-  [ -z "$BATCH_SIZE" ] && BATCH_SIZE=0
-
-  if [ "$BATCH_SIZE" -eq 0 ]; then
+  # --- Task scheduling ---
+  if [ "$NO_PARALLEL" = true ]; then
+    # sequential mode: skip expensive get_ready_tasks, just check completion
     if all_tasks_complete "$SPEC_DIR/tasks.md"; then
       echo ""
       echo "All tasks complete!"
       print_pr_suggestion "$SPEC_NAME"
+      if [ "$AUTO_COMPLETE" = true ]; then
+        echo ""
+        echo "Starting post-completion pipeline..."
+        bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
+      fi
       break
-    else
-      echo "DEADLOCK: no ready tasks but not all complete"
-      echo "Check tasks.md for dependency cycles or stuck tasks."
-      exit 1
+    fi
+    BATCH_SIZE=1
+  else
+    READY_TASKS=$(get_ready_tasks "$SPEC_DIR/tasks.md")
+    # filter tasks for parallel eligibility:
+    # - completed-but-unverified tasks need sequential re-verification, not parallel re-implementation
+    # - sequential-marked tasks (from merge conflict escalation) must run sequentially
+    PARALLEL_TASKS=""
+    for _CANDIDATE in $READY_TASKS; do
+      _CAND_STATUS=$(_get_task_status "$SPEC_DIR/tasks.md" "$_CANDIDATE")
+      if [[ "$_CAND_STATUS" == "completed" ]]; then
+        continue
+      fi
+      if ! _is_sequential_task "$SPEC_DIR/tasks.md" "$_CANDIDATE"; then
+        PARALLEL_TASKS="$PARALLEL_TASKS $_CANDIDATE"
+      fi
+    done
+    PARALLEL_TASKS=$(echo "$PARALLEL_TASKS" | xargs)
+    # use parallel-eligible count for batch sizing (sequential tasks handled in sequential path)
+    BATCH_SIZE=$(echo "$READY_TASKS" | wc -w | tr -d ' ')
+    [ -z "$BATCH_SIZE" ] && BATCH_SIZE=0
+    PARALLEL_COUNT=$(echo "$PARALLEL_TASKS" | wc -w | tr -d ' ')
+    [ -z "$PARALLEL_COUNT" ] && PARALLEL_COUNT=0
+    # if only sequential-marked tasks remain, force sequential path
+    if [ "$PARALLEL_COUNT" -le 1 ] && [ "$BATCH_SIZE" -gt 0 ]; then
+      BATCH_SIZE=1
+    fi
+
+    if [ "$BATCH_SIZE" -eq 0 ]; then
+      if all_tasks_complete "$SPEC_DIR/tasks.md"; then
+        echo ""
+        echo "All tasks complete!"
+        print_pr_suggestion "$SPEC_NAME"
+        if [ "$AUTO_COMPLETE" = true ]; then
+          echo ""
+          echo "Starting post-completion pipeline..."
+          bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
+        fi
+        break
+      else
+        echo "DEADLOCK: no ready tasks but not all complete"
+        echo "Check tasks.md for dependency cycles or stuck tasks."
+        exit 1
+      fi
     fi
   fi
 
@@ -241,7 +295,7 @@ while true; do
         head -4 "$SPEC_DIR/progress.md"
         grep -c '^---$' "$SPEC_DIR/progress.md" > /dev/null 2>&1 && \
           awk '/^---$/{n++} n>0' "$SPEC_DIR/progress.md" | \
-          awk -v tail="$PROGRESS_TAIL" 'BEGIN{n=0} /^---$/{n++} {lines[n]=lines[n] $0 "\n"} END{start=n-tail; if(start<1) start=1; for(i=start;i<=n;i++) printf "%s", lines[i]}' \
+          awk -v tail="$PROGRESS_TAIL" 'BEGIN{n=0} /^---$/{n++} {lines[n]=lines[n] $0 "\n"} END{start=n-tail+1; if(start<1) start=1; for(i=start;i<=n;i++) printf "%s", lines[i]}' \
           || cat "$SPEC_DIR/progress.md"
       fi
       if [ "$ITERATION" -eq 1 ]; then
@@ -354,6 +408,9 @@ CRITICAL RULES:
 EOF
     } > "$PROMPT_FILE"
 
+    # snapshot completed task IDs before iteration to detect which task was just completed
+    COMPLETED_BEFORE=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+
     # snapshot progress.md before iteration to detect if Claude updated it
     PROGRESS_HASH_BEFORE=""
     if [ -f "$SPEC_DIR/progress.md" ]; then
@@ -383,11 +440,11 @@ EOF
       echo "WARNING: progress.md was not updated by iteration $ITERATION — fallback entry appended."
     fi
 
-    # verification gate for last completed task
-    LAST_COMPLETED_TASK=$(grep -B2 'Status.*completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | tail -1 | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' || echo "")
-    if [ -n "$LAST_COMPLETED_TASK" ]; then
-      run_gate_with_retry "$LAST_COMPLETED_TASK"
-    fi
+    # verification gate for tasks completed THIS iteration (not any old completed task)
+    COMPLETED_AFTER=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+    while IFS= read -r NEWLY_COMPLETED; do
+      [ -n "$NEWLY_COMPLETED" ] && run_gate_with_retry "$NEWLY_COMPLETED"
+    done < <(comm -13 <(echo "$COMPLETED_BEFORE") <(echo "$COMPLETED_AFTER"))
 
     if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
       echo ""
@@ -407,8 +464,8 @@ EOF
     # --- Parallel path (batch size > 1) ---
     create_checkpoint "$ITERATION" "$WORK_DIR"
 
-    # cap batch at 4 tasks
-    BATCH=$(echo "$READY_TASKS" | tr ' ' '\n' | head -4 | tr '\n' ' ')
+    # cap batch at 4 parallel-eligible tasks
+    BATCH=$(echo "$PARALLEL_TASKS" | tr ' ' '\n' | head -4 | tr '\n' ' ')
     BATCH_COUNT=$(echo "$BATCH" | wc -w | tr -d ' ')
     echo "Launching parallel batch ($BATCH_COUNT tasks): $BATCH"
 

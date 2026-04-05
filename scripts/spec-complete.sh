@@ -124,11 +124,13 @@ run_step() {
 
   if [ -n "$promise" ] && ! grep -q "<promise>${promise}</promise>" "$output_file"; then
     echo ""
-    echo "WARNING: $step_name completed but promise marker <promise>${promise}</promise> not found (${step_duration}s)"
-  else
-    echo ""
-    echo "PASSED: $step_name (${step_duration}s)"
+    echo "FAILED: $step_name — expected promise <promise>${promise}</promise> not found (${step_duration}s)"
+    rm -f "$output_file"
+    return 1
   fi
+
+  echo ""
+  echo "PASSED: $step_name (${step_duration}s)"
 
   rm -f "$output_file"
   return 0
@@ -137,17 +139,17 @@ run_step() {
 # Step 1: User Acceptance Testing
 if [ "$SKIP_ACCEPT" = false ]; then
   if ! run_step "User Acceptance Testing" "spec-accept.sh" "ACCEPTED"; then
-    echo ""
-    echo "Pipeline halted: UAT failed."
-    PIPELINE_STATUS="failed"
-  fi
-
-  # check for rejection
-  if [ -f "$SPEC_DIR/acceptance.md" ] && grep -q "REJECTED" "$SPEC_DIR/acceptance.md"; then
-    echo ""
-    echo "Pipeline halted: Spec was REJECTED during UAT."
-    echo "Fix the issues in acceptance.md and re-run."
-    PIPELINE_STATUS="rejected"
+    # distinguish deliberate rejection from script crash
+    if [ -f "$SPEC_DIR/acceptance.md" ] && grep -q "REJECTED" "$SPEC_DIR/acceptance.md"; then
+      echo ""
+      echo "Pipeline halted: Spec was REJECTED during UAT."
+      echo "Fix the issues in acceptance.md and re-run."
+      PIPELINE_STATUS="rejected"
+    else
+      echo ""
+      echo "Pipeline halted: UAT failed."
+      PIPELINE_STATUS="failed"
+    fi
   fi
 else
   echo "Skipping: User Acceptance Testing (--skip-accept)"
@@ -158,8 +160,10 @@ if [ "$PIPELINE_STATUS" = "success" ] && [ "$SKIP_DOCS" = false ]; then
   if ! run_step "Documentation Generation" "spec-docs.sh" "DOCS_GENERATED"; then
     echo "WARNING: Documentation generation failed, continuing pipeline..."
   fi
-else
-  [ "$SKIP_DOCS" = true ] && echo "Skipping: Documentation (--skip-docs)"
+elif [ "$SKIP_DOCS" = true ]; then
+  echo "Skipping: Documentation (--skip-docs)"
+elif [ "$PIPELINE_STATUS" != "success" ]; then
+  echo "Skipping: Documentation (pipeline status: $PIPELINE_STATUS)"
 fi
 
 # Step 3: Release
@@ -167,8 +171,10 @@ if [ "$PIPELINE_STATUS" = "success" ] && [ "$SKIP_RELEASE" = false ]; then
   if ! run_step "Release Notes" "spec-release.sh" "RELEASED"; then
     echo "WARNING: Release generation failed, continuing pipeline..."
   fi
-else
-  [ "$SKIP_RELEASE" = true ] && echo "Skipping: Release Notes (--skip-release)"
+elif [ "$SKIP_RELEASE" = true ]; then
+  echo "Skipping: Release Notes (--skip-release)"
+elif [ "$PIPELINE_STATUS" != "success" ]; then
+  echo "Skipping: Release Notes (pipeline status: $PIPELINE_STATUS)"
 fi
 
 # Step 4: Retrospective
@@ -176,8 +182,10 @@ if [ "$PIPELINE_STATUS" = "success" ] && [ "$SKIP_RETRO" = false ]; then
   if ! run_step "Retrospective" "spec-retro.sh" "RETRO_COMPLETE"; then
     echo "WARNING: Retrospective failed, continuing pipeline..."
   fi
-else
-  [ "$SKIP_RETRO" = true ] && echo "Skipping: Retrospective (--skip-retro)"
+elif [ "$SKIP_RETRO" = true ]; then
+  echo "Skipping: Retrospective (--skip-retro)"
+elif [ "$PIPELINE_STATUS" != "success" ]; then
+  echo "Skipping: Retrospective (pipeline status: $PIPELINE_STATUS)"
 fi
 
 PIPELINE_END=$(date +%s)

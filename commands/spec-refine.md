@@ -6,6 +6,7 @@ allowed-tools:
   - Write
   - Edit
   - Glob
+  - Task
   - AskUserQuestion
 ---
 

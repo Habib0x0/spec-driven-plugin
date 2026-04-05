@@ -210,4 +210,4 @@ EOF
 echo "=== Preparing release for: $SPEC_NAME (version bump: $VERSION_BUMP) ==="
 [ "$CREATE_TAG" = true ] && echo "Will create git tag"
 [ "$CREATE_RELEASE" = true ] && echo "Will create GitHub release"
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")"

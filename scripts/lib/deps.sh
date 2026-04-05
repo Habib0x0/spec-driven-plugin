@@ -163,18 +163,24 @@ check_dependencies() {
   local tmp_visited tmp_path
   tmp_visited="$(mktemp -d)"
   tmp_path="$(mktemp -d)"
-  trap "rm -rf '$tmp_visited' '$tmp_path'" RETURN
 
   touch "$tmp_path/$spec_name"
   touch "$tmp_visited/$spec_name"
 
+  local cycle_found=false
   while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
-    _detect_cycle "$dep" "$tmp_visited" "$tmp_path" "$spec_name" || exit 1
+    if ! _detect_cycle "$dep" "$tmp_visited" "$tmp_path" "$spec_name"; then
+      cycle_found=true
+      break
+    fi
   done <<< "$deps"
 
   rm -rf "$tmp_visited" "$tmp_path"
-  trap - RETURN
+
+  if $cycle_found; then
+    exit 1
+  fi
 
   # check each dependency exists and is complete
   local has_failure=false

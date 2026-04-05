@@ -169,4 +169,4 @@ EOF
 } > "$PROMPT_FILE"
 
 echo "=== Running acceptance testing for: $SPEC_NAME (scope: $SCOPE) ==="
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")"

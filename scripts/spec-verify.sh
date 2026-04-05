@@ -182,7 +182,7 @@ EOF
 echo "=== Running post-deployment verification for: $SPEC_NAME ==="
 echo "Target: $TARGET_URL"
 echo "Scope: $SCOPE"
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)" | tee "$OUTPUT_FILE"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
 
 # exit with appropriate code for CI/CD
 if grep -q '<promise>VERIFIED</promise>' "$OUTPUT_FILE"; then
@@ -192,5 +192,9 @@ if grep -q '<promise>VERIFIED</promise>' "$OUTPUT_FILE"; then
 elif grep -q '<promise>VERIFICATION_FAILED</promise>' "$OUTPUT_FILE"; then
   echo ""
   echo "Verification FAILED"
+  exit 1
+else
+  echo ""
+  echo "Verification INCONCLUSIVE — no promise marker found in output"
   exit 1
 fi

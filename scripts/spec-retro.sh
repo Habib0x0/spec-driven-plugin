@@ -164,4 +164,4 @@ EOF
 } > "$PROMPT_FILE"
 
 echo "=== Running retrospective for: $SPEC_NAME ==="
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")"

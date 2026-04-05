@@ -187,7 +187,7 @@ EOF
 } > "$PROMPT_FILE"
 
 echo "=== Running spec-exec for: $SPEC_NAME ==="
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)" | tee "$OUTPUT_FILE"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
 
 if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
   echo ""

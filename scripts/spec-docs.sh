@@ -143,4 +143,4 @@ EOF
 
 echo "=== Generating documentation for: $SPEC_NAME ==="
 echo "Output: $OUTPUT_DIR"
-claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)"
+claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")"

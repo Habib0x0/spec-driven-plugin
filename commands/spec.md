@@ -85,7 +85,7 @@ Collect all answers into a structured brief. Also include any relevant codebase 
 
 ### 3. Requirements + Design Writing (via spec-planner agent)
 
-Delegate to the **spec-planner** agent using the Task tool. This agent runs on **Opus 4.5** for deep reasoning.
+Delegate to the **spec-planner** agent using the Task tool. This agent runs on **Opus 4.6** for deep reasoning.
 
 Pass the agent ALL of the following context:
 - The feature name

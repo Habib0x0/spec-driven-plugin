@@ -128,6 +128,8 @@ Break down the design into discrete, trackable implementation tasks.
 ### T-1: [Task Title]
 
 - **Status**: pending | in_progress | completed
+- **Wired**: no | yes | n/a
+- **Verified**: no | yes
 - **Requirements**: US-1, US-2
 - **Description**: [Detailed description]
 - **Acceptance**: [How to verify completion]

@@ -266,7 +266,7 @@ trap cleanup EXIT
 
 # run with agent teams enabled, capture exit code
 set +e
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude --dangerously-skip-permissions "$(cat $PROMPT_FILE)" | tee "$OUTPUT_FILE"
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
 CLAUDE_EXIT=${PIPESTATUS[0]}
 set -e
 

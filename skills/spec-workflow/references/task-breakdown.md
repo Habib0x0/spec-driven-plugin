@@ -184,26 +184,26 @@ Comprehensive test coverage:
 ```markdown
 ## Phase 4: Testing
 
-### T-9: Write unit tests for auth service
+### T-10: Write unit tests for auth service
 - Status: pending
 - Requirements: US-1
 - Description: Unit tests for password hashing, JWT generation
 - Acceptance: >80% coverage, all tests pass
 - Dependencies: T-6
 
-### T-10: Write integration tests for auth flow
+### T-11: Write integration tests for auth flow
 - Status: pending
 - Requirements: US-1
 - Description: E2E tests for registration and login flows
 - Acceptance: All happy paths and error cases covered
 - Dependencies: T-7, T-8
 
-### T-11: Write E2E tests for user journeys
+### T-12: Write E2E tests for user journeys
 - Status: pending
 - Requirements: US-1, US-2
 - Description: Playwright tests for complete user flows
 - Acceptance: Tests run in CI, cover critical paths
-- Dependencies: T-10
+- Dependencies: T-11
 ```
 
 ### Phase 5: Polish
@@ -213,26 +213,26 @@ Error handling, edge cases, documentation:
 ```markdown
 ## Phase 5: Polish
 
-### T-12: Add error handling and logging
+### T-13: Add error handling and logging
 - Status: pending
 - Requirements: US-1
 - Description: Structured error responses, request logging
 - Acceptance: All errors return consistent format, logs are searchable
 - Dependencies: T-8
 
-### T-13: Implement rate limiting
+### T-14: Implement rate limiting
 - Status: pending
 - Requirements: US-1 (security)
 - Description: Add rate limiting to auth endpoints
 - Acceptance: Returns 429 after 5 failed attempts in 15 minutes
 - Dependencies: T-6
 
-### T-14: Add monitoring and alerts
+### T-15: Add monitoring and alerts
 - Status: pending
 - Requirements: none (operational)
 - Description: Set up APM, error tracking, alert rules
 - Acceptance: Errors trigger alerts, dashboard shows metrics
-- Dependencies: T-12
+- Dependencies: T-13
 ```
 
 ## Task Dependencies

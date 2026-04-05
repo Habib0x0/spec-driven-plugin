@@ -21,6 +21,10 @@ parse_dependency_graph() {
   while IFS= read -r line; do
     # match task headers like "### T-1: ..."
     if [[ "$line" =~ ^###\ (T-[0-9]+(\.[0-9]+)?): ]]; then
+      # emit previous task if it had no Dependencies line
+      if [[ -n "$current_task" ]]; then
+        echo "$current_task:none"
+      fi
       current_task="${BASH_REMATCH[1]}"
     fi
 
@@ -32,6 +36,11 @@ parse_dependency_graph() {
       current_task=""
     fi
   done < "$tasks_file"
+
+  # emit final task if it had no Dependencies line
+  if [[ -n "$current_task" ]]; then
+    echo "$current_task:none"
+  fi
 }
 
 # _get_task_status(tasks_file, task_id)
@@ -57,8 +66,30 @@ _get_task_status() {
   echo "unknown"
 }
 
+# _get_task_verified(tasks_file, task_id)
+# Looks up the Verified field for a single task.
+_get_task_verified() {
+  local tasks_file="$1"
+  local target_id="$2"
+
+  local in_task=false
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^###\ ${target_id}: ]]; then
+      in_task=true
+    elif [[ "$line" =~ ^###\  ]]; then
+      in_task=false
+    fi
+    if $in_task && [[ "$line" =~ ^-\ \*\*Verified\*\*:\ (.+)$ ]]; then
+      echo "${BASH_REMATCH[1]}"
+      return
+    fi
+  done < "$tasks_file"
+
+  echo "unknown"
+}
+
 # get_ready_tasks(tasks_file)
-# Returns task IDs whose status is "pending" and all dependencies are "completed".
+# Returns task IDs that need work: "pending" with deps met, OR "completed" but not verified.
 # Output: space-separated task IDs on a single line.
 get_ready_tasks() {
   local tasks_file="$1"
@@ -78,14 +109,25 @@ get_ready_tasks() {
     local task_id="${line%%:*}"
     local deps="${line#*:}"
 
-    # skip non-pending tasks
     local task_status
     task_status=$(_get_task_status "$tasks_file" "$task_id")
+
+    # completed but not verified — needs re-work
+    if [[ "$task_status" == "completed" ]]; then
+      local verified
+      verified=$(_get_task_verified "$tasks_file" "$task_id")
+      if [[ "$verified" != "yes" ]]; then
+        ready_tasks="$ready_tasks $task_id"
+      fi
+      continue
+    fi
+
+    # skip non-pending tasks
     if [[ "$task_status" != "pending" ]]; then
       continue
     fi
 
-    # check if all deps are completed
+    # check if all deps are completed AND verified
     local all_deps_met=true
     if [[ "$deps" != "none" ]]; then
       local old_ifs="$IFS"
@@ -93,7 +135,9 @@ get_ready_tasks() {
       for dep in $deps; do
         local dep_status
         dep_status=$(_get_task_status "$tasks_file" "$dep")
-        if [[ "$dep_status" != "completed" ]]; then
+        local dep_verified
+        dep_verified=$(_get_task_verified "$tasks_file" "$dep")
+        if [[ "$dep_status" != "completed" ]] || [[ "$dep_verified" != "yes" ]]; then
           all_deps_met=false
           break
         fi
@@ -142,7 +186,8 @@ launch_parallel_task() {
     git worktree prune 2>/dev/null
   fi
 
-  _create_worktree "$worktree_path" "$branch_name"
+  # redirect worktree creation output to stderr so it doesn't pollute PID capture
+  _create_worktree "$worktree_path" "$branch_name" >&2
 
   local task_worktree
   task_worktree="$(cd "$worktree_path" && pwd)"
@@ -249,9 +294,10 @@ consolidate_parallel_results() {
       requeue_count=$((requeue_count + 1))
 
       if [ "$requeue_count" -ge 3 ]; then
-        # mark for sequential execution by adding a marker
+        # mark for sequential execution with a marker comment
         _set_task_status "$spec_dir/tasks.md" "$task_id" "pending"
-        echo "CONFLICT ($task_id): re-queued $requeue_count times — marking for sequential execution" >&2
+        _set_sequential_marker "$spec_dir/tasks.md" "$task_id"
+        echo "CONFLICT ($task_id): re-queued $requeue_count times — marked for sequential execution" >&2
 
         # log to progress.md
         {
@@ -377,6 +423,60 @@ _set_requeue_count() {
   # handle case where task is the last section in the file
   if $in_task && ! $found_requeue; then
     echo "<!-- requeue: $count -->" >> "$tmp_file"
+  fi
+
+  mv "$tmp_file" "$tasks_file"
+}
+
+# _is_sequential_task(tasks_file, task_id)
+# Returns 0 if the task has a <!-- sequential: true --> marker, 1 otherwise.
+_is_sequential_task() {
+  local tasks_file="$1"
+  local target_id="$2"
+
+  local in_task=false
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^###\ ${target_id}: ]]; then
+      in_task=true
+    elif [[ "$line" =~ ^###\  ]]; then
+      in_task=false
+    fi
+    if $in_task && [[ "$line" =~ ^\<!--\ sequential:\ true ]]; then
+      return 0
+    fi
+  done < "$tasks_file"
+  return 1
+}
+
+# _set_sequential_marker(tasks_file, task_id)
+# Adds a <!-- sequential: true --> comment to a task section.
+_set_sequential_marker() {
+  local tasks_file="$1"
+  local task_id="$2"
+
+  local in_task=false
+  local found_marker=false
+  local tmp_file
+  tmp_file=$(mktemp)
+
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^###\ ${task_id}: ]]; then
+      in_task=true
+    elif [[ "$line" =~ ^###\  ]]; then
+      if $in_task && ! $found_marker; then
+        echo "<!-- sequential: true -->" >> "$tmp_file"
+      fi
+      in_task=false
+    fi
+
+    if $in_task && [[ "$line" =~ ^\<!--\ sequential: ]]; then
+      found_marker=true
+    fi
+    echo "$line" >> "$tmp_file"
+  done < "$tasks_file"
+
+  if $in_task && ! $found_marker; then
+    echo "<!-- sequential: true -->" >> "$tmp_file"
   fi
 
   mv "$tmp_file" "$tasks_file"

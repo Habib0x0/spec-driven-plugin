@@ -157,7 +157,7 @@ When implementing features, Claude automatically includes relevant spec files as
 
 For advanced workflows and optimization patterns, see:
 
-- **REPORT_ENHANCEMENTS.md** — What changed from v3.x to v4.0 and why (simplification overview)
+- **REPORT_ENHANCEMENTS.md** — What changed from v4.x to v5.0 and why (breaking changes overview)
 - **ADVANCED_PATTERNS.md** — Power user patterns:
   - Test-driven autonomous loops
   - Parallel agent teams

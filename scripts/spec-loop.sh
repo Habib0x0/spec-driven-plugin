@@ -4,10 +4,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 SPEC_NAME=""
-USE_WORKTREE=true
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
-NO_PARALLEL=false
 AUTO_COMPLETE=true
 
 # parse args
@@ -25,21 +23,13 @@ while [[ $# -gt 0 ]]; do
       PROGRESS_TAIL="$2"
       shift 2
       ;;
-    --no-worktree)
-      USE_WORKTREE=false
-      shift
-      ;;
-    --no-parallel)
-      NO_PARALLEL=true
-      shift
-      ;;
     --no-complete)
       AUTO_COMPLETE=false
       shift
       ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-worktree] [--no-parallel] [--no-complete]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-complete]"
       exit 1
       ;;
   esac
@@ -84,15 +74,8 @@ for f in requirements.md design.md tasks.md; do
   fi
 done
 
-# parallel requires worktrees — force sequential if worktrees disabled
-if [ "$USE_WORKTREE" = false ] && [ "$NO_PARALLEL" = false ]; then
-  echo "Note: --no-worktree implies --no-parallel (parallel requires isolated worktrees)."
-  NO_PARALLEL=true
-fi
-
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
-source "$SCRIPT_DIR/lib/worktree.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
 
 # source verify.sh with defensive guard
@@ -105,21 +88,8 @@ if ! type run_verification_gate &>/dev/null; then
   run_debugger_fix() { return 0; }
 fi
 
-# source parallel.sh with defensive guard
-if [ -f "$SCRIPT_DIR/lib/parallel.sh" ]; then
-  source "$SCRIPT_DIR/lib/parallel.sh"
-fi
-type get_ready_tasks &>/dev/null || {
-  echo "WARNING: parallel.sh not loaded -- forcing sequential execution."
-  NO_PARALLEL=true
-}
-
-# check cross-spec dependencies before any worktree creation
+# check cross-spec dependencies
 check_dependencies "$SPEC_NAME"
-
-# setup worktree (sets WORK_DIR)
-setup_worktree "$SPEC_NAME" "$USE_WORKTREE"
-cd "$WORK_DIR"
 
 # create progress.md if it doesn't exist
 if [ ! -f "$SPEC_DIR/progress.md" ]; then
@@ -134,12 +104,10 @@ OUTPUT_FILE=$(mktemp)
 PROMPT_FILE=$(mktemp)
 trap "rm -f $OUTPUT_FILE $PROMPT_FILE" EXIT
 
-# log directory for parallel task output
-LOG_DIR=".claude/specs/$SPEC_NAME/logs"
-mkdir -p "$LOG_DIR"
+WORK_DIR="$(pwd)"
 
 # all_tasks_complete(tasks_file)
-# Returns 0 if every task is completed, wired, AND verified. Matches the documented completion bar.
+# Returns 0 if every task is completed, wired, AND verified.
 all_tasks_complete() {
   local tasks_file="$1"
   local has_pending
@@ -152,6 +120,14 @@ all_tasks_complete() {
   has_unwired=$(grep -c '^\- \*\*Wired\*\*: no' "$tasks_file" 2>/dev/null || true)
   has_unwired=${has_unwired:-0}
   [ "$has_pending" -eq 0 ] && [ "$has_unverified" -eq 0 ] && [ "$has_unwired" -eq 0 ]
+}
+
+# print_pr_suggestion(spec_name)
+print_pr_suggestion() {
+  local spec_name="$1"
+  echo ""
+  echo "Suggested next steps:"
+  echo "  git push && gh pr create --title \"$spec_name\""
 }
 
 ITERATION=0
@@ -207,99 +183,50 @@ while true; do
   ITER_START=$(date +%s)
   echo "=== Spec Loop: Iteration $ITERATION / $MAX_ITERATIONS ==="
 
-  # --- Task scheduling ---
-  if [ "$NO_PARALLEL" = true ]; then
-    # sequential mode: skip expensive get_ready_tasks, just check completion
-    if all_tasks_complete "$SPEC_DIR/tasks.md"; then
+  # check if all tasks are already done
+  if all_tasks_complete "$SPEC_DIR/tasks.md"; then
+    echo ""
+    echo "All tasks complete!"
+    print_pr_suggestion "$SPEC_NAME"
+    if [ "$AUTO_COMPLETE" = true ]; then
       echo ""
-      echo "All tasks complete!"
-      print_pr_suggestion "$SPEC_NAME"
-      if [ "$AUTO_COMPLETE" = true ]; then
-        echo ""
-        echo "Starting post-completion pipeline..."
-        bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
-      fi
-      break
+      echo "Starting post-completion pipeline..."
+      bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
     fi
-    BATCH_SIZE=1
-  else
-    READY_TASKS=$(get_ready_tasks "$SPEC_DIR/tasks.md")
-    # filter tasks for parallel eligibility:
-    # - completed-but-unverified tasks need sequential re-verification, not parallel re-implementation
-    # - sequential-marked tasks (from merge conflict escalation) must run sequentially
-    PARALLEL_TASKS=""
-    for _CANDIDATE in $READY_TASKS; do
-      _CAND_STATUS=$(_get_task_status "$SPEC_DIR/tasks.md" "$_CANDIDATE")
-      if [[ "$_CAND_STATUS" == "completed" ]]; then
-        continue
-      fi
-      if ! _is_sequential_task "$SPEC_DIR/tasks.md" "$_CANDIDATE"; then
-        PARALLEL_TASKS="$PARALLEL_TASKS $_CANDIDATE"
-      fi
-    done
-    PARALLEL_TASKS=$(echo "$PARALLEL_TASKS" | xargs)
-    # use parallel-eligible count for batch sizing (sequential tasks handled in sequential path)
-    BATCH_SIZE=$(echo "$READY_TASKS" | wc -w | tr -d ' ')
-    [ -z "$BATCH_SIZE" ] && BATCH_SIZE=0
-    PARALLEL_COUNT=$(echo "$PARALLEL_TASKS" | wc -w | tr -d ' ')
-    [ -z "$PARALLEL_COUNT" ] && PARALLEL_COUNT=0
-    # if only sequential-marked tasks remain, force sequential path
-    if [ "$PARALLEL_COUNT" -le 1 ] && [ "$BATCH_SIZE" -gt 0 ]; then
-      BATCH_SIZE=1
-    fi
-
-    if [ "$BATCH_SIZE" -eq 0 ]; then
-      if all_tasks_complete "$SPEC_DIR/tasks.md"; then
-        echo ""
-        echo "All tasks complete!"
-        print_pr_suggestion "$SPEC_NAME"
-        if [ "$AUTO_COMPLETE" = true ]; then
-          echo ""
-          echo "Starting post-completion pipeline..."
-          bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
-        fi
-        break
-      else
-        echo "DEADLOCK: no ready tasks but not all complete"
-        echo "Check tasks.md for dependency cycles or stuck tasks."
-        exit 1
-      fi
-    fi
+    break
   fi
 
-  if [ "$BATCH_SIZE" -eq 1 ] || [ "$NO_PARALLEL" = true ]; then
-    # --- Sequential path (single task per iteration) ---
-    create_checkpoint "$ITERATION" "$WORK_DIR"
+  create_checkpoint "$ITERATION" "$WORK_DIR"
 
-    # build fresh prompt each iteration (re-reads spec files to get latest state)
-    {
-      if [ "$ITERATION" -eq 1 ]; then
-        echo "# Requirements"
-        cat "$SPEC_DIR/requirements.md"
-        echo ""
-        echo "# Design"
-        cat "$SPEC_DIR/design.md"
-        echo ""
-      else
-        echo "# Spec Reference"
-        echo "Requirements and Design are unchanged. Read these files ONLY if you need to check acceptance criteria or architecture:"
-        echo "- $(pwd)/$SPEC_DIR/requirements.md"
-        echo "- $(pwd)/$SPEC_DIR/design.md"
-        echo ""
-      fi
-      echo "# Tasks"
-      cat "$SPEC_DIR/tasks.md"
+  # build fresh prompt each iteration (re-reads spec files to get latest state)
+  {
+    if [ "$ITERATION" -eq 1 ]; then
+      echo "# Requirements"
+      cat "$SPEC_DIR/requirements.md"
       echo ""
-      echo "# Progress Log (last $PROGRESS_TAIL entries)"
-      if [ -f "$SPEC_DIR/progress.md" ]; then
-        head -4 "$SPEC_DIR/progress.md"
-        grep -c '^---$' "$SPEC_DIR/progress.md" > /dev/null 2>&1 && \
-          awk '/^---$/{n++} n>0' "$SPEC_DIR/progress.md" | \
-          awk -v tail="$PROGRESS_TAIL" 'BEGIN{n=0} /^---$/{n++} {lines[n]=lines[n] $0 "\n"} END{start=n-tail+1; if(start<1) start=1; for(i=start;i<=n;i++) printf "%s", lines[i]}' \
-          || cat "$SPEC_DIR/progress.md"
-      fi
-      if [ "$ITERATION" -eq 1 ]; then
-        cat << 'FIRST_ITER'
+      echo "# Design"
+      cat "$SPEC_DIR/design.md"
+      echo ""
+    else
+      echo "# Spec Reference"
+      echo "Requirements and Design are unchanged. Read these files ONLY if you need to check acceptance criteria or architecture:"
+      echo "- $(pwd)/$SPEC_DIR/requirements.md"
+      echo "- $(pwd)/$SPEC_DIR/design.md"
+      echo ""
+    fi
+    echo "# Tasks"
+    cat "$SPEC_DIR/tasks.md"
+    echo ""
+    echo "# Progress Log (last $PROGRESS_TAIL entries)"
+    if [ -f "$SPEC_DIR/progress.md" ]; then
+      head -4 "$SPEC_DIR/progress.md"
+      grep -c '^---$' "$SPEC_DIR/progress.md" > /dev/null 2>&1 && \
+        awk '/^---$/{n++} n>0' "$SPEC_DIR/progress.md" | \
+        awk -v tail="$PROGRESS_TAIL" 'BEGIN{n=0} /^---$/{n++} {lines[n]=lines[n] $0 "\n"} END{start=n-tail+1; if(start<1) start=1; for(i=start;i<=n;i++) printf "%s", lines[i]}' \
+        || cat "$SPEC_DIR/progress.md"
+    fi
+    if [ "$ITERATION" -eq 1 ]; then
+      cat << 'FIRST_ITER'
 
 ## Instructions
 
@@ -310,8 +237,8 @@ while true; do
 4. If init.sh exists in the spec directory, read it to understand how to run the app.
 5. Run a basic health check — start the dev server if needed, verify the app/tests still work before making changes.
 FIRST_ITER
-      else
-        cat << 'NEXT_ITER'
+    else
+      cat << 'NEXT_ITER'
 
 ## Instructions
 
@@ -319,8 +246,8 @@ FIRST_ITER
 1. Read the Progress Log above. Check git log --oneline -5 for recent changes.
 2. Only start the dev server or run health checks if the previous iteration reported issues.
 NEXT_ITER
-      fi
-      cat << 'EOF'
+    fi
+    cat << 'EOF'
 
 ### Step 2: Pick ONE Task
 1. Find the highest-priority task that is NOT yet verified.
@@ -406,99 +333,58 @@ CRITICAL RULES:
 - Always append to progress.md, never edit previous entries.
 - Always leave the codebase in a working state.
 EOF
-    } > "$PROMPT_FILE"
+  } > "$PROMPT_FILE"
 
-    # snapshot completed task IDs before iteration to detect which task was just completed
-    COMPLETED_BEFORE=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+  # snapshot completed task IDs before iteration to detect which task was just completed
+  COMPLETED_BEFORE=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
 
-    # snapshot progress.md before iteration to detect if Claude updated it
-    PROGRESS_HASH_BEFORE=""
-    if [ -f "$SPEC_DIR/progress.md" ]; then
-      PROGRESS_HASH_BEFORE=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
-    fi
+  # snapshot progress.md before iteration to detect if Claude updated it
+  PROGRESS_HASH_BEFORE=""
+  if [ -f "$SPEC_DIR/progress.md" ]; then
+    PROGRESS_HASH_BEFORE=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
+  fi
 
-    set +e
-    claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
-    CLAUDE_EXIT=${PIPESTATUS[0]}
-    set -e
+  set +e
+  claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
+  CLAUDE_EXIT=${PIPESTATUS[0]}
+  set -e
 
-    # handle checkpoint recovery on failure
-    handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" "$ITERATION" "$WORK_DIR"
+  # handle checkpoint recovery on failure
+  handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" "$ITERATION" "$WORK_DIR"
 
-    # if Claude didn't update progress.md, append a fallback entry
-    PROGRESS_HASH_AFTER=""
-    if [ -f "$SPEC_DIR/progress.md" ]; then
-      PROGRESS_HASH_AFTER=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
-    fi
-    if [ "$PROGRESS_HASH_BEFORE" = "$PROGRESS_HASH_AFTER" ]; then
-      echo "" >> "$SPEC_DIR/progress.md"
-      echo "---" >> "$SPEC_DIR/progress.md"
-      echo "" >> "$SPEC_DIR/progress.md"
-      echo "## Iteration $ITERATION (auto-logged)" >> "$SPEC_DIR/progress.md"
-      echo "- Date: $(date '+%Y-%m-%d %H:%M')" >> "$SPEC_DIR/progress.md"
-      echo "- Note: Claude did not update progress.md this iteration. Check git log for what changed." >> "$SPEC_DIR/progress.md"
-      echo "WARNING: progress.md was not updated by iteration $ITERATION — fallback entry appended."
-    fi
+  # if Claude didn't update progress.md, append a fallback entry
+  PROGRESS_HASH_AFTER=""
+  if [ -f "$SPEC_DIR/progress.md" ]; then
+    PROGRESS_HASH_AFTER=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
+  fi
+  if [ "$PROGRESS_HASH_BEFORE" = "$PROGRESS_HASH_AFTER" ]; then
+    echo "" >> "$SPEC_DIR/progress.md"
+    echo "---" >> "$SPEC_DIR/progress.md"
+    echo "" >> "$SPEC_DIR/progress.md"
+    echo "## Iteration $ITERATION (auto-logged)" >> "$SPEC_DIR/progress.md"
+    echo "- Date: $(date '+%Y-%m-%d %H:%M')" >> "$SPEC_DIR/progress.md"
+    echo "- Note: Claude did not update progress.md this iteration. Check git log for what changed." >> "$SPEC_DIR/progress.md"
+    echo "WARNING: progress.md was not updated by iteration $ITERATION — fallback entry appended."
+  fi
 
-    # verification gate for tasks completed THIS iteration (not any old completed task)
-    COMPLETED_AFTER=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
-    while IFS= read -r NEWLY_COMPLETED; do
-      [ -n "$NEWLY_COMPLETED" ] && run_gate_with_retry "$NEWLY_COMPLETED"
-    done < <(comm -13 <(echo "$COMPLETED_BEFORE") <(echo "$COMPLETED_AFTER"))
+  # verification gate for tasks completed THIS iteration
+  COMPLETED_AFTER=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+  while IFS= read -r NEWLY_COMPLETED; do
+    [ -n "$NEWLY_COMPLETED" ] && run_gate_with_retry "$NEWLY_COMPLETED"
+  done < <(comm -13 <(echo "$COMPLETED_BEFORE") <(echo "$COMPLETED_AFTER"))
 
-    if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
+  if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
+    echo ""
+    echo "All tasks complete and verified!"
+    print_pr_suggestion "$SPEC_NAME"
+
+    if [ "$AUTO_COMPLETE" = true ]; then
       echo ""
-      echo "All tasks complete and verified!"
-      print_pr_suggestion "$SPEC_NAME"
-
-      if [ "$AUTO_COMPLETE" = true ]; then
-        echo ""
-        echo "Starting post-completion pipeline..."
-        bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
-      fi
-
-      break
+      echo "Starting post-completion pipeline..."
+      bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
     fi
 
-  else
-    # --- Parallel path (batch size > 1) ---
-    create_checkpoint "$ITERATION" "$WORK_DIR"
-
-    # cap batch at 4 parallel-eligible tasks
-    BATCH=$(echo "$PARALLEL_TASKS" | tr ' ' '\n' | head -4 | tr '\n' ' ')
-    BATCH_COUNT=$(echo "$BATCH" | wc -w | tr -d ' ')
-    echo "Launching parallel batch ($BATCH_COUNT tasks): $BATCH"
-
-    PIDS=()
-    for TASK in $BATCH; do
-      PID=$(launch_parallel_task "$TASK" "$SPEC_DIR" "$WORK_DIR" "$LOG_DIR" "$ITERATION")
-      PIDS+=("$PID:$TASK")
-      echo "  Started $TASK (PID $PID) -> $LOG_DIR/iteration-${ITERATION}-task-${TASK}.log"
-    done
-
-    echo "Waiting for batch to complete..."
-    set +e
-    wait_for_batch "${PIDS[@]}"
-    set -e
-
-    echo "Consolidating parallel results..."
-    consolidate_parallel_results "$SPEC_DIR" "$BATCH" "$WORK_DIR"
-
-    # run verification gates for each task in the completed batch
-    for TASK in $BATCH; do
-      run_gate_with_retry "$TASK"
-    done
-
-    # auto-log progress for parallel iteration
-    {
-      echo ""
-      echo "---"
-      echo ""
-      echo "## Iteration $ITERATION (parallel batch)"
-      echo "- Date: $(date '+%Y-%m-%d %H:%M')"
-      echo "- Tasks: $BATCH"
-      echo "- Mode: parallel ($BATCH_COUNT concurrent)"
-    } >> "$SPEC_DIR/progress.md"
+    break
   fi
 
   if [ "$ITERATION" -ge "$MAX_ITERATIONS" ]; then

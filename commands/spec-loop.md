@@ -16,7 +16,7 @@ Run spec-driven implementation in a loop. Each iteration picks the next highest-
 Run the script directly from your project root:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>]
+${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-complete]
 ```
 
 Or via Bash tool if invoked within Claude Code:
@@ -30,14 +30,16 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name>
 - `--spec-name <name>` - Which spec to execute against. Auto-detected if only one spec exists in `.claude/specs/`.
 - `--max-iterations <n>` - Maximum number of iterations before stopping. Default: 50.
 - `--progress-tail <n>` - Number of recent progress entries to include in prompt. Default: 20.
+- `--no-complete` - Skip auto-triggering the post-completion pipeline when all tasks are done.
 
 ## What It Does
 
 1. Reads your spec files fresh each iteration
 2. Runs Claude to implement one feature per iteration
-3. Checks output for `<promise>COMPLETE</promise>` to detect completion
-4. Stops when all tasks are done or max iterations reached
-5. Ctrl+C to cancel at any time
+3. Runs verification gates on completed tasks
+4. Checks output for `<promise>COMPLETE</promise>` to detect completion
+5. Automatically runs the post-completion pipeline (UAT, docs, release, retro) on completion
+6. Stops when all tasks are done or max iterations reached
 
 ## Prerequisites
 

@@ -120,7 +120,7 @@ Templates use `{{PLACEHOLDER}}` syntax for substitution during spec creation.
 After completing the spec workflow (Requirements, Design, Tasks), use the execution scripts to implement autonomously:
 
 - `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
-- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-parallel` flag to force sequential task execution and `--no-complete` to skip auto-triggering the post-completion pipeline
+- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-complete` to skip auto-triggering the post-completion pipeline
 - `spec-complete.sh` - Full post-completion pipeline: accept -> docs -> release -> retro. Auto-triggered by `spec-loop.sh` on completion (disable with `--no-complete`)
 
 Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.

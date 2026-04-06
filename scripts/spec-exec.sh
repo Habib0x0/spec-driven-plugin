@@ -4,7 +4,6 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 SPEC_NAME=""
-USE_WORKTREE=true
 
 # parse args
 while [[ $# -gt 0 ]]; do
@@ -13,13 +12,9 @@ while [[ $# -gt 0 ]]; do
       SPEC_NAME="$2"
       shift 2
       ;;
-    --no-worktree)
-      USE_WORKTREE=false
-      shift
-      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-exec.sh [--spec-name <name>] [--no-worktree]"
+      echo "Usage: spec-exec.sh [--spec-name <name>]"
       exit 1
       ;;
   esac
@@ -66,14 +61,9 @@ done
 
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
-source "$SCRIPT_DIR/lib/worktree.sh"
 
-# check cross-spec dependencies before any worktree creation
+# check cross-spec dependencies
 check_dependencies "$SPEC_NAME"
-
-# setup worktree (sets WORK_DIR)
-setup_worktree "$SPEC_NAME" "$USE_WORKTREE"
-cd "$WORK_DIR"
 
 # create progress.md if it doesn't exist
 if [ ! -f "$SPEC_DIR/progress.md" ]; then
@@ -192,5 +182,7 @@ claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_
 if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
   echo ""
   echo "All tasks complete and verified!"
-  print_pr_suggestion "$SPEC_NAME"
+  echo ""
+  echo "Suggested next steps:"
+  echo "  git push && gh pr create --title \"$SPEC_NAME\""
 fi

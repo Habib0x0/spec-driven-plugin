@@ -33,7 +33,7 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-exec.sh --spec-name <name>
 
 1. Reads your spec files (requirements.md, design.md, tasks.md)
 2. Builds a prompt with the full spec context
-3. Runs `claude --dangerously-skip-permissions` with that prompt
+3. Runs `claude --dangerously-skip-permissions -p` with that prompt
 4. Claude implements one feature, tests it, updates the spec, and commits
 
 ## Prerequisites

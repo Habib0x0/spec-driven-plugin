@@ -4,7 +4,6 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 SPEC_NAME=""
-USE_WORKTREE=true
 MAX_ITERATIONS=50
 
 # parse args
@@ -18,13 +17,9 @@ while [[ $# -gt 0 ]]; do
       MAX_ITERATIONS="$2"
       shift 2
       ;;
-    --no-worktree)
-      USE_WORKTREE=false
-      shift
-      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-team.sh [--spec-name <name>] [--max-iterations <n>] [--no-worktree]"
+      echo "Usage: spec-team.sh [--spec-name <name>] [--max-iterations <n>]"
       exit 1
       ;;
   esac
@@ -103,15 +98,12 @@ done
 
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
-source "$SCRIPT_DIR/lib/worktree.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
 
-# check cross-spec dependencies before any worktree creation
+# check cross-spec dependencies
 check_dependencies "$SPEC_NAME"
 
-# setup worktree (sets WORK_DIR)
-setup_worktree "$SPEC_NAME" "$USE_WORKTREE"
-cd "$WORK_DIR"
+WORK_DIR="$(pwd)"
 
 # create progress.md if it doesn't exist
 if [ ! -f "$SPEC_DIR/progress.md" ]; then
@@ -277,5 +269,7 @@ handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" 1 "$WORK_DIR"
 if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
   echo ""
   echo "All tasks complete and verified!"
-  print_pr_suggestion "$SPEC_NAME"
+  echo ""
+  echo "Suggested next steps:"
+  echo "  git push && gh pr create --title \"$SPEC_NAME\""
 fi

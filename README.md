@@ -12,24 +12,31 @@ This plugin guides you through three phases:
 
 ## Commands
 
+### Core Workflow
 | Command | Description |
 |---------|-------------|
-| `/spec-brainstorm` | Brainstorm a feature idea (optionally with domain expert consultants) |
+| `/spec-brainstorm` | Brainstorm a feature idea before spec creation |
 | `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
-| `/spec-import` | Import a markdown/PRD file and convert to EARS requirements |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |
 | `/spec-status` | Show spec progress, task completion, and dependency status |
-| `/spec-sync` | Sync tasks.md status back to Claude Code task list |
 | `/spec-validate` | Validate spec completeness and consistency |
+
+### Implementation
+| Command | Description |
+|---------|-------------|
 | `/spec-exec` | Run one autonomous implementation iteration |
 | `/spec-loop` | Loop implementation until all tasks complete |
-| `/spec-team` | Execute with agent team (4 specialized agents) |
+
+### Post-Completion (Optional)
+| Command | Description |
+|---------|-------------|
 | `/spec-accept` | Run user acceptance testing for formal sign-off |
 | `/spec-docs` | Generate documentation from spec and implementation |
 | `/spec-release` | Generate release notes and deployment checklist |
 | `/spec-verify` | Run post-deployment smoke tests |
 | `/spec-retro` | Run a retrospective on a completed spec |
+| `/spec-complete` | Run full post-completion pipeline (accept → docs → release → retro) |
 
 ## Usage
 
@@ -45,13 +52,6 @@ This will:
 3. Guide you through Design phase (architecture docs)
 4. Generate Tasks and sync to Claude Code todos
 
-### Importing from an Existing PRD
-
-```
-/spec-import my-feature --file /path/to/prd.md
-```
-
-Reads a markdown document (PRD, RFC, design doc) and converts it to EARS requirements. Review the output, then proceed to design with `/spec-refine`.
 
 ### Spec Files Location
 
@@ -76,22 +76,43 @@ Specs can declare dependencies on other specs via a `## Depends On` section in r
 
 Execution scripts check dependencies before running. A dependency is considered complete when all its tasks are verified. `/spec-status` shows dependency status.
 
-## Execution
+## Implementation
 
 After creating a spec, run autonomous implementation:
 
 ```bash
 # single task
-spec-exec.sh --spec-name user-authentication
+bash scripts/spec-exec.sh --spec-name user-authentication
 
-# loop until done
-spec-loop.sh --spec-name user-authentication --max-iterations 20
-
-# agent team (Implementer + Tester + Reviewer + Debugger)
-spec-team.sh --spec-name user-authentication
+# loop until all tasks complete
+bash scripts/spec-loop.sh --spec-name user-authentication --max-iterations 20
 ```
 
 Scripts live in the plugin's `scripts/` directory. If only one spec exists, `--spec-name` is auto-detected.
+
+### Post-Completion (Optional)
+
+After implementation completes, optionally run:
+
+```bash
+# user acceptance testing
+bash scripts/spec-accept.sh --spec-name user-authentication
+
+# generate documentation
+bash scripts/spec-docs.sh --spec-name user-authentication
+
+# release notes and deployment checklist
+bash scripts/spec-release.sh --spec-name user-authentication
+
+# post-deployment smoke tests
+bash scripts/spec-verify.sh --spec-name user-authentication
+
+# retrospective analysis
+bash scripts/spec-retro.sh --spec-name user-authentication
+
+# or run all at once
+bash scripts/spec-complete.sh --spec-name user-authentication
+```
 
 ### Git Worktree Isolation
 
@@ -105,50 +126,9 @@ By default, execution scripts create a **git worktree** for each spec:
 
 Use `--no-worktree` to commit directly to the current branch (v2.x behavior).
 
-### Crash Recovery
+### Checkpoint Recovery
 
-`spec-loop.sh` and `spec-team.sh` create checkpoint commits before each iteration. If Claude crashes or exits non-zero, the branch is rolled back to the last checkpoint automatically.
-
-### Task Sync
-
-After running execution scripts, use `/spec-sync` to update the Claude Code task list from tasks.md. The subprocess can't call TaskUpdate directly, so this reconciliation step keeps the two in sync.
-
-### Agent Team Mode
-
-Use `spec-team.sh` when you need reliable verification. It spawns 4 specialized agents:
-- **Implementer** -- writes code
-- **Tester** -- verifies with Playwright/tests (only they can mark Verified: yes)
-- **Reviewer** -- checks code quality, security, architecture (uses Opus)
-- **Debugger** -- fixes issues when Tester or Reviewer reject
-
-This costs more tokens but prevents tasks from being marked complete without real testing.
-
-### Post-Implementation Pipeline
-
-After all tasks are complete, run the post-implementation scripts:
-
-```bash
-# user acceptance testing (verify requirements are met)
-spec-accept.sh --spec-name user-authentication
-
-# generate documentation from spec + code
-spec-docs.sh --spec-name user-authentication
-
-# generate release notes + deployment checklist
-spec-release.sh --spec-name user-authentication --version-bump minor
-
-# create git tag + GitHub release
-spec-release.sh --spec-name user-authentication --version-bump minor --release
-
-# post-deployment smoke test against live environment
-spec-verify.sh --spec-name user-authentication --url https://staging.example.com
-
-# quick health check only
-spec-verify.sh --spec-name user-authentication --url https://prod.example.com --scope quick
-
-# retrospective analysis
-spec-retro.sh --spec-name user-authentication
-```
+`spec-loop.sh` creates checkpoint commits before each iteration. If Claude crashes or exits non-zero, the branch is rolled back to the last checkpoint automatically.
 
 ### CI/CD Integration
 
@@ -172,6 +152,20 @@ The loop script includes optimizations for long-running specs:
 ## Auto-Context
 
 When implementing features, Claude automatically includes relevant spec files as context if you're working in a directory with specs.
+
+## Reference Documentation
+
+For advanced workflows and optimization patterns, see:
+
+- **REPORT_ENHANCEMENTS.md** — What changed from v3.x to v4.0 and why (simplification overview)
+- **ADVANCED_PATTERNS.md** — Power user patterns:
+  - Test-driven autonomous loops
+  - Parallel agent teams
+  - Checkpoint-based pipelines
+  - Error loop prevention
+- **HEADLESS_ORCHESTRATION.md** — Alternative parallel execution approach for large specs
+
+These are reference materials. The core workflow (spec → exec/loop) works for all project sizes.
 
 ## EARS Notation
 

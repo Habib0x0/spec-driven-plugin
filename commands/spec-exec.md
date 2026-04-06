@@ -40,3 +40,25 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-exec.sh --spec-name <name>
 
 - A completed spec in `.claude/specs/<name>/` with all three files
 - Run `/spec <name>` first if you haven't created a spec yet
+
+## Quick Preflight
+
+Before running a single iteration:
+
+```bash
+# 1. Verify git is configured
+git remote -v | head -1
+
+# 2. Check the build is clean
+npm run build 2>&1 | tail -3
+
+# 3. Confirm spec exists
+[ -d ".claude/specs/<spec-name>" ] && echo "✓ Spec ready"
+```
+
+## Tips
+
+- **Run one at a time**: Each exec picks ONE task. Run multiple execs to implement multiple tasks.
+- **Check progress.md after each**: Tells you what was completed and what's next
+- **Use /spec-loop for batches**: If you want to run many iterations automatically, use `/spec-loop` instead
+- **Integration sweep runs at end**: When all tasks complete, /spec-loop triggers mandatory final validation. Single /spec-exec iterations don't do this.

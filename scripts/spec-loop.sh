@@ -6,7 +6,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SPEC_NAME=""
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
-AUTO_COMPLETE=true
 
 # parse args
 while [[ $# -gt 0 ]]; do
@@ -23,13 +22,9 @@ while [[ $# -gt 0 ]]; do
       PROGRESS_TAIL="$2"
       shift 2
       ;;
-    --no-complete)
-      AUTO_COMPLETE=false
-      shift
-      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-complete]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>]"
       exit 1
       ;;
   esac
@@ -188,11 +183,6 @@ while true; do
     echo ""
     echo "All tasks complete!"
     print_pr_suggestion "$SPEC_NAME"
-    if [ "$AUTO_COMPLETE" = true ]; then
-      echo ""
-      echo "Starting post-completion pipeline..."
-      bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
-    fi
     break
   fi
 
@@ -377,13 +367,6 @@ EOF
     echo ""
     echo "All tasks complete and verified!"
     print_pr_suggestion "$SPEC_NAME"
-
-    if [ "$AUTO_COMPLETE" = true ]; then
-      echo ""
-      echo "Starting post-completion pipeline..."
-      bash "$SCRIPT_DIR/spec-complete.sh" --spec-name "$SPEC_NAME"
-    fi
-
     break
   fi
 

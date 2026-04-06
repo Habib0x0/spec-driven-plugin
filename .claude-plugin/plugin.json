@@ -15,9 +15,7 @@
     "./agents/spec-reviewer.md",
     "./agents/spec-consultant.md",
     "./agents/spec-acceptor.md",
-    "./agents/spec-documenter.md",
-    "./agents/spec-debugger.md",
-    "./agents/spec-scanner.md"
+    "./agents/spec-documenter.md"
   ],
   "commands": [
     "./commands/spec.md",
@@ -28,16 +26,11 @@
     "./commands/spec-validate.md",
     "./commands/spec-exec.md",
     "./commands/spec-loop.md",
-    "./commands/spec-team.md",
     "./commands/spec-accept.md",
     "./commands/spec-docs.md",
     "./commands/spec-release.md",
     "./commands/spec-verify.md",
     "./commands/spec-retro.md",
-    "./commands/spec-scan.md",
-    "./commands/spec-debug.md",
-    "./commands/spec-sync.md",
-    "./commands/spec-import.md",
     "./commands/spec-complete.md"
   ]
 }

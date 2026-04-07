@@ -2,7 +2,7 @@
 name: spec-debugger
 description: |
   Fixes issues when Tester or Reviewer reject an implementation. Fresh perspective on problems the Implementer couldn't solve.
-model: claude-sonnet-4-6
+model: claude-haiku-4-5-20251001
 color: red
 tools:
   - Read

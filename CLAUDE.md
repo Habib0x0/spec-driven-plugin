@@ -50,6 +50,7 @@ The plugin automatically uses the optimal model for each phase:
 | spec-consultant | Sonnet 4.6 | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
 | spec-acceptor | Sonnet 4.6 | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
 | spec-documenter | Sonnet 4.6 | Documentation | Generates docs from spec and code |
+| spec-debugger | Haiku 4.5 | Debug / small fixes | Lightweight targeted fixes when Tester or Reviewer rejects |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
 

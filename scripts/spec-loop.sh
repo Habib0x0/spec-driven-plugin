@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SPEC_NAME=""
 MAX_ITERATIONS=50
 PROGRESS_TAIL=20
+ON_COMPLETE=""
 
 # parse args
 while [[ $# -gt 0 ]]; do
@@ -22,9 +23,13 @@ while [[ $# -gt 0 ]]; do
       PROGRESS_TAIL="$2"
       shift 2
       ;;
+    --on-complete)
+      ON_COMPLETE="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
-      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>]"
+      echo "Usage: spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--on-complete <command>]"
       exit 1
       ;;
   esac
@@ -367,6 +372,11 @@ EOF
     echo ""
     echo "All tasks complete and verified!"
     print_pr_suggestion "$SPEC_NAME"
+    if [ -n "$ON_COMPLETE" ]; then
+      echo ""
+      echo "Running on-complete hook: $ON_COMPLETE"
+      eval "$ON_COMPLETE"
+    fi
     break
   fi
 

@@ -16,7 +16,7 @@ Run spec-driven implementation in a loop. Each iteration picks the next highest-
 Run the script directly from your project root:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--no-complete]
+${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh [--spec-name <name>] [--max-iterations <n>] [--progress-tail <n>] [--on-complete <command>]
 ```
 
 Or via Bash tool if invoked within Claude Code:
@@ -30,6 +30,7 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name>
 - `--spec-name <name>` - Which spec to execute against. Auto-detected if only one spec exists in `.claude/specs/`.
 - `--max-iterations <n>` - Maximum number of iterations before stopping. Default: 50.
 - `--progress-tail <n>` - Number of recent progress entries to include in prompt. Default: 20.
+- `--on-complete <command>` - Shell command to run after clean completion. Only fires when `<promise>COMPLETE</promise>` is detected, not on max-iterations exit. Recommended: `"bash scripts/spec-accept.sh --spec-name <name>"`.
 
 ## What It Does
 
@@ -39,9 +40,21 @@ bash ${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name>
 4. Checks output for `<promise>COMPLETE</promise>` to detect completion
 5. Stops when all tasks are done or max iterations reached
 
-Post-completion (UAT, docs, release, retro) is now optional—run manually if needed:
+**Recommended hook** — run UAT automatically on clean completion:
 ```bash
-bash scripts/spec-accept.sh --spec-name <name>    # UAT
+bash scripts/spec-loop.sh --spec-name <name> \
+  --on-complete "bash scripts/spec-accept.sh --spec-name <name>"
+```
+
+If you want docs too:
+```bash
+bash scripts/spec-loop.sh --spec-name <name> \
+  --on-complete "bash scripts/spec-accept.sh --spec-name <name> && bash scripts/spec-docs.sh --spec-name <name>"
+```
+
+Post-completion (release notes, retro) should be run manually after reviewing acceptance results:
+```bash
+bash scripts/spec-accept.sh --spec-name <name>    # UAT gate
 bash scripts/spec-docs.sh --spec-name <name>      # Docs
 bash scripts/spec-release.sh --spec-name <name>   # Release notes
 bash scripts/spec-retro.sh --spec-name <name>     # Retrospective

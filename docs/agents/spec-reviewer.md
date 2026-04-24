@@ -8,7 +8,7 @@ Review code quality, security, and architectural alignment. The reviewer is the 
 
 ## Model
 
-**Opus 4.6.** Security vulnerabilities and architectural issues are often subtle — an injection vector buried in an interpolated string, a race condition in an async flow, or an abstraction that looks right but violates the design's separation of concerns. Opus's deeper reasoning is warranted here because the cost of missing these issues is high.
+**opus tier.** Security vulnerabilities and architectural issues are often subtle — an injection vector buried in an interpolated string, a race condition in an async flow, or an abstraction that looks right but violates the design's separation of concerns. Opus's deeper reasoning is warranted here because the cost of missing these issues is high.
 
 ## When It Runs
 

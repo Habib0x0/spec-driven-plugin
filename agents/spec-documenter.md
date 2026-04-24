@@ -13,7 +13,7 @@ description: |
   comprehensive documentation targeted at end users and developers.
   </commentary>
   </example>
-model: claude-sonnet-4-6
+model: sonnet
 color: magenta
 tools:
   - Read

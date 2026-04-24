@@ -10,7 +10,7 @@ Run the `/spec` command with a feature name:
 /spec user-authentication
 ```
 
-The command will ask you 2-3 rounds of questions about scope, user roles, key behaviors, edge cases, and non-functional requirements. Then the spec-planner agent (Opus 4.6) writes formal requirements and design:
+The command will ask you 2-3 rounds of questions about scope, user roles, key behaviors, edge cases, and non-functional requirements. Then the spec-planner agent (opus tier) writes formal requirements and design:
 
 1. **Requirements** — It asks clarifying questions, identifies user roles, and writes user stories with EARS acceptance criteria
 2. **Design** — It defines the architecture, data models, and key sequences based on your requirements

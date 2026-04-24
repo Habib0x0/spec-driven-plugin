@@ -3,7 +3,7 @@ name: spec-scanner
 description: |
   Scans a codebase using LLM-driven heuristics to detect framework, patterns, entities, and registration points.
   Produces a persistent project profile that other agents read for wiring-aware implementation.
-model: claude-sonnet-4-6
+model: sonnet
 color: cyan
 tools:
   - Read

@@ -22,7 +22,7 @@ description: |
   the codebase structure and returns recommendations about component boundaries and data flow.
   </commentary>
   </example>
-model: claude-sonnet-4-6
+model: sonnet
 color: cyan
 tools:
   - Read

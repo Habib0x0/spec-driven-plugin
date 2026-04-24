@@ -1,14 +1,14 @@
 ---
 name: spec-tasker
 description: |
-  Use this agent to break down a completed spec design into implementation tasks. This agent runs on Sonnet for fast, structured task generation. Examples:
+  Use this agent to break down a completed spec design into implementation tasks. This agent runs on the sonnet tier for fast, structured task generation. Examples:
 
   <example>
   Context: User has completed requirements and design, now needs tasks.
   user: "The requirements and design are done, now break it down into tasks"
   assistant: "I'll use the spec-tasker agent to create structured implementation tasks from your spec."
   <commentary>
-  Design is complete. Task breakdown is structured work that Sonnet handles efficiently -- read the spec, generate ordered tasks with dependencies.
+  Design is complete. Task breakdown is structured work that the sonnet tier handles efficiently -- read the spec, generate ordered tasks with dependencies.
   </commentary>
   </example>
 
@@ -17,7 +17,7 @@ description: |
   user: "/spec-tasks"
   assistant: "I'll use the spec-tasker agent to regenerate tasks from the updated spec."
   <commentary>
-  Task regeneration follows a clear pattern. Sonnet is fast and accurate for this structured decomposition.
+  Task regeneration follows a clear pattern. The sonnet tier is fast and accurate for this structured decomposition.
   </commentary>
   </example>
 
@@ -29,7 +29,7 @@ description: |
   Transitioning from design to tasks. The tasker agent picks up where the planner left off, using the structured spec to generate tasks.
   </commentary>
   </example>
-model: claude-sonnet-4-6
+model: sonnet
 color: green
 tools:
   - Read

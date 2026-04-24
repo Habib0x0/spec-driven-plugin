@@ -61,6 +61,7 @@ done
 
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
+source "$SCRIPT_DIR/lib/detect-backend.sh"
 
 # check cross-spec dependencies
 check_dependencies "$SPEC_NAME"

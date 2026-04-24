@@ -26,7 +26,7 @@ All plugin commands are slash commands used within a Claude Code session. Execut
 |---------|-------------|---------------|
 | `/spec-exec` | Run one autonomous implementation iteration: pick a task, implement, wire, test, commit. | `/spec-exec` |
 | `/spec-loop` | Trigger the loop script from inside Claude Code. Runs until all tasks are verified. | `/spec-loop` |
-| `/spec-team` | Execute with a four-agent team: Implementer, Tester, Reviewer (Opus 4.6), Debugger. Higher token cost, stronger guarantees. | `/spec-team` |
+| `/spec-team` | Execute with a four-agent team: Implementer, Tester, Reviewer (opus tier), Debugger. Higher token cost, stronger guarantees. | `/spec-team` |
 
 ## Post-implementation commands
 

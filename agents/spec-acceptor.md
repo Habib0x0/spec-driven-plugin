@@ -27,7 +27,7 @@ description: |
   The acceptor can filter by requirement ID or user story to test a subset.
   </commentary>
   </example>
-model: claude-sonnet-4-6
+model: sonnet
 color: green
 tools:
   - Read

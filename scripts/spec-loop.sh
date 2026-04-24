@@ -77,6 +77,7 @@ done
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
+source "$SCRIPT_DIR/lib/detect-backend.sh"
 
 # source verify.sh with defensive guard
 if [ -f "$SCRIPT_DIR/lib/verify.sh" ]; then

@@ -2,7 +2,7 @@
 name: spec-tester
 description: |
   Verifies that implemented tasks actually work. Uses Playwright for UI testing, runs test suites, and only marks Verified: yes after real verification.
-model: claude-sonnet-4-6
+model: sonnet
 color: yellow
 tools:
   - Read

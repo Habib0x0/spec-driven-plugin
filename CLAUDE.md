@@ -37,24 +37,27 @@ templates/                  - Document scaffolding for specs
 
 ## Model Routing
 
-The plugin automatically uses the optimal model for each phase:
+The plugin routes each agent to a model tier. Claude Code resolves tier aliases (`opus`, `sonnet`, `haiku`) to the current model in that tier at runtime, so the plugin stays compatible with new model releases without code changes.
 
-| Agent | Model | Phase | Rationale |
-|-------|-------|-------|-----------|
-| spec-planner | Opus 4.6 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
-| spec-tasker | Sonnet 4.6 | Task breakdown | Fast, structured decomposition |
-| spec-validator | Sonnet 4.6 | Validation | Checklist-based verification |
-| spec-implementer | Sonnet 4.6 | Implementation | Writes code for tasks |
-| spec-tester | Sonnet 4.6 | Testing | Verifies with Playwright/tests |
-| spec-reviewer | Opus 4.6 | Review | Code quality, security, architecture |
-| spec-consultant | Sonnet 4.6 | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
-| spec-acceptor | Sonnet 4.6 | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
-| spec-documenter | Sonnet 4.6 | Documentation | Generates docs from spec and code |
-| spec-debugger | Haiku 4.5 | Debug / small fixes | Lightweight targeted fixes when Tester or Reviewer rejects |
+| Agent | Model Tier | Phase | Rationale |
+|-------|------------|-------|-----------|
+| spec-planner | opus | Requirements + Design | Deep reasoning for edge cases, security, architecture |
+| spec-tasker | sonnet | Task breakdown | Fast, structured decomposition |
+| spec-validator | sonnet | Validation | Checklist-based verification |
+| spec-implementer | sonnet | Implementation | Writes code for tasks |
+| spec-tester | sonnet | Testing | Verifies with Playwright/tests |
+| spec-reviewer | opus | Review | Code quality, security, architecture |
+| spec-consultant | sonnet | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
+| spec-acceptor | sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
+| spec-documenter | sonnet | Documentation | Generates docs from spec and code |
+| spec-scanner | sonnet | Profile scan | Detects framework, patterns, entities, registration points |
+| spec-debugger | haiku | Debug / small fixes | Lightweight targeted fixes when Tester or Reviewer rejects |
 
 The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
 
-For implementation after spec completion, Sonnet 4.6 is recommended — the spec provides all the context needed for accurate code generation.
+Each agent's model can be overridden via environment variable (e.g., `SPEC_MODEL_PLANNER=my-model`). See [`docs/advanced/model-routing.md`](docs/advanced/model-routing.md) for details on per-agent overrides, non-Anthropic backend support, and router configuration examples.
+
+For implementation after spec completion, the sonnet tier is recommended — the spec provides all the context needed for accurate code generation.
 
 ## Key Concepts
 

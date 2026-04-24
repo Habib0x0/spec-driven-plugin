@@ -89,7 +89,9 @@ Spawn a `spec-driven:spec-consultant` agent via the Task tool when:
 
 **How to spawn a consultant:**
 
-Use the Task tool to spawn a `spec-driven:spec-consultant` agent. In the prompt, provide:
+Use the Task tool to spawn a `spec-driven:spec-consultant` agent. The agent runs on the **sonnet tier** by default. If the `SPEC_MODEL_CONSULTANT` environment variable is set and non-empty, pass its value as the `model:` parameter to the Task tool (e.g., `Task(subagent_type="spec-consultant", model="$SPEC_MODEL_CONSULTANT", prompt=...)`). Otherwise omit `model:` and the agent uses its frontmatter default.
+
+In the prompt, provide:
 
 1. **Expert Role**: The specific role (e.g., "Security Expert")
 2. **Domain Expertise**: What this expert specializes in

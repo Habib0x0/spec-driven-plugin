@@ -1,6 +1,6 @@
 # Tasks
 
-The tasks phase breaks the design into discrete, trackable implementation items. The spec-tasker agent (Sonnet 4.6) generates `tasks.md` and syncs tasks to Claude Code's todo system.
+The tasks phase breaks the design into discrete, trackable implementation items. The spec-tasker agent (sonnet tier) generates `tasks.md` and syncs tasks to Claude Code's todo system.
 
 ## Task structure
 

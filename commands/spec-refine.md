@@ -14,6 +14,15 @@ allowed-tools:
 
 Update requirements or design for an existing spec.
 
+## Model Override
+
+When this command delegates to agents via the Task tool, check the relevant `SPEC_MODEL_*` environment variable and pass its value as the `model:` parameter when set and non-empty. When unset, omit `model:` and the agent uses its frontmatter default tier.
+
+| Env var | Agent | Default tier | Used in |
+|---------|-------|--------------|---------|
+| `SPEC_MODEL_PLANNER` | spec-planner | opus | Requirements / design refinement (steps 4, 5) |
+| `SPEC_MODEL_TASKER` | spec-tasker | sonnet | Task regeneration cascade (step 6) |
+
 ## Workflow
 
 ### 1. Identify Current Spec

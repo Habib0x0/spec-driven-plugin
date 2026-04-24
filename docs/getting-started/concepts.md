@@ -82,15 +82,16 @@ The plugin automatically selects the appropriate model for each phase. You do no
 
 | Agent | Model | Phase | Rationale |
 |-------|-------|-------|-----------|
-| spec-planner | Opus 4.6 | Requirements + Design | Deep reasoning for edge cases, security, architecture |
-| spec-tasker | Sonnet 4.6 | Task breakdown | Fast, structured decomposition |
-| spec-validator | Sonnet 4.6 | Validation | Checklist-based verification |
-| spec-implementer | Sonnet 4.6 | Implementation | Writes code for tasks |
-| spec-tester | Sonnet 4.6 | Testing | Verifies with Playwright/tests |
-| spec-reviewer | Opus 4.6 | Review | Code quality, security, architecture |
-| spec-consultant | Sonnet 4.6 | Consultation | Domain expert analysis during brainstorming |
-| spec-acceptor | Sonnet 4.6 | Acceptance | Requirement traceability, formal sign-off |
-| spec-documenter | Sonnet 4.6 | Documentation | Generates docs from spec and code |
-| spec-debugger | Sonnet 4.6 | Debugging | Fixes issues when rejected |
+| spec-planner | opus tier | Requirements + Design | Deep reasoning for edge cases, security, architecture |
+| spec-tasker | sonnet tier | Task breakdown | Fast, structured decomposition |
+| spec-validator | sonnet tier | Validation | Checklist-based verification |
+| spec-implementer | sonnet tier | Implementation | Writes code for tasks |
+| spec-tester | sonnet tier | Testing | Verifies with Playwright/tests |
+| spec-reviewer | opus tier | Review | Code quality, security, architecture |
+| spec-consultant | sonnet tier | Consultation | Domain expert analysis during brainstorming |
+| spec-acceptor | sonnet tier | Acceptance | Requirement traceability, formal sign-off |
+| spec-documenter | sonnet tier | Documentation | Generates docs from spec and code |
+| spec-debugger | haiku tier | Debugging | Fixes issues when rejected |
+| spec-scanner | sonnet tier | Profile scan | Detects framework, patterns, entities, and registration points |
 
-Opus is used where careful reasoning matters most (planning and review). Sonnet handles the high-frequency work (implementation, testing, documentation).
+The opus tier is used where careful reasoning matters most (planning and review). The sonnet tier handles the high-frequency work (implementation, testing, documentation). The haiku tier handles targeted debug fixes. Each agent's tier can be overridden per-environment via `SPEC_MODEL_*` variables — see [model-routing](../advanced/model-routing.md).

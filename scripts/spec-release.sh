@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/lib/detect-backend.sh"
+
 SPEC_NAME=""
 VERSION_BUMP="minor"
 CREATE_TAG=false

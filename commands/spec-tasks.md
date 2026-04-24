@@ -16,6 +16,10 @@ allowed-tools:
 
 Regenerate implementation tasks from the current spec requirements and design.
 
+## Model Override
+
+When this command delegates task generation to the spec-tasker agent via the Task tool, check the `SPEC_MODEL_TASKER` environment variable. If it is set and non-empty, pass its value as the `model:` parameter to the Task tool invocation, overriding the agent's frontmatter default (sonnet tier). When unset, omit `model:` and the agent runs on its default.
+
 ## Workflow
 
 ### 1. Identify Current Spec

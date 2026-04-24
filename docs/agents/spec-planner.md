@@ -8,7 +8,7 @@ Converts user answers and codebase context into a complete, rigorous spec — us
 
 ## Model
 
-**Opus 4.6.** The planner uses the most capable model because requirements and design are where mistakes are most expensive. Opus reasons carefully about edge cases, failure modes, security considerations, and architectural tradeoffs that a faster model is more likely to miss. A well-constructed spec written by a strong reasoner means fewer surprises during implementation.
+**opus tier.** The planner uses the most capable model because requirements and design are where mistakes are most expensive. Opus reasons carefully about edge cases, failure modes, security considerations, and architectural tradeoffs that a faster model is more likely to miss. A well-constructed spec written by a strong reasoner means fewer surprises during implementation.
 
 ## When It Runs
 

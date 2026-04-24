@@ -91,6 +91,7 @@ nav:
     - Consultant: agents/spec-consultant.md
     - Acceptor: agents/spec-acceptor.md
     - Documenter: agents/spec-documenter.md
+    - Scanner: agents/spec-scanner.md
   - Reference:
     - EARS Notation: reference/ears-notation.md
     - Design Patterns: reference/design-patterns.md
@@ -101,5 +102,6 @@ nav:
     - Crash Recovery: advanced/crash-recovery.md
     - Cross-Spec Dependencies: advanced/cross-spec-deps.md
     - CI/CD Integration: advanced/ci-cd.md
+    - Model Routing: advanced/model-routing.md
     - Extending the Plugin: advanced/extending.md
   - Privacy Policy: privacy.md

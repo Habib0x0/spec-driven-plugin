@@ -1,6 +1,6 @@
 # Spec-Driven Development Plugin
 
-A structured workflow plugin for Claude Code that transforms feature ideas into formal specifications before implementation.
+A structured workflow plugin for Codex and Claude Code that transforms feature ideas into formal specifications before implementation.
 
 ## Overview
 
@@ -8,7 +8,7 @@ This plugin guides you through three phases:
 
 1. **Requirements** - User stories with EARS notation and acceptance criteria
 2. **Design** - Technical architecture, sequence diagrams, implementation considerations
-3. **Tasks** - Discrete, trackable implementation items synced to Claude Code todos
+3. **Tasks** - Discrete, trackable implementation items that can be mirrored to the active agent's todo system
 
 ## Commands
 
@@ -47,17 +47,17 @@ This plugin guides you through three phases:
 ```
 
 This will:
-1. Create `.claude/specs/user-authentication/` directory
+1. Create `.codex/specs/user-authentication/` directory
 2. Gather requirements interactively (2-3 rounds of questions)
 3. Guide you through Design phase (architecture docs)
-4. Generate Tasks and sync to Claude Code todos
+4. Generate Tasks with explicit status, wiring, verification, and dependencies
 
 
 ### Spec Files Location
 
-Specs are stored in `.claude/specs/<feature-name>/`:
+Specs are stored in `.codex/specs/<feature-name>/` by default. Existing `.claude/specs/<feature-name>/` directories are still supported as a migration fallback, or you can set `SPEC_ROOT` explicitly:
 ```
-.claude/specs/user-authentication/
+.codex/specs/user-authentication/
 ├── requirements.md   # User stories with acceptance criteria
 ├── design.md         # Architecture and implementation plan
 └── tasks.md          # Trackable implementation tasks
@@ -119,7 +119,7 @@ bash scripts/spec-complete.sh --spec-name user-authentication
 By default, execution scripts create a **git worktree** for each spec:
 
 - Branch: `spec/<spec-name>`
-- Path: `.claude/specs/.worktrees/<spec-name>/`
+- Path: `.codex/specs/.worktrees/<spec-name>/`
 - Main branch stays clean while the spec is implemented
 - Multiple specs can run in parallel on separate worktrees
 - On completion, a `gh pr create` command is suggested
@@ -128,7 +128,7 @@ Use `--no-worktree` to commit directly to the current branch (v2.x behavior).
 
 ### Checkpoint Recovery
 
-`spec-loop.sh` creates checkpoint commits before each iteration. If Claude crashes or exits non-zero, the branch is rolled back to the last checkpoint automatically.
+`spec-loop.sh` creates checkpoint commits before each iteration. If the agent crashes or exits non-zero, the branch is rolled back to the last checkpoint automatically.
 
 ### CI/CD Integration
 
@@ -151,7 +151,7 @@ The loop script includes optimizations for long-running specs:
 
 ## Auto-Context
 
-When implementing features, Claude automatically includes relevant spec files as context if you're working in a directory with specs.
+When implementing features, include relevant spec files as context if you're working in a directory with specs.
 
 ## Reference Documentation
 
@@ -183,6 +183,38 @@ THE SYSTEM SHALL display validation errors inline
 ```
 
 ## Installation
+
+### Codex
+
+This repository now includes a Codex plugin manifest at `.codex-plugin/plugin.json` and marketplace metadata at `.agents/plugins/marketplace.json`.
+
+Install from GitHub:
+
+```bash
+codex plugin marketplace add Habib0x0/spec-driven-plugin
+```
+
+Or test the local checkout:
+
+```bash
+codex plugin marketplace add /path/to/spec-driven-plugin
+```
+
+The execution scripts default to Codex when `codex` is available:
+
+```bash
+export SPEC_AGENT_BACKEND=codex
+bash scripts/spec-exec.sh --spec-name user-authentication
+```
+
+Useful overrides:
+
+```bash
+export SPEC_ROOT=.codex/specs
+export SPEC_AGENT_CMD='codex exec --full-auto -'
+```
+
+### Claude Code
 
 Add to your `~/.claude/settings.json`:
 

@@ -2,7 +2,11 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/lib/spec-root.sh"
+source "$SCRIPT_DIR/lib/agent-runner.sh"
 source "$SCRIPT_DIR/lib/detect-backend.sh"
+SPEC_ROOT="$(detect_spec_root)"
+
 
 SPEC_NAME=""
 TARGET_URL=""
@@ -45,16 +49,16 @@ fi
 
 # auto-detect spec if not provided
 if [ -z "$SPEC_NAME" ]; then
-  if [ ! -d ".claude/specs" ]; then
-    echo "Error: No .claude/specs directory found."
+  if [ ! -d "$SPEC_ROOT" ]; then
+    echo "Error: No specs directory found at $SPEC_ROOT."
     echo "Run /spec <name> first to create a spec."
     exit 1
   fi
 
-  SPECS=($(ls -d .claude/specs/*/  2>/dev/null | xargs -I{} basename {}))
+  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
-    echo "Error: No specs found in .claude/specs/"
+    echo "Error: No specs found in $SPEC_ROOT/"
     exit 1
   elif [ ${#SPECS[@]} -eq 1 ]; then
     SPEC_NAME="${SPECS[0]}"
@@ -68,7 +72,7 @@ if [ -z "$SPEC_NAME" ]; then
   fi
 fi
 
-SPEC_DIR=".claude/specs/$SPEC_NAME"
+SPEC_DIR="$SPEC_ROOT/$SPEC_NAME"
 
 if [ ! -d "$SPEC_DIR" ]; then
   echo "Error: Spec directory not found: $SPEC_DIR"
@@ -185,7 +189,7 @@ EOF
 echo "=== Running post-deployment verification for: $SPEC_NAME ==="
 echo "Target: $TARGET_URL"
 echo "Scope: $SCOPE"
-claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
+run_agent_prompt_file "$PROMPT_FILE" | tee "$OUTPUT_FILE"
 
 # exit with appropriate code for CI/CD
 if grep -q '<promise>VERIFIED</promise>' "$OUTPUT_FILE"; then

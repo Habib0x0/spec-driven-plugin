@@ -28,14 +28,14 @@ create_checkpoint() {
 }
 
 # handle_checkpoint_recovery(exit_code, checkpoint_sha, iteration, work_dir)
-# Rolls back to checkpoint if Claude exited non-zero and a checkpoint exists.
+# Rolls back to checkpoint if the agent exited non-zero and a checkpoint exists.
 handle_checkpoint_recovery() {
   local exit_code="$1"
   local checkpoint_sha="$2"
   local iteration="$3"
   local work_dir="$4"
 
-  # nothing to do if Claude succeeded or no checkpoint was created
+  # nothing to do if the agent succeeded or no checkpoint was created
   if [[ "$exit_code" -eq 0 ]] || [[ -z "$checkpoint_sha" ]]; then
     return 0
   fi

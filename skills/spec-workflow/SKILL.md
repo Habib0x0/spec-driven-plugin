@@ -31,16 +31,16 @@ Before formalizing requirements, use `/spec-brainstorm` to explore the idea thro
 
 1. Start with `/spec-brainstorm [idea]`
 2. Have a back-and-forth conversation exploring the problem
-3. Claude asks probing questions, suggests alternatives, identifies gaps
-4. When the idea is solid, Claude outputs a brief
+3. Codex asks probing questions, suggests alternatives, identifies gaps
+4. When the idea is solid, Codex outputs a brief
 5. Use that brief as input for `/spec <feature-name>`
 
 The brainstorm phase is optional — if you already know exactly what you want, skip straight to `/spec`.
 
-All spec files are stored in `.claude/specs/<feature-name>/`:
+All new spec files are stored in `.codex/specs/<feature-name>/`. Existing `.claude/specs/<feature-name>/` specs remain supported as a migration fallback:
 - `requirements.md` - User stories with EARS acceptance criteria
 - `design.md` - Architecture, components, data flow
-- `tasks.md` - Implementation tasks synced to Claude Code todos
+- `tasks.md` - Implementation tasks tracked by status, wiring, verification, and dependencies
 
 ## Phase 1: Requirements
 
@@ -161,7 +161,7 @@ Organize tasks into logical phases:
 3. Sequence tasks based on dependencies
 4. Link each task to requirements
 5. Define acceptance criteria per task
-6. Sync tasks to Claude Code todos using TaskCreate
+6. Keep tasks traceable in `tasks.md`; if the active client has a native todo tool, mirror the task list there.
 
 For detailed task breakdown strategies, consult `references/task-breakdown.md`.
 
@@ -174,7 +174,7 @@ After planning is complete, execute the spec autonomously using the provided scr
 Run one task at a time:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/spec-exec.sh --spec-name <name>
+${CODEX_PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/spec-exec.sh --spec-name <name>
 ```
 
 Each run picks the highest-priority pending task, implements it, tests it, updates the spec, and commits.
@@ -184,7 +184,7 @@ Each run picks the highest-priority pending task, implements it, tests it, updat
 Run all tasks in a loop:
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name> --max-iterations 50
+${CODEX_PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}/scripts/spec-loop.sh --spec-name <name> --max-iterations 50
 ```
 
 The loop re-reads spec files each iteration, detects completion via `<promise>COMPLETE</promise>`, and stops when all tasks are done.
@@ -198,11 +198,11 @@ The loop re-reads spec files each iteration, detects completion via `<promise>CO
 
 ## Spec File Location
 
-Create specs in the project's `.claude/specs/` directory:
+Create specs in the project's `.codex/specs/` directory. If an older project already has `.claude/specs/`, the scripts read that location unless `SPEC_ROOT` is set:
 
 ```
 project/
-├── .claude/
+├── .codex/
 │   └── specs/
 │       └── user-authentication/
 │           ├── requirements.md
@@ -211,7 +211,7 @@ project/
 └── src/
 ```
 
-## Integration with Claude Code
+## Integration with Codex
 
 ### Creating Specs
 
@@ -219,16 +219,16 @@ Use the `/spec <feature-name>` command to start a new spec with interactive guid
 
 ### Task Synchronization
 
-After completing the Tasks phase, sync to Claude Code todos:
+After completing the Tasks phase, keep `tasks.md` authoritative and mirror to the active client's todo system when available:
 
 ```
 For each task in tasks.md:
-  TaskCreate with subject, description, and dependencies
+  Create or update a todo with subject, description, and dependencies
 ```
 
 ### Auto-Context
 
-When implementing features, Claude automatically includes relevant spec files as context. This ensures implementation stays aligned with requirements.
+When implementing features, include relevant spec files as context. This ensures implementation stays aligned with requirements.
 
 ### Refinement
 
@@ -238,7 +238,7 @@ Use `/spec-refine` to update requirements or design. Changes cascade:
 
 ## Templates
 
-Templates are available at `${CLAUDE_PLUGIN_ROOT}/templates/`:
+Templates are available at `${CODEX_PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}/templates/`:
 - `requirements.md` - Requirements template with EARS format
 - `design.md` - Design document template
 - `tasks.md` - Task tracking template

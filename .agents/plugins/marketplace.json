@@ -1,0 +1,20 @@
+{
+  "name": "spec-driven",
+  "interface": {
+    "displayName": "Spec Driven"
+  },
+  "plugins": [
+    {
+      "name": "spec-driven",
+      "source": {
+        "source": "local",
+        "path": "."
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}

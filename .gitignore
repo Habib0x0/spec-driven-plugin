@@ -5,4 +5,8 @@
 .claude/*.local.md
 .claude/*.local.json
 .claude/specs/.worktrees/
+.codex/*.local.md
+.codex/*.local.json
+.codex/specs/.worktrees/
+*.sync-conflict-*
 site/

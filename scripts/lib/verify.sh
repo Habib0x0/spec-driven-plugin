@@ -3,6 +3,11 @@
 # Provides run_verification_gate() and run_debugger_fix() for post-task wiring validation.
 # Source this file; do not execute directly.
 
+if ! declare -f run_agent_prompt >/dev/null 2>&1; then
+  # shellcheck source=agent-runner.sh
+  source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/agent-runner.sh"
+fi
+
 # run_verification_gate(spec_dir, task_id, work_dir)
 # Reads the project profile and the task's changed files (via git diff).
 # For each new file/export, checks if it appears at the expected registration points.
@@ -45,7 +50,7 @@ run_verification_gate() {
     return 0
   fi
 
-  # build a verification prompt for Claude
+  # build a verification prompt for the configured agent
   local prompt
   prompt=$(cat <<PROMPT_EOF
 You are a wiring verification checker. Given the registration points from a project profile and a git diff, determine whether new files or exports are properly registered.
@@ -71,11 +76,11 @@ PROMPT_EOF
 )
 
   local gate_output
-  gate_output=$(claude --dangerously-skip-permissions -p "$prompt" 2>/dev/null)
-  local claude_exit=$?
+  gate_output=$(run_agent_prompt "$prompt" 2>/dev/null)
+  local agent_exit=$?
 
-  if [ $claude_exit -ne 0 ]; then
-    echo "Verification gate: Claude invocation failed (exit $claude_exit) -- skipping gate."
+  if [ $agent_exit -ne 0 ]; then
+    echo "Verification gate: agent invocation failed (exit $agent_exit) -- skipping gate."
     return 0
   fi
 
@@ -95,7 +100,7 @@ PROMPT_EOF
 }
 
 # run_debugger_fix(spec_dir, task_id, gap_description, work_dir)
-# Spawns Claude with a debugger prompt to fix a specific wiring gap.
+# Spawns the configured agent with a debugger prompt to fix a specific wiring gap.
 # Returns 0 if fix was applied, 1 if debugger failed.
 run_debugger_fix() {
   local spec_dir="$1"
@@ -123,11 +128,11 @@ PROMPT_EOF
 )
 
   local fix_output
-  fix_output=$(cd "$work_dir" && claude --dangerously-skip-permissions -p "$prompt" 2>/dev/null)
-  local claude_exit=$?
+  fix_output=$(cd "$work_dir" && run_agent_prompt "$prompt" 2>/dev/null)
+  local agent_exit=$?
 
-  if [ $claude_exit -ne 0 ]; then
-    echo "Debugger fix: Claude invocation failed (exit $claude_exit)." >&2
+  if [ $agent_exit -ne 0 ]; then
+    echo "Debugger fix: agent invocation failed (exit $agent_exit)." >&2
     return 1
   fi
 

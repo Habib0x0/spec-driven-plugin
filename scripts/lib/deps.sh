@@ -3,12 +3,21 @@
 # Provides check_dependencies() and get_dependency_status() for execution scripts.
 # Source this file; do not execute directly.
 
+if ! declare -f detect_spec_root >/dev/null 2>&1; then
+  # shellcheck source=spec-root.sh
+  source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/spec-root.sh"
+fi
+
+_spec_root() {
+  detect_spec_root
+}
+
 # _parse_depends_on(spec_name)
 # Parses the "## Depends On" section from requirements.md.
 # Outputs one dependency name per line. Outputs nothing if no deps.
 _parse_depends_on() {
   local spec_name="$1"
-  local req_file=".claude/specs/$spec_name/requirements.md"
+  local req_file="$(_spec_root)/$spec_name/requirements.md"
 
   if [[ ! -f "$req_file" ]]; then
     return 0
@@ -40,7 +49,7 @@ _parse_depends_on() {
 # Outputs "verified_count:total_count" to stdout.
 _check_spec_complete() {
   local spec_name="$1"
-  local tasks_file=".claude/specs/$spec_name/tasks.md"
+  local tasks_file="$(_spec_root)/$spec_name/tasks.md"
 
   if [[ ! -f "$tasks_file" ]]; then
     echo "0:0"
@@ -187,12 +196,12 @@ check_dependencies() {
   while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
 
-    if [[ ! -d ".claude/specs/$dep" ]]; then
+    if [[ ! -d "$(_spec_root)/$dep" ]]; then
       echo "Error: Dependency spec not found: $dep" >&2
       exit 1
     fi
 
-    if [[ ! -f ".claude/specs/$dep/tasks.md" ]]; then
+    if [[ ! -f "$(_spec_root)/$dep/tasks.md" ]]; then
       echo "Error: Dependency $dep has no tasks.md" >&2
       exit 1
     fi
@@ -230,7 +239,7 @@ get_dependency_status() {
   while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
 
-    if [[ ! -d ".claude/specs/$dep" ]] || [[ ! -f ".claude/specs/$dep/tasks.md" ]]; then
+    if [[ ! -d "$(_spec_root)/$dep" ]] || [[ ! -f "$(_spec_root)/$dep/tasks.md" ]]; then
       echo "$dep:not_found:0:0"
       continue
     fi

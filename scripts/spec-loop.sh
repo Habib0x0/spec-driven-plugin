@@ -2,6 +2,10 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/lib/spec-root.sh"
+source "$SCRIPT_DIR/lib/agent-runner.sh"
+source "$SCRIPT_DIR/lib/detect-backend.sh"
+SPEC_ROOT="$(detect_spec_root)"
 
 SPEC_NAME=""
 MAX_ITERATIONS=50
@@ -37,16 +41,16 @@ done
 
 # auto-detect spec if not provided
 if [ -z "$SPEC_NAME" ]; then
-  if [ ! -d ".claude/specs" ]; then
-    echo "Error: No .claude/specs directory found."
+  if [ ! -d "$SPEC_ROOT" ]; then
+    echo "Error: No specs directory found at $SPEC_ROOT."
     echo "Run /spec <name> first to create a spec."
     exit 1
   fi
 
-  SPECS=($(ls -d .claude/specs/*/  2>/dev/null | xargs -I{} basename {}))
+  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
-    echo "Error: No specs found in .claude/specs/"
+    echo "Error: No specs found in $SPEC_ROOT/"
     exit 1
   elif [ ${#SPECS[@]} -eq 1 ]; then
     SPEC_NAME="${SPECS[0]}"
@@ -60,7 +64,7 @@ if [ -z "$SPEC_NAME" ]; then
   fi
 fi
 
-SPEC_DIR=".claude/specs/$SPEC_NAME"
+SPEC_DIR="$SPEC_ROOT/$SPEC_NAME"
 
 if [ ! -d "$SPEC_DIR" ]; then
   echo "Error: Spec directory not found: $SPEC_DIR"
@@ -334,21 +338,21 @@ EOF
   # snapshot completed task IDs before iteration to detect which task was just completed
   COMPLETED_BEFORE=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
 
-  # snapshot progress.md before iteration to detect if Claude updated it
+  # snapshot progress.md before iteration to detect if the agent updated it
   PROGRESS_HASH_BEFORE=""
   if [ -f "$SPEC_DIR/progress.md" ]; then
     PROGRESS_HASH_BEFORE=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
   fi
 
   set +e
-  claude --dangerously-skip-permissions -p "$(cat "$PROMPT_FILE")" | tee "$OUTPUT_FILE"
-  CLAUDE_EXIT=${PIPESTATUS[0]}
+  run_agent_prompt_file "$PROMPT_FILE" | tee "$OUTPUT_FILE"
+  AGENT_EXIT=${PIPESTATUS[0]}
   set -e
 
   # handle checkpoint recovery on failure
-  handle_checkpoint_recovery "$CLAUDE_EXIT" "$CHECKPOINT_SHA" "$ITERATION" "$WORK_DIR"
+  handle_checkpoint_recovery "$AGENT_EXIT" "$CHECKPOINT_SHA" "$ITERATION" "$WORK_DIR"
 
-  # if Claude didn't update progress.md, append a fallback entry
+  # if the agent didn't update progress.md, append a fallback entry
   PROGRESS_HASH_AFTER=""
   if [ -f "$SPEC_DIR/progress.md" ]; then
     PROGRESS_HASH_AFTER=$(md5 -q "$SPEC_DIR/progress.md" 2>/dev/null || md5sum "$SPEC_DIR/progress.md" 2>/dev/null | cut -d' ' -f1)
@@ -359,7 +363,7 @@ EOF
     echo "" >> "$SPEC_DIR/progress.md"
     echo "## Iteration $ITERATION (auto-logged)" >> "$SPEC_DIR/progress.md"
     echo "- Date: $(date '+%Y-%m-%d %H:%M')" >> "$SPEC_DIR/progress.md"
-    echo "- Note: Claude did not update progress.md this iteration. Check git log for what changed." >> "$SPEC_DIR/progress.md"
+    echo "- Note: the agent did not update progress.md this iteration. Check git log for what changed." >> "$SPEC_DIR/progress.md"
     echo "WARNING: progress.md was not updated by iteration $ITERATION — fallback entry appended."
   fi
 

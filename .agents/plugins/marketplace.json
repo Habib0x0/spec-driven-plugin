@@ -8,7 +8,7 @@
       "name": "spec-driven",
       "source": {
         "source": "local",
-        "path": "."
+        "path": "./plugins/spec-driven"
       },
       "policy": {
         "installation": "AVAILABLE",

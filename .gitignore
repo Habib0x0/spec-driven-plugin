@@ -5,6 +5,7 @@
 .claude/*.local.md
 .claude/*.local.json
 .claude/specs/.worktrees/
+.claude/specs/*
 .codex/*.local.md
 .codex/*.local.json
 .codex/specs/.worktrees/

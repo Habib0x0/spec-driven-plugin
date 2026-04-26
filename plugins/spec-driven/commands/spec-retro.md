@@ -1,16 +1,8 @@
 ---
-name: spec-retro
 description: Run a retrospective on a completed spec to capture lessons learned
-argument-hint: "[spec-name]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
-  - AskUserQuestion
 ---
 
-# /spec-retro Command
+# /spec-retro
 
 Analyze a completed spec's lifecycle to generate a retrospective — what went well, what caused friction, and what to improve next time. This closes the feedback loop for continuous process improvement.
 

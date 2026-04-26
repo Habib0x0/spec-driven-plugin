@@ -1,16 +1,8 @@
 ---
-name: spec-brainstorm
 description: Brainstorm a feature idea through conversation until it's ready for /spec
-argument-hint: "[idea]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - AskUserQuestion
-  - Task
 ---
 
-# /spec-brainstorm Command
+# /spec-brainstorm
 
 Have a back-and-forth conversation to explore and refine a feature idea. No structured output yet — just discussion until the idea is solid. When ready, output a brief for `/spec`.
 

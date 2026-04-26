@@ -1,13 +1,8 @@
 ---
-name: spec-validate
 description: Validate spec completeness and consistency
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
 ---
 
-# /spec-validate Command
+# /spec-validate
 
 Validate that a spec is complete, consistent, and ready for implementation.
 

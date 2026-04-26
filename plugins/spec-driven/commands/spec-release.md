@@ -1,16 +1,8 @@
 ---
-name: spec-release
 description: Generate release notes, changelog, and deployment checklist
-argument-hint: "[spec-name]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
-  - AskUserQuestion
 ---
 
-# /spec-release Command
+# /spec-release
 
 Prepare a feature for release by generating changelog entries, migration checklists, environment variable documentation, and deployment steps. Optionally creates a git tag and GitHub release.
 

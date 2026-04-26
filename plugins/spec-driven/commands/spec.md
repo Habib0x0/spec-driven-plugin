@@ -1,20 +1,8 @@
 ---
-name: spec
 description: Start a new spec-driven development workflow for a feature
-argument-hint: "<feature-name>"
-allowed-tools:
-  - Read
-  - Write
-  - Glob
-  - Grep
-  - Task
-  - TaskCreate
-  - TaskUpdate
-  - TaskList
-  - AskUserQuestion
 ---
 
-# /spec Command
+# /spec
 
 Create a new specification for a feature using the 3-phase spec-driven workflow. Requirements are gathered interactively with the user, then agents handle the heavy writing.
 

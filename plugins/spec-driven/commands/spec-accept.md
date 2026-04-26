@@ -1,16 +1,8 @@
 ---
-name: spec-accept
 description: Run user acceptance testing against spec requirements for formal sign-off
-argument-hint: "[spec-name]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - AskUserQuestion
-  - Task
 ---
 
-# /spec-accept Command
+# /spec-accept
 
 Perform user acceptance testing (UAT) to verify the implementation satisfies all spec requirements. This bridges the gap between "code works" (spec-tester) and "the right thing was built" (acceptance).
 

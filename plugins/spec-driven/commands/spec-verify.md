@@ -1,16 +1,8 @@
 ---
-name: spec-verify
 description: Run post-deployment smoke tests against a live environment
-argument-hint: "[spec-name] [url]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - AskUserQuestion
-  - Task
 ---
 
-# /spec-verify Command
+# /spec-verify
 
 Run smoke tests against a deployed environment to verify the feature works in production/staging. Reuses the spec-tester agent with a target URL instead of localhost.
 

@@ -1,16 +1,8 @@
 ---
-name: spec-refine
 description: Refine requirements or design for an existing spec
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Task
-  - AskUserQuestion
 ---
 
-# /spec-refine Command
+# /spec-refine
 
 Update requirements or design for an existing spec.
 

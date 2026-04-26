@@ -1,16 +1,8 @@
 ---
-name: spec-docs
 description: Generate user-facing documentation from spec and implementation
-argument-hint: "[spec-name]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - AskUserQuestion
-  - Task
 ---
 
-# /spec-docs Command
+# /spec-docs
 
 Generate documentation from spec files and implemented code. Produces API references, user guides, architecture decision records, and operations runbooks as appropriate.
 

@@ -1,13 +1,8 @@
 ---
-name: spec-loop
 description: Loop spec execution until all tasks are complete
-allowed-tools:
-  - Bash
-  - Read
-  - Glob
 ---
 
-# /spec-loop Command
+# /spec-loop
 
 Run spec-driven implementation in a loop. Each iteration picks the next highest-priority task, implements it, and continues until all tasks are done or max iterations reached.
 

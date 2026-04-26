@@ -1,14 +1,8 @@
 ---
-name: spec-complete
 description: Run full post-completion pipeline (accept, docs, release, retro)
-allowed-tools:
-  - Bash
-  - Read
-  - Glob
-argument-hint: "[spec-name]"
 ---
 
-# /spec-complete Command
+# /spec-complete
 
 Run the full post-completion pipeline after all spec tasks are done. Chains: UAT -> Documentation -> Release Notes -> Retrospective.
 

@@ -1,13 +1,8 @@
 ---
-name: spec-exec
 description: Execute one spec task by running Claude in autonomous mode
-allowed-tools:
-  - Bash
-  - Read
-  - Glob
 ---
 
-# /spec-exec Command
+# /spec-exec
 
 Run a single iteration of spec-driven implementation. Claude picks the highest-priority pending task, implements it, tests it, updates the spec, and commits.
 

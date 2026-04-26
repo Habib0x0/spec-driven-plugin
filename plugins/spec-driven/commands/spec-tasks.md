@@ -1,18 +1,8 @@
 ---
-name: spec-tasks
 description: Regenerate tasks from updated spec requirements and design
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - TaskCreate
-  - TaskUpdate
-  - TaskList
-  - AskUserQuestion
 ---
 
-# /spec-tasks Command
+# /spec-tasks
 
 Regenerate implementation tasks from the current spec requirements and design.
 

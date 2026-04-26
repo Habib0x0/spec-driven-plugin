@@ -1,13 +1,8 @@
 ---
-name: spec-status
 description: Show status and progress of current spec
-allowed-tools:
-  - Read
-  - Glob
-  - TaskList
 ---
 
-# /spec-status Command
+# /spec-status
 
 Display the current status and progress of a spec.
 

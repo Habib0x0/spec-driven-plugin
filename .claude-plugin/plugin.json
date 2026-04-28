@@ -31,6 +31,7 @@
     "./commands/spec-release.md",
     "./commands/spec-verify.md",
     "./commands/spec-retro.md",
-    "./commands/spec-complete.md"
+    "./commands/spec-complete.md",
+    "./commands/research.md"
   ]
 }

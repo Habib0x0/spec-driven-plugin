@@ -34,6 +34,7 @@ templates/                  - Document scaffolding for specs
 | `/spec-release` | Generate release notes, changelog, and deployment checklist |
 | `/spec-verify` | Run post-deployment smoke tests against a live environment |
 | `/spec-retro` | Run a retrospective to capture lessons learned |
+| `/research` | Deep research before planning — parallel agents search docs, web, and codebase |
 
 ## Model Routing
 

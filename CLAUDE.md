@@ -35,6 +35,7 @@ templates/                  - Document scaffolding for specs
 | `/spec-verify` | Run post-deployment smoke tests against a live environment |
 | `/spec-retro` | Run a retrospective to capture lessons learned |
 | `/research` | Deep research before planning — parallel agents search docs, web, and codebase |
+| `/zoom-out` | Step up a layer of abstraction and map modules, interfaces, and callers |
 
 ## Model Routing
 

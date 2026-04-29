@@ -33,6 +33,7 @@
     "./commands/spec-retro.md",
     "./commands/spec-complete.md",
     "./commands/research.md",
-    "./commands/zoom-out.md"
+    "./commands/zoom-out.md",
+    "./commands/ubiquitous-language.md"
   ]
 }

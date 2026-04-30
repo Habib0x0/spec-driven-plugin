@@ -198,3 +198,30 @@ After modifying shell configs (tmux, neovim, zsh), always verify the change took
 - Test a related command to confirm the change applied
 - Never report success without verification
 - If a reload doesn't work, diagnose before proceeding (the file may have a syntax error)
+
+## Release Checklist
+
+After any fix or feature session, before closing out, ALWAYS run the version bump script. Never rely on the user to remember.
+
+```bash
+# patch — bug fixes, doc corrections, small tweaks
+bash scripts/bump-version.sh patch
+
+# minor — new commands, new agents, new behavior
+bash scripts/bump-version.sh minor
+
+# major — breaking changes, large rewrites
+bash scripts/bump-version.sh major
+
+# bump and push in one step
+bash scripts/bump-version.sh patch --push
+```
+
+The script atomically:
+1. Bumps the version in all 4 files: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, `skills/spec-workflow/SKILL.md`
+2. Inserts a dated `## [X.Y.Z] - YYYY-MM-DD` section in `CHANGELOG.md`
+3. Stages and commits all 5 files
+
+After running it, fill in the CHANGELOG section with a 1–3 bullet summary of what changed, then amend or create a follow-up commit.
+
+**Never** bump only one or two version files. All 4 must stay in sync. The script enforces this with a post-update verification check.

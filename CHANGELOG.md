@@ -2,7 +2,7 @@
 
 All notable changes to the spec-driven plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [5.2.0] - 2026-04-29
+## [5.3.0] - 2026-04-29
 
 ### Fixed
 
@@ -34,6 +34,13 @@ All notable changes to the spec-driven plugin are documented here. The format fo
 - Fixed `CLAUDE.md` to remove `--no-complete` flag claim and auto-chaining claim; replaced with accurate `--on-complete` opt-in description.
 - Updated `skills/spec-workflow/SKILL.md` to version 5.2.0.
 - Synced `.codex-plugin/plugin.json` to version 5.2.0.
+
+## [5.2.0] - 2026-04-28
+
+### Added
+
+- **`/zoom-out` command.** Maps modules, interfaces, and callers for unfamiliar sections of a codebase. Useful for getting oriented before starting a spec.
+- **`/ubiquitous-language` command.** Extracts domain terms from the codebase into a canonical glossary and flags ambiguous or inconsistent naming.
 
 ## [5.1.1] - 2026-04-26
 

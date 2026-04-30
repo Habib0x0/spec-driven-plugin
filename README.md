@@ -22,6 +22,13 @@ This plugin guides you through three phases:
 | `/spec-status` | Show spec progress, task completion, and dependency status |
 | `/spec-validate` | Validate spec completeness and consistency |
 
+### Research & Navigation
+| Command | Description |
+|---------|-------------|
+| `/research` | Deep parallel research before planning — searches docs, web, and codebase |
+| `/zoom-out` | Map modules, interfaces, and callers for unfamiliar code |
+| `/ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities |
+
 ### Implementation
 | Command | Description |
 |---------|-------------|

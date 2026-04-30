@@ -132,12 +132,6 @@ Run `/spec-validate` to check at any time.
 
 Use `/spec-refine` to update requirements after the initial spec is created. Updated requirements will prompt a review of the design to ensure alignment.
 
-## Importing from a PRD
+## Starting from an existing document
 
-If you have an existing product requirements document, use `/spec-import`:
-
-```
-/spec-import my-feature --file /path/to/prd.md
-```
-
-This reads the markdown document and converts it to EARS requirements. Review the output, then proceed to design with `/spec-refine`.
+If you have an existing PRD or design document, paste its contents into `/spec <name>` as context and instruct the spec-planner to derive EARS requirements from it. Review the output, then proceed to design.

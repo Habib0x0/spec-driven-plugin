@@ -123,8 +123,4 @@ If requirements or design change significantly, regenerate tasks with:
 
 ## Syncing with Claude Code todos
 
-Tasks sync to Claude Code's built-in todo system via `TaskCreate` and `TaskUpdate`. After running execution scripts (which run in a subprocess and cannot call `TaskUpdate` directly), reconcile the two with:
-
-```
-/spec-sync
-```
+Tasks sync to Claude Code's built-in todo system via `TaskCreate` and `TaskUpdate` when a spec is created. After running execution scripts in a subprocess, use `/spec-status` to read the current state of `tasks.md`.

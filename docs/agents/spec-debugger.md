@@ -12,9 +12,9 @@ Fix the specific issues identified by the tester or reviewer, without rewriting 
 
 ## When It Runs
 
-- `/spec-team` — dispatched by the Lead when the tester reports a verification failure
-- `/spec-team` — dispatched by the Lead when the reviewer rejects an implementation
-- Dispatched again if a previous fix attempt didn't resolve the issue
+- Verification gate in `spec-loop.sh` — dispatched automatically when a wiring gap is detected after a task is marked complete
+- Can be invoked directly via the Task tool when a specific bug or wiring issue needs fixing
+- Retried up to 2 times if the first fix attempt does not resolve the issue
 
 ## What It Does
 

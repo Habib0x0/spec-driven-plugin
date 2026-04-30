@@ -1,6 +1,6 @@
 # Agents
 
-The plugin uses 11 specialized agents, each optimized for a specific phase of the workflow. You don't invoke agents directly — they are automatically dispatched by commands like `/spec`, `/spec-team`, `/spec-brainstorm`, and the post-implementation commands.
+The plugin uses 11 specialized agents, each optimized for a specific phase of the workflow. You don't invoke agents directly — they are automatically dispatched by commands like `/spec`, `/spec-brainstorm`, and the post-implementation commands.
 
 ## Model Routing
 
@@ -36,7 +36,7 @@ Each agent is assigned a model tier that best fits its task. Reasoning-heavy pha
 
 ### Implementation pipeline
 
-The core implementation loop runs in this order, primarily through `/spec-team` or `/spec-exec`:
+The core implementation loop runs in this order, primarily through `/spec-exec` or `spec-loop.sh`:
 
 1. **[spec-implementer](spec-implementer.md)** — writes the code and wires it into the application
 2. **[spec-tester](spec-tester.md)** — verifies the implementation works end-to-end; only this agent can mark a task `Verified: yes`
@@ -48,3 +48,5 @@ The core implementation loop runs in this order, primarily through `/spec-team` 
 **[spec-acceptor](spec-acceptor.md)** runs after all tasks are complete. It maps every EARS acceptance criterion back to verified tasks to confirm the right thing was built, and produces a formal UAT report.
 
 **[spec-documenter](spec-documenter.md)** generates user-facing documentation — API references, user guides, architecture decision records, and runbooks — from spec files and actual implementation code.
+
+**[spec-scanner](spec-scanner.md)** runs during Phase 0 of `/spec` to build a project profile (`_project-profile.md`). It detects the framework, existing code patterns, domain entities, and the exact file/line registration points where new code must be wired. This profile is used by the implementer and verification gate to ensure new code is connected correctly.

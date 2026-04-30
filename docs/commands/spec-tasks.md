@@ -57,6 +57,5 @@ After running `/spec-refine` to add OAuth support, run `/spec-tasks` to add the 
 ## See Also
 
 - [/spec-refine](spec-refine.md) — Update requirements or design before regenerating tasks
-- [/spec-sync](spec-sync.md) — Sync task statuses after running implementation scripts
 - [/spec-status](spec-status.md) — View current task progress
 - [/spec-validate](spec-validate.md) — Validate the spec including task traceability

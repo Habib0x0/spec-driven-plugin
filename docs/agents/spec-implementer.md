@@ -1,6 +1,6 @@
 # spec-implementer
 
-The spec-implementer writes the code for a single assigned task. It is one member of the implementation team dispatched by `/spec-team`, working alongside the tester, reviewer, and debugger.
+The spec-implementer writes the code for a single assigned task. It is the core execution agent used by `/spec-exec` and `spec-loop.sh`.
 
 ## Role
 
@@ -12,8 +12,8 @@ Implement the code for a task from `tasks.md` and ensure that code is fully wire
 
 ## When It Runs
 
-- `/spec-team` — dispatched by the Lead for each task in the implementation loop
 - `/spec-exec` — runs as the implementer in a single-iteration execution cycle
+- `spec-loop.sh` — invoked for each iteration of the automated implementation loop
 
 ## What It Does
 

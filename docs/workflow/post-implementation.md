@@ -34,7 +34,7 @@ Output: `ACCEPTED` or `REJECTED` (as `<promise>ACCEPTED</promise>` / `<promise>R
 If rejected, the acceptor lists which criteria failed and suggests either running `/spec-refine` (if requirements need updating) or fixing the implementation.
 
 !!!tip
-    Run `/spec-accept` after `/spec-loop` or `/spec-team` completes. Some non-functional requirements (performance benchmarks, accessibility audits) are flagged as requiring manual verification — the report calls these out explicitly.
+    Run `/spec-accept` after `/spec-loop` completes. Some non-functional requirements (performance benchmarks, accessibility audits) are flagged as requiring manual verification — the report calls these out explicitly.
 
 ## Step 2: Documentation (spec-docs.sh)
 

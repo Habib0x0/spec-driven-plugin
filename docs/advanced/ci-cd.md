@@ -18,7 +18,9 @@ Scripts that produce structured outcomes write promise markers in their output:
 |--------|---------|
 | `spec-loop.sh` | `<promise>COMPLETE</promise>` |
 | `spec-accept.sh` | `<promise>ACCEPTED</promise>` or `<promise>REJECTED</promise>` |
+| `spec-verify.sh` | `<promise>VERIFIED</promise>` or `<promise>VERIFICATION_FAILED</promise>` |
 | `spec-retro.sh` | `<promise>RETRO_COMPLETE</promise>` |
+| `spec-complete.sh` | `<promise>PIPELINE_COMPLETE</promise>`, `<promise>PIPELINE_REJECTED</promise>`, or `<promise>PIPELINE_FAILED</promise>` |
 
 These markers let the calling script detect outcomes reliably without parsing human-readable prose.
 
@@ -60,10 +62,9 @@ fi
 Run the implementation loop in CI with a bounded iteration count. The loop exits 0 when complete or when max iterations is reached:
 
 ```bash
-spec-loop.sh \
+bash scripts/spec-loop.sh \
   --spec-name user-authentication \
-  --max-iterations 30 \
-  --no-worktree
+  --max-iterations 30
 ```
 
 !!!warning

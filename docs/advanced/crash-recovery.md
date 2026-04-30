@@ -1,6 +1,6 @@
 # Crash recovery
 
-`spec-loop.sh` and `spec-team.sh` implement crash recovery via checkpoint commits. If Claude exits with a non-zero exit code during an iteration, the branch is automatically rolled back to the state before that iteration started.
+`spec-loop.sh` implements crash recovery via checkpoint commits. If Claude exits with a non-zero exit code during an iteration, the branch is automatically rolled back to the state before that iteration started.
 
 ## How checkpoints work
 
@@ -20,7 +20,7 @@ After Claude exits, the script checks the exit code:
 - **Non-zero exit code with a checkpoint** — call `git reset --hard <CHECKPOINT_SHA>` to discard the failed iteration's partial work and return to the pre-iteration state
 - **Non-zero exit code without a checkpoint** — nothing to roll back, continue
 
-If `git reset --hard` itself fails (rare), the script prints a critical warning and the path to the worktree so you can inspect manually.
+If `git reset --hard` itself fails (rare), the script prints a critical warning with the current git state so you can inspect manually.
 
 ## What triggers a non-zero exit
 

@@ -44,7 +44,7 @@ Automated tests verify that code passes tests. Acceptance testing verifies that 
 
 ## Tips
 
-- Run this after all tasks are complete and `/spec-loop` or `/spec-team` has finished.
+- Run this after all tasks are complete and `/spec-loop` has finished.
 - Non-functional requirements (performance, security, accessibility) are often missed during implementation — this command explicitly checks them.
 - Some criteria will be flagged as untestable automatically. The report calls these out for manual verification.
 - The `acceptance.md` file becomes part of the spec record and is referenced by `/spec-release` and `/spec-retro`.
@@ -57,5 +57,4 @@ Automated tests verify that code passes tests. Acceptance testing verifies that 
 
 - [/spec-release](spec-release.md) — Generate release notes and deployment checklist after acceptance
 - [/spec-refine](spec-refine.md) — Update requirements if acceptance reveals a spec problem
-- [/spec-team](spec-team.md) — Higher-quality implementation that is more likely to pass acceptance
 - [/spec-verify](spec-verify.md) — Post-deployment smoke tests after the release is live

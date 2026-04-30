@@ -12,7 +12,7 @@ Review code quality, security, and architectural alignment. The reviewer is the 
 
 ## When It Runs
 
-- `/spec-team` — invoked after the tester marks a task `Verified: yes`
+- Can be invoked directly via the Task tool for code review after implementation
 - Called back in after the debugger addresses review feedback
 
 ## What It Does

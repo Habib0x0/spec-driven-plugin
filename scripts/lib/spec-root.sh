@@ -5,12 +5,12 @@
 detect_spec_root() {
   if [ -n "${SPEC_ROOT:-}" ]; then
     printf '%s\n' "$SPEC_ROOT"
-  elif [ -d ".codex/specs" ]; then
-    printf '%s\n' ".codex/specs"
   elif [ -d ".claude/specs" ]; then
     printf '%s\n' ".claude/specs"
-  else
+  elif [ -d ".codex/specs" ]; then
     printf '%s\n' ".codex/specs"
+  else
+    printf '%s\n' ".claude/specs"
   fi
 }
 

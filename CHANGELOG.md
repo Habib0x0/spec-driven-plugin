@@ -2,6 +2,46 @@
 
 All notable changes to the spec-driven plugin are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [5.2.0] - 2026-04-29
+
+### Fixed
+
+- **`mapfile` incompatibility on macOS.** Replaced `mapfile -t` with POSIX-compatible `while IFS= read -r` loops in all 8 execution scripts. `mapfile` requires bash 4+; macOS ships bash 3.2, which caused all scripts to fail immediately with `bash: mapfile: command not found`.
+- **`spec-scanner` and `spec-debugger` not registered in `plugin.json`.** Both agent files existed but were missing from the `agents` array, causing `/spec` Phase 0 to silently invoke the wrong agent.
+- **`verify.sh` awk range pattern.** Fixed `awk '/^## Registration Points/,/^## /'` to exclude the closing heading line, which was bleeding content from the next section into the Registration Points data passed to the verification agent.
+- **`verify.sh` git diff fallback on first commit.** Changed fallback from `git diff --cached` (returns empty after a commit) to `git diff --root HEAD`, which works correctly when there is only one commit in the repo.
+- **`spec-loop.sh` task completion detection.** Replaced brittle `grep -B2` (failed when extra lines existed between `### T-N:` and the Status field) with an `awk` pattern that reliably extracts task IDs regardless of line spacing.
+- **`spec-loop.sh` `comm -13` on empty strings.** Fixed false positives by writing snapshots to temp files before diffing, instead of piping `echo ""` (a single blank line) into `comm`.
+- **`spec-complete.sh` no early exit after UAT failure.** Added explicit exit after setting `PIPELINE_STATUS=rejected/failed` to avoid printing confusing skip messages for subsequent pipeline steps.
+- **Duplicate `detect-backend.sh` source.** Removed second `source` call in `spec-loop.sh` and `spec-exec.sh` (each sourced the file at startup and again in the library block).
+- **`spec-root.sh` preference order.** Changed default spec root from `.codex/specs` to `.claude/specs` to match the Claude Code plugin's primary use case. `.codex/specs` is still detected and used as a migration fallback when present.
+
+### Removed
+
+- **`EnterPlanMode` reference** from `research.md` (tool does not exist in Claude Code).
+- **`/spec-team` references** from `spec-accept.md` and `spec-status.md` (command was never implemented).
+- **`/spec-debug` command references** from `spec-debugger.md` standalone mode section (command was never implemented; the workflow itself is preserved).
+
+### Documentation
+
+- Rewrote `README.md` to remove git worktree claims, `--no-worktree` flag, references to non-existent files (`REPORT_ENHANCEMENTS.md`, `ADVANCED_PATTERNS.md`, `HEADLESS_ORCHESTRATION.md`), and the incorrect marketplace path.
+- Rewrote `docs/workflow/execution.md` to remove Mode 3 (spec-team), worktree section, and `/spec-sync` post-loop step.
+- Rewrote `docs/advanced/worktrees.md` to accurately state worktree isolation is not implemented and document the recommended manual branch workflow.
+- Updated `docs/commands/index.md`: removed `/spec-import`, `/spec-sync`, `/spec-team`; added `/spec-complete`, `/research`, `/zoom-out`, `/ubiquitous-language`; fixed script table.
+- Deleted phantom command docs: `docs/commands/spec-team.md`, `docs/commands/spec-import.md`, `docs/commands/spec-sync.md`.
+- Added `spec-scanner` agent role description to `docs/agents/index.md`.
+- Added `spec-verify.sh` and `spec-complete.sh` promise markers to `docs/advanced/ci-cd.md`.
+- Fixed `CLAUDE.md` to remove `--no-complete` flag claim and auto-chaining claim; replaced with accurate `--on-complete` opt-in description.
+- Updated `skills/spec-workflow/SKILL.md` to version 5.2.0.
+- Synced `.codex-plugin/plugin.json` to version 5.2.0.
+
+## [5.1.1] - 2026-04-26
+
+### Fixed
+
+- **`spec-scanner` and `spec-debugger` agents** added to the model routing tables in `CLAUDE.md` and `docs/agents/index.md`. Both agents existed and were functional but were omitted from the public-facing documentation tables.
+- **Commands table in `CLAUDE.md`** corrected to include `/research`, `/zoom-out`, and `/ubiquitous-language`, which were added in 5.1.0 but not reflected in the table.
+
 ## [5.1.0] - 2026-04-23
 
 ### Changed

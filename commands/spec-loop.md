@@ -138,7 +138,7 @@ bash scripts/spec-loop.sh --spec-name my-feature --max-iterations 15
 ### Large Specs (40+ tasks)
 Consider:
 1. **Test-first approach** — Pass guideline: write tests before code
-2. **Parallel teams** — Run independent task groups in parallel (see ADVANCED_PATTERNS.md)
+2. **Parallel runs** — Run independent specs in parallel on separate branches
 3. **Smaller batches** — 8-10 tasks per run to catch issues early
 
 ## Error Recovery

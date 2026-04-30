@@ -12,8 +12,9 @@ Verify implemented tasks end-to-end. The tester is the only agent that can mark 
 
 ## When It Runs
 
-- `/spec-team` — invoked after the implementer reports a task complete
+- Verification gate in `spec-loop.sh` — called after each task is marked completed
 - Called back in when the debugger fixes an issue and requests re-verification
+- Can be invoked directly via the Task tool for manual verification
 
 ## What It Does
 

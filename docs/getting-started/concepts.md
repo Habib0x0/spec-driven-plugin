@@ -74,7 +74,7 @@ pending
 
 The `tasks.md` summary table tracks counts for each field, making it immediately visible when tasks are "completed" on paper but not actually working in the application.
 
-Tasks are also synced to Claude Code's built-in todo system via `TaskCreate` and `TaskUpdate`. Use `/spec-sync` to reconcile the two after running execution scripts (which cannot call TaskUpdate directly from a subprocess).
+Tasks sync to Claude Code's built-in todo system via `TaskCreate` and `TaskUpdate` when a spec is created. After running execution scripts, use `/spec-status` to check current task state.
 
 ## Model routing
 

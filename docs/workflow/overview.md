@@ -60,15 +60,14 @@ See [Tasks](tasks.md).
 
 ## Stage 4: Execution
 
-Three modes are available depending on how much oversight you want:
+Two modes are available depending on how much oversight you want:
 
 | Mode | Command/Script | When to use |
 |------|---------------|-------------|
 | Single iteration | `/spec-exec` | Manual step-by-step control |
 | Automated loop | `spec-loop.sh` | Run all tasks unattended |
-| Agent team | `spec-team.sh` | When you need review before each commit |
 
-All execution modes use git worktrees for branch isolation and checkpoint commits for crash recovery.
+`spec-loop.sh` uses checkpoint commits for crash recovery — if the agent crashes mid-iteration, the branch rolls back to the last checkpoint.
 
 See [Execution](execution.md).
 

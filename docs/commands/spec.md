@@ -41,13 +41,12 @@ Claude will ask about your authentication requirements (OAuth? Email/password? R
 - Run `/spec-validate` after the spec is created to catch any gaps before you start coding.
 - For implementation, use `/spec-exec` (one task at a time) or `/spec-loop` (run until complete).
 
-!!!note
-    If you have an existing PRD or design doc, use `/spec-import` instead to convert it into a spec automatically.
+!!!tip
+    If you have an existing PRD or design doc, paste its contents as context when running `/spec <name>` and instruct the spec-planner to derive requirements from it.
 
 ## See Also
 
 - [/spec-brainstorm](spec-brainstorm.md) — Explore the idea conversationally before creating a spec
-- [/spec-import](spec-import.md) — Convert an existing document into a spec
 - [/spec-validate](spec-validate.md) — Validate the spec before implementation
 - [/spec-exec](spec-exec.md) — Implement one task at a time
 - [/spec-loop](spec-loop.md) — Run implementation until all tasks complete

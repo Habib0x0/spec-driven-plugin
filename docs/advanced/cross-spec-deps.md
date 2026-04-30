@@ -29,7 +29,7 @@ A dependency with any task that does not meet all three conditions is considered
 
 ## Dependency check behavior
 
-When you run `spec-loop.sh`, `spec-exec.sh`, or `spec-team.sh`, the script calls `check_dependencies()` before creating any worktree or running any iteration.
+When you run `spec-loop.sh` or `spec-exec.sh`, the script calls `check_dependencies()` before running any iteration.
 
 If a dependency is not found:
 
@@ -75,6 +75,10 @@ This output comes from `get_dependency_status()` in `scripts/lib/deps.sh`, which
 
 ## Multiple specs in parallel
 
-Specs without dependencies on each other can run in parallel on separate worktrees. Because each spec gets its own branch (`spec/<name>`), parallel execution does not cause conflicts.
+Specs without dependencies on each other can run in parallel on separate branches. Create a branch per spec manually before running:
+
+```bash
+git checkout -b spec/auth-system && bash scripts/spec-loop.sh --spec-name auth-system
+```
 
 Specs with a dependency chain must run in order: complete the dependency first, then start the dependent spec.

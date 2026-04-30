@@ -90,7 +90,7 @@ The project profile (`_project-profile.md`) captures codebase intelligence that 
 5. **Regression Markers** - Bug fixes with affected files and regression check descriptions
 6. **Manual Overrides** - User-editable section preserved across rescans
 
-The profile is auto-created on the first `/spec` run (Phase 0 auto-scan) and can be manually updated via `/spec-scan`. For large codebases or monorepos, the scanner may split profiles by domain into `_profile-<domain>.md` files with a `_profile-index.md` listing.
+The profile is auto-created on the first `/spec` run (Phase 0 auto-scan). For large codebases or monorepos, the scanner may split profiles by domain into `_profile-<domain>.md` files with a `_profile-index.md` listing.
 
 ### Task Synchronization
 Tasks in `tasks.md` sync to Claude Code's todo system via TaskCreate/TaskUpdate. Task phases: Setup, Core Implementation, Integration, Testing, Polish.
@@ -120,12 +120,12 @@ Templates use `{{PLACEHOLDER}}` syntax for substitution during spec creation.
 After completing the spec workflow (Requirements, Design, Tasks), use the execution scripts to implement autonomously:
 
 - `spec-exec.sh` - Single iteration: implements one task, tests, updates spec, commits
-- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Supports `--no-complete` to skip auto-triggering the post-completion pipeline
-- `spec-complete.sh` - Full post-completion pipeline: accept -> docs -> release -> retro. Auto-triggered by `spec-loop.sh` on completion (disable with `--no-complete`)
+- `spec-loop.sh` - Loops until all tasks complete or max iterations reached. Pass `--on-complete <command>` to run a custom command when the loop finishes
+- `spec-complete.sh` - Full post-completion pipeline: accept -> docs -> release -> retro. Run manually after `spec-loop.sh` completes
 
 Both scripts build a prompt from the spec files and run `claude --dangerously-skip-permissions`. The loop version re-reads spec files each iteration to pick up changes from previous runs.
 
-Completion is detected via `<promise>COMPLETE</promise>` in Claude's output. When detected, `spec-loop.sh` automatically chains into `spec-complete.sh` which runs the full post-completion pipeline. If UAT rejects the spec, the pipeline halts.
+Completion is detected via `<promise>COMPLETE</promise>` in Claude's output.
 
 ### Post-Implementation Scripts
 

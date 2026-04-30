@@ -49,4 +49,3 @@ Claude will ask clarifying questions, explore whether you mean user-facing error
 ## See Also
 
 - [/spec](spec.md) — Formalize the idea into requirements, design, and tasks
-- [/spec-import](spec-import.md) — Convert an existing document into a spec instead

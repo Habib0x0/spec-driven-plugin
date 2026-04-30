@@ -54,13 +54,12 @@ No arguments — the command detects available specs. If multiple exist, it show
 - Run periodically during implementation to stay oriented.
 - Pay close attention to "Unwired Tasks" — a task marked completed but not wired is the most common reason a feature appears done but does not work for users.
 - A task marked completed but not wired or verified does not count toward the spec's true progress percentage.
-- If a cross-spec dependency is incomplete, execution commands (`/spec-exec`, `/spec-loop`, `/spec-team`) will refuse to run until it is resolved.
+- If a cross-spec dependency is incomplete, execution commands (`/spec-exec`, `/spec-loop`) will refuse to run until it is resolved.
 
 !!!warning
     "Completed" does not mean done. A task is only finished when it is completed, wired, and verified. The status report makes this distinction explicit.
 
 ## See Also
 
-- [/spec-sync](spec-sync.md) — Sync task statuses after running implementation scripts
 - [/spec-validate](spec-validate.md) — Run a full consistency check on the spec
 - [/spec-exec](spec-exec.md) — Implement the next pending task

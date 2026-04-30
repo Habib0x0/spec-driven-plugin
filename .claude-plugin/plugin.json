@@ -15,7 +15,9 @@
     "./agents/spec-reviewer.md",
     "./agents/spec-consultant.md",
     "./agents/spec-acceptor.md",
-    "./agents/spec-documenter.md"
+    "./agents/spec-documenter.md",
+    "./agents/spec-scanner.md",
+    "./agents/spec-debugger.md"
   ],
   "commands": [
     "./commands/spec.md",

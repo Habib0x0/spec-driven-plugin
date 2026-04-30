@@ -100,10 +100,6 @@ Anything else discovered that the user should know — gotchas, related patterns
 ### Downsides & Risks
 What could go wrong with the recommended approach? Be specific. Skip if the solution is trivially safe.
 
-## Then enter Plan mode
-
-After presenting research findings, call the EnterPlanMode tool so the user flows directly into planning with all the research context available.
-
 ## Rules
 
 - **AskUserQuestion fires at Steps 1 and 4 at minimum.** More is fine — the bar for asking is low.

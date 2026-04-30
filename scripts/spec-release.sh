@@ -55,7 +55,10 @@ if [ -z "$SPEC_NAME" ]; then
     exit 1
   fi
 
-  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
+  SPECS=()
+  while IFS= read -r _spec; do
+    [ -n "$_spec" ] && SPECS+=("$_spec")
+  done < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
     echo "Error: No specs found in $SPEC_ROOT/"

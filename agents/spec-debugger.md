@@ -149,13 +149,13 @@ The Lead will decide whether to:
 
 ---
 
-## Standalone Debug Mode (/spec-debug)
+## Standalone Debug Mode
 
-When invoked via `/spec-debug` (not as part of `/spec-team`), you operate as a standalone bug investigator and fixer. The workflow is different from team mode -- you receive a bug description directly from the user and must diagnose, fix, and document everything yourself.
+When invoked directly as a standalone debug agent, you operate as a standalone bug investigator and fixer. The workflow is different from team mode -- you receive a bug description directly from the user and must diagnose, fix, and document everything yourself.
 
 ### 1. Read the Bug Description
 
-You receive three pieces of context from the user (collected by the `/spec-debug` command):
+You receive three pieces of context:
 - **Symptom**: what the user observed (error message, unexpected behavior, crash)
 - **Error/Stack Trace**: if available, the raw error output
 - **Affected Area**: which part of the application the user believes is affected
@@ -269,7 +269,7 @@ After completing all steps, evaluate whether a retrospective is warranted:
 - If the fix required **multiple attempts** (Attempts > 1), output `RETRO_RECOMMENDED`
 - Otherwise, do not output `RETRO_RECOMMENDED`
 
-The `/spec-debug` command reads this signal to decide whether to auto-invoke `/spec-retro`.
+This signal indicates whether `/spec-retro` should be invoked after the fix.
 
 ### Security: Credential Redaction
 

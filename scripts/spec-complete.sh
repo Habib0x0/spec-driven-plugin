@@ -53,7 +53,10 @@ if [ -z "$SPEC_NAME" ]; then
     exit 1
   fi
 
-  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
+  SPECS=()
+  while IFS= read -r _spec; do
+    [ -n "$_spec" ] && SPECS+=("$_spec")
+  done < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
     echo "Error: No specs found in $SPEC_ROOT/"
@@ -155,6 +158,16 @@ if [ "$SKIP_ACCEPT" = false ]; then
       echo "Pipeline halted: UAT failed."
       PIPELINE_STATUS="failed"
     fi
+    echo ""
+    echo "============================================"
+    echo "  Pipeline Complete: $PIPELINE_STATUS"
+    echo "============================================"
+    if [ "$PIPELINE_STATUS" = "rejected" ]; then
+      echo "<promise>PIPELINE_REJECTED</promise>"
+    else
+      echo "<promise>PIPELINE_FAILED</promise>"
+    fi
+    exit 1
   fi
 else
   echo "Skipping: User Acceptance Testing (--skip-accept)"

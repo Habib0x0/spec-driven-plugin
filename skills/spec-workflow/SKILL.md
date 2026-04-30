@@ -37,7 +37,7 @@ Before formalizing requirements, use `/spec-brainstorm` to explore the idea thro
 
 The brainstorm phase is optional — if you already know exactly what you want, skip straight to `/spec`.
 
-All new spec files are stored in `.codex/specs/<feature-name>/`. Existing `.claude/specs/<feature-name>/` specs remain supported as a migration fallback:
+All new spec files are stored in `.claude/specs/<feature-name>/`. Existing `.codex/specs/<feature-name>/` specs remain supported as a migration fallback:
 - `requirements.md` - User stories with EARS acceptance criteria
 - `design.md` - Architecture, components, data flow
 - `tasks.md` - Implementation tasks tracked by status, wiring, verification, and dependencies
@@ -198,7 +198,7 @@ The loop re-reads spec files each iteration, detects completion via `<promise>CO
 
 ## Spec File Location
 
-Create specs in the project's `.codex/specs/` directory. If an older project already has `.claude/specs/`, the scripts read that location unless `SPEC_ROOT` is set:
+Create specs in the project's `.claude/specs/` directory. If an older project already has `.codex/specs/`, the scripts read that location unless `SPEC_ROOT` is set:
 
 ```
 project/

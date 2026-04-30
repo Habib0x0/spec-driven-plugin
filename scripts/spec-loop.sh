@@ -47,7 +47,10 @@ if [ -z "$SPEC_NAME" ]; then
     exit 1
   fi
 
-  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
+  SPECS=()
+  while IFS= read -r _spec; do
+    [ -n "$_spec" ] && SPECS+=("$_spec")
+  done < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
     echo "Error: No specs found in $SPEC_ROOT/"
@@ -81,7 +84,6 @@ done
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
 source "$SCRIPT_DIR/lib/checkpoint.sh"
-source "$SCRIPT_DIR/lib/detect-backend.sh"
 
 # source verify.sh with defensive guard
 if [ -f "$SCRIPT_DIR/lib/verify.sh" ]; then
@@ -336,7 +338,7 @@ EOF
   } > "$PROMPT_FILE"
 
   # snapshot completed task IDs before iteration to detect which task was just completed
-  COMPLETED_BEFORE=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+  COMPLETED_BEFORE=$(awk '/^### T-/{tid=$0} /^\- \*\*Status\*\*: completed/{print tid}' "$SPEC_DIR/tasks.md" | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort)
 
   # snapshot progress.md before iteration to detect if the agent updated it
   PROGRESS_HASH_BEFORE=""
@@ -368,10 +370,15 @@ EOF
   fi
 
   # verification gate for tasks completed THIS iteration
-  COMPLETED_AFTER=$(grep -B2 '^\- \*\*Status\*\*: completed' "$SPEC_DIR/tasks.md" | grep '^### T-' | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort || echo "")
+  COMPLETED_AFTER=$(awk '/^### T-/{tid=$0} /^\- \*\*Status\*\*: completed/{print tid}' "$SPEC_DIR/tasks.md" | sed 's/^### \(T-[0-9]*\(\.[0-9]*\)\{0,1\}\).*/\1/' | sort)
+  _before_tmp=$(mktemp)
+  _after_tmp=$(mktemp)
+  [ -n "$COMPLETED_BEFORE" ] && printf '%s\n' "$COMPLETED_BEFORE" > "$_before_tmp"
+  [ -n "$COMPLETED_AFTER" ] && printf '%s\n' "$COMPLETED_AFTER" > "$_after_tmp"
   while IFS= read -r NEWLY_COMPLETED; do
     [ -n "$NEWLY_COMPLETED" ] && run_gate_with_retry "$NEWLY_COMPLETED"
-  done < <(comm -13 <(echo "$COMPLETED_BEFORE") <(echo "$COMPLETED_AFTER"))
+  done < <(comm -13 "$_before_tmp" "$_after_tmp" 2>/dev/null | grep -v '^[[:space:]]*$' || true)
+  rm -f "$_before_tmp" "$_after_tmp"
 
   if grep -q '<promise>COMPLETE</promise>' "$OUTPUT_FILE"; then
     echo ""

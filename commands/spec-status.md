@@ -105,7 +105,7 @@ For each dependency spec name:
    - Total tasks (any `### T-N:` heading)
    - Verified tasks (Status: completed AND Wired: yes/n/a AND Verified: yes)
 3. If all tasks are verified, the dependency is COMPLETE. Otherwise, INCOMPLETE.
-4. An INCOMPLETE or NOT FOUND dependency BLOCKS EXECUTION (spec-exec, spec-loop, spec-team will refuse to run).
+4. An INCOMPLETE or NOT FOUND dependency BLOCKS EXECUTION (spec-exec, spec-loop will refuse to run).
 
 Display the `### Dependencies` section (from the output format in step 5) only if the spec has at least one dependency. Omit it entirely if there are no dependencies.
 

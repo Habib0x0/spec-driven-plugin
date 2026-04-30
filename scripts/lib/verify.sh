@@ -34,7 +34,7 @@ run_verification_gate() {
 
   # extract the Registration Points section from the profile
   local reg_points
-  reg_points=$(awk '/^## Registration Points/,/^## /' "$profile_path" | head -100)
+  reg_points=$(awk '/^## Registration Points/{f=1; next} f && /^## /{f=0} f' "$profile_path" | head -100)
 
   if [ -z "$reg_points" ]; then
     echo "No registration points in profile -- verification gate skipped."
@@ -43,7 +43,7 @@ run_verification_gate() {
 
   # get the git diff for recent changes in the work dir
   local diff_output
-  diff_output=$(git -C "$work_dir" diff HEAD~1 --name-status 2>/dev/null || git -C "$work_dir" diff --cached --name-status 2>/dev/null || echo "")
+  diff_output=$(git -C "$work_dir" diff HEAD~1 --name-status 2>/dev/null || git -C "$work_dir" diff --root HEAD --name-status 2>/dev/null || echo "")
 
   if [ -z "$diff_output" ]; then
     echo "No diff detected -- verification gate skipped."

@@ -90,7 +90,7 @@ Based on the user's decision:
 
 ## Tips
 
-- Run this after `/spec-team` or `/spec-loop` completes all tasks
+- Run this after `/spec-loop` completes all tasks
 - It's normal for some criteria to be UNTESTABLE automatically — the report will flag these for manual verification
 - Non-functional requirements (performance, security, accessibility) are often overlooked — this catches them
 - The acceptance report becomes part of the spec record, useful for audits and retrospectives

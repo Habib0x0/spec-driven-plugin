@@ -32,7 +32,10 @@ if [ -z "$SPEC_NAME" ]; then
     exit 1
   fi
 
-  mapfile -t SPECS < <(list_specs "$SPEC_ROOT")
+  SPECS=()
+  while IFS= read -r _spec; do
+    [ -n "$_spec" ] && SPECS+=("$_spec")
+  done < <(list_specs "$SPEC_ROOT")
 
   if [ ${#SPECS[@]} -eq 0 ]; then
     echo "Error: No specs found in $SPEC_ROOT/"
@@ -65,7 +68,6 @@ done
 
 # source shared libraries
 source "$SCRIPT_DIR/lib/deps.sh"
-source "$SCRIPT_DIR/lib/detect-backend.sh"
 
 # check cross-spec dependencies
 check_dependencies "$SPEC_NAME"

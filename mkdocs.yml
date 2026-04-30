@@ -65,20 +65,20 @@ nav:
     - commands/index.md
     - /spec: commands/spec.md
     - /spec-brainstorm: commands/spec-brainstorm.md
-    - /spec-import: commands/spec-import.md
     - /spec-refine: commands/spec-refine.md
     - /spec-tasks: commands/spec-tasks.md
     - /spec-status: commands/spec-status.md
-    - /spec-sync: commands/spec-sync.md
     - /spec-validate: commands/spec-validate.md
     - /spec-exec: commands/spec-exec.md
     - /spec-loop: commands/spec-loop.md
-    - /spec-team: commands/spec-team.md
     - /spec-accept: commands/spec-accept.md
     - /spec-docs: commands/spec-docs.md
     - /spec-release: commands/spec-release.md
     - /spec-verify: commands/spec-verify.md
     - /spec-retro: commands/spec-retro.md
+    - /research: commands/research.md
+    - /zoom-out: commands/zoom-out.md
+    - /ubiquitous-language: commands/ubiquitous-language.md
   - Agents:
     - agents/index.md
     - Planner: agents/spec-planner.md
@@ -98,7 +98,7 @@ nav:
     - Task Breakdown: reference/task-breakdown.md
     - Templates: reference/templates.md
   - Advanced:
-    - Git Worktree Isolation: advanced/worktrees.md
+    - Git Worktrees: advanced/worktrees.md
     - Crash Recovery: advanced/crash-recovery.md
     - Cross-Spec Dependencies: advanced/cross-spec-deps.md
     - CI/CD Integration: advanced/ci-cd.md

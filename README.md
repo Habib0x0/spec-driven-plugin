@@ -1,6 +1,6 @@
 # Spec-Driven Development Plugin
 
-A structured workflow plugin for Claude Code that transforms feature ideas into formal specifications before implementation.
+A structured workflow plugin for Claude Code & Codex that transforms feature ideas into formal specifications before implementation.
 
 ## Overview
 

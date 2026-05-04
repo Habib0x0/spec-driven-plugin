@@ -43,9 +43,22 @@ The plugin also works with Codex via the manifest at `.codex-plugin/plugin.json`
 codex plugin marketplace add Habib0x0/spec-driven-plugin
 ```
 
+### Command Syntax
+
+Codex commands use `$spec-driven:` prefix instead of `/`:
+
+| Claude Code | Codex |
+|-------------|-------|
+| `/spec <name>` | `$spec-driven:spec <name>` |
+| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` |
+| `/spec-bugfix <name>` | `$spec-driven:spec-bugfix <name>` |
+| `/spec-status` | `$spec-driven:spec-status` |
+| `/spec-exec` | `$spec-driven:spec-exec` |
+| `/spec-loop` | `$spec-driven:spec-loop` |
+
 ### Usage in Codex
 
-Codex does not use slash commands. Invoke the skill by typing one of its default prompts:
+Invoke the skill by typing one of its default prompts:
 
 | Prompt | Action |
 | --- | --- |

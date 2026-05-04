@@ -1,49 +1,56 @@
 # Command reference
 
-All plugin commands are slash commands used within a Claude Code session. Execution scripts (`spec-loop.sh`, `spec-exec.sh`, etc.) are run from the terminal in your project root.
+Commands use `/` prefix in Claude Code and `$spec-driven:` prefix in Codex. Execution scripts (`spec-loop.sh`, `spec-exec.sh`, etc.) are run from the terminal in your project root.
+
+| Claude Code | Codex | Description |
+|-------------|-------|-------------|
+| `/spec` | `$spec-driven:spec` | Start a new feature spec |
+| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` | Brainstorm a feature idea |
+| `/spec-bugfix` | `$spec-driven:spec-bugfix` | Start a bugfix spec |
+| `/spec-status` | `$spec-driven:spec-status` | Check spec progress |
 
 ## Planning commands
 
-| Command | Description | Example usage |
-|---------|-------------|---------------|
-| `/spec-brainstorm` | Free-form conversation to refine a vague idea before formalizing a spec. Optionally brings in domain expert consultants. | `/spec-brainstorm user notifications` |
-| `/spec <name>` | Start a new feature spec with the three-phase workflow (Requirements, Design, Tasks). | `/spec user-authentication` |
-| `/spec-bugfix <name>` | Start a new bugfix spec with defect analysis, root cause, and regression-safe tasks. | `/spec-bugfix email-validation-plus-sign` |
-| `/spec-refine` | Update requirements or design for the current spec. Changes cascade to design and task regeneration. | `/spec-refine` |
-| `/spec-tasks` | Regenerate `tasks.md` from the current design, useful after design changes. | `/spec-tasks` |
+| Claude Code | Codex | Description | Example |
+|-------------|-------|-------------|---------|
+| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` | Brainstorm a feature idea with optional expert consultants. | `/spec-brainstorm user notifications` |
+| `/spec <name>` | `$spec-driven:spec <name>` | Start a new feature spec (Requirements, Design, Tasks). | `/spec user-authentication` |
+| `/spec-bugfix <name>` | `$spec-driven:spec-bugfix <name>` | Start a bugfix spec with regression prevention. | `/spec-bugfix email-validation-plus-sign` |
+| `/spec-refine` | `$spec-driven:spec-refine` | Update requirements or design; cascades to tasks. | `/spec-refine` |
+| `/spec-tasks` | `$spec-driven:spec-tasks` | Regenerate `tasks.md` from current design. | `/spec-tasks` |
 
 ## Status and validation commands
 
-| Command | Description | Example usage |
-|---------|-------------|---------------|
-| `/spec-status` | Show current progress: task counts, completion percentages, and dependency status. | `/spec-status` |
-| `/spec-validate` | Validate spec completeness and consistency: EARS notation, design coverage, task traceability, no circular dependencies. | `/spec-validate` |
+| Claude Code | Codex | Description | Example |
+|-------------|-------|-------------|---------|
+| `/spec-status` | `$spec-driven:spec-status` | Show progress, task counts, dependency status. | `/spec-status` |
+| `/spec-validate` | `$spec-driven:spec-validate` | Validate EARS notation, coverage, traceability. | `/spec-validate` |
 
 ## Execution commands
 
-| Command | Description | Example usage |
-|---------|-------------|---------------|
-| `/spec-exec` | Run one autonomous implementation iteration: pick a task, implement, wire, test, commit. | `/spec-exec` |
-| `/spec-loop` | Trigger the loop script from inside Claude Code. Runs until all tasks are verified. | `/spec-loop` |
+| Claude Code | Codex | Description | Example |
+|-------------|-------|-------------|---------|
+| `/spec-exec` | `$spec-driven:spec-exec` | Run one implementation iteration. | `/spec-exec` |
+| `/spec-loop` | `$spec-driven:spec-loop` | Loop until all tasks are verified. | `/spec-loop` |
 
 ## Post-implementation commands
 
-| Command | Description | Example usage |
-|---------|-------------|---------------|
-| `/spec-accept` | Run user acceptance testing. Traces every EARS criterion to a verified task. Outputs ACCEPTED or REJECTED. | `/spec-accept` |
-| `/spec-docs` | Generate documentation (API reference, user guide, runbook) from the spec and implementation. | `/spec-docs` |
-| `/spec-release` | Generate release notes, changelog, and deployment checklist. Optionally creates a git tag and GitHub release. | `/spec-release` |
-| `/spec-verify` | Run post-deployment smoke tests against a live URL. Exits 0 on PASS, 1 on FAIL. | `/spec-verify` |
-| `/spec-retro` | Run a structured retrospective on a completed spec. | `/spec-retro` |
-| `/spec-complete` | Run the full post-completion pipeline: accept → docs → release → retro. | `/spec-complete` |
+| Claude Code | Codex | Description | Example |
+|-------------|-------|-------------|---------|
+| `/spec-accept` | `$spec-driven:spec-accept` | Acceptance testing against EARS criteria. | `/spec-accept` |
+| `/spec-docs` | `$spec-driven:spec-docs` | Generate docs from spec and implementation. | `/spec-docs` |
+| `/spec-release` | `$spec-driven:spec-release` | Release notes, changelog, deployment checklist. | `/spec-release` |
+| `/spec-verify` | `$spec-driven:spec-verify` | Post-deployment smoke tests against a URL. | `/spec-verify` |
+| `/spec-retro` | `$spec-driven:spec-retro` | Retrospective on a completed spec. | `/spec-retro` |
+| `/spec-complete` | `$spec-driven:spec-complete` | Full pipeline: accept → docs → release → retro. | `/spec-complete` |
 
 ## Research and navigation commands
 
-| Command | Description | Example usage |
-|---------|-------------|---------------|
-| `/research` | Deep research before planning. Launches parallel agents to search docs, web, and codebase. | `/research how does our auth middleware work` |
-| `/zoom-out` | Map modules, interfaces, and callers for unfamiliar code. | `/zoom-out` |
-| `/ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities. | `/ubiquitous-language` |
+| Claude Code | Codex | Description | Example |
+|-------------|-------|-------------|---------|
+| `/research` | `$spec-driven:research` | Deep parallel research before planning. | `/research how does our auth middleware work` |
+| `/zoom-out` | `$spec-driven:zoom-out` | Map modules, interfaces, and callers. | `/zoom-out` |
+| `/ubiquitous-language` | `$spec-driven:ubiquitous-language` | Extract domain glossary. | `/ubiquitous-language` |
 
 ## Script equivalents
 

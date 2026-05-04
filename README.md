@@ -12,46 +12,54 @@ This plugin guides you through three phases:
 
 ## Commands
 
+Commands use `/` prefix in Claude Code and `$spec-driven:` prefix in Codex.
+
 ### Core Workflow
-| Command | Description |
-|---------|-------------|
-| `/spec-brainstorm` | Brainstorm a feature idea before spec creation |
-| `/spec <feature-name>` | Start a new feature spec with interactive 3-phase workflow |
-| `/spec-bugfix <bug-name>` | Start a new bugfix spec with defect analysis and regression prevention |
-| `/spec-refine` | Refine requirements/design for current spec |
-| `/spec-tasks` | Regenerate tasks from updated spec |
-| `/spec-status` | Show spec progress, task completion, and dependency status |
-| `/spec-validate` | Validate spec completeness and consistency |
+| Claude Code | Codex | Description |
+|-------------|-------|-------------|
+| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` | Brainstorm a feature idea before spec creation |
+| `/spec <name>` | `$spec-driven:spec <name>` | Start a new feature spec with interactive 3-phase workflow |
+| `/spec-bugfix <name>` | `$spec-driven:spec-bugfix <name>` | Start a new bugfix spec with defect analysis and regression prevention |
+| `/spec-refine` | `$spec-driven:spec-refine` | Refine requirements/design for current spec |
+| `/spec-tasks` | `$spec-driven:spec-tasks` | Regenerate tasks from updated spec |
+| `/spec-status` | `$spec-driven:spec-status` | Show spec progress, task completion, and dependency status |
+| `/spec-validate` | `$spec-driven:spec-validate` | Validate spec completeness and consistency |
 
 ### Research & Navigation
-| Command | Description |
-|---------|-------------|
-| `/research` | Deep parallel research before planning — searches docs, web, and codebase |
-| `/zoom-out` | Map modules, interfaces, and callers for unfamiliar code |
-| `/ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities |
+| Claude Code | Codex | Description |
+|-------------|-------|-------------|
+| `/research` | `$spec-driven:research` | Deep parallel research before planning — searches docs, web, and codebase |
+| `/zoom-out` | `$spec-driven:zoom-out` | Map modules, interfaces, and callers for unfamiliar code |
+| `/ubiquitous-language` | `$spec-driven:ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities |
 
 ### Implementation
-| Command | Description |
-|---------|-------------|
-| `/spec-exec` | Run one autonomous implementation iteration |
-| `/spec-loop` | Loop implementation until all tasks complete |
+| Claude Code | Codex | Description |
+|-------------|-------|-------------|
+| `/spec-exec` | `$spec-driven:spec-exec` | Run one autonomous implementation iteration |
+| `/spec-loop` | `$spec-driven:spec-loop` | Loop implementation until all tasks complete |
 
 ### Post-Completion (Optional)
-| Command | Description |
-|---------|-------------|
-| `/spec-accept` | Run user acceptance testing for formal sign-off |
-| `/spec-docs` | Generate documentation from spec and implementation |
-| `/spec-release` | Generate release notes and deployment checklist |
-| `/spec-verify` | Run post-deployment smoke tests |
-| `/spec-retro` | Run a retrospective on a completed spec |
-| `/spec-complete` | Run full post-completion pipeline (accept → docs → release → retro) |
+| Claude Code | Codex | Description |
+|-------------|-------|-------------|
+| `/spec-accept` | `$spec-driven:spec-accept` | Run user acceptance testing for formal sign-off |
+| `/spec-docs` | `$spec-driven:spec-docs` | Generate documentation from spec and implementation |
+| `/spec-release` | `$spec-driven:spec-release` | Generate release notes and deployment checklist |
+| `/spec-verify` | `$spec-driven:spec-verify` | Run post-deployment smoke tests |
+| `/spec-retro` | `$spec-driven:spec-retro` | Run a retrospective on a completed spec |
+| `/spec-complete` | `$spec-driven:spec-complete` | Run full post-completion pipeline (accept → docs → release → retro) |
 
 ## Usage
 
 ### Starting a New Spec
 
+**Claude Code:**
 ```
 /spec user-authentication
+```
+
+**Codex:**
+```
+$spec-driven:spec user-authentication
 ```
 
 This will:

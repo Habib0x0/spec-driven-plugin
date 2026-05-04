@@ -4,10 +4,14 @@ This guide walks through creating a spec from scratch and running the first impl
 
 ## Step 1: Start a new spec
 
-Run the `/spec` command with a feature name:
-
+**Claude Code:**
 ```
 /spec user-authentication
+```
+
+**Codex:**
+```
+$spec-driven:spec user-authentication
 ```
 
 The command will ask you 2-3 rounds of questions about scope, user roles, key behaviors, edge cases, and non-functional requirements. Then the spec-planner agent (opus tier) writes formal requirements and design:
@@ -28,23 +32,31 @@ Your spec files are created at:
 
 ## Step 2: Check the spec status
 
-Before running implementation, review what was created:
-
+**Claude Code:**
 ```
 /spec-status
+```
+
+**Codex:**
+```
+$spec-driven:spec-status
 ```
 
 This shows task completion, dependency status, and which tasks are pending, in progress, or verified.
 
 ## Step 3: Run the first implementation iteration
 
-Run one autonomous implementation cycle:
-
+**Claude Code:**
 ```
 /spec-exec
 ```
 
-The agent picks the highest-priority pending task, implements it, verifies it, updates `tasks.md`, and commits. Run it again for the next task, or use `/spec-loop` to run all tasks automatically.
+**Codex:**
+```
+$spec-driven:spec-exec
+```
+
+The agent picks the highest-priority pending task, implements it, verifies it, updates `tasks.md`, and commits. Run it again for the next task, or use `/spec-loop` (Claude Code) / `$spec-driven:spec-loop` (Codex) to run all tasks automatically.
 
 !!!tip
     If you have only one spec in `.claude/specs/`, the `--spec-name` argument is auto-detected. With multiple specs, pass `--spec-name <name>` explicitly.

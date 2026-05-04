@@ -16,7 +16,8 @@ This plugin guides you through three phases:
 | Command | Description |
 |---------|-------------|
 | `/spec-brainstorm` | Brainstorm a feature idea before spec creation |
-| `/spec <feature-name>` | Start a new spec with interactive 3-phase workflow |
+| `/spec <feature-name>` | Start a new feature spec with interactive 3-phase workflow |
+| `/spec-bugfix <bug-name>` | Start a new bugfix spec with defect analysis and regression prevention |
 | `/spec-refine` | Refine requirements/design for current spec |
 | `/spec-tasks` | Regenerate tasks from updated spec |
 | `/spec-status` | Show spec progress, task completion, and dependency status |

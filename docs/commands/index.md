@@ -7,7 +7,8 @@ All plugin commands are slash commands used within a Claude Code session. Execut
 | Command | Description | Example usage |
 |---------|-------------|---------------|
 | `/spec-brainstorm` | Free-form conversation to refine a vague idea before formalizing a spec. Optionally brings in domain expert consultants. | `/spec-brainstorm user notifications` |
-| `/spec <name>` | Start a new spec with the three-phase workflow (Requirements, Design, Tasks). | `/spec user-authentication` |
+| `/spec <name>` | Start a new feature spec with the three-phase workflow (Requirements, Design, Tasks). | `/spec user-authentication` |
+| `/spec-bugfix <name>` | Start a new bugfix spec with defect analysis, root cause, and regression-safe tasks. | `/spec-bugfix email-validation-plus-sign` |
 | `/spec-refine` | Update requirements or design for the current spec. Changes cascade to design and task regeneration. | `/spec-refine` |
 | `/spec-tasks` | Regenerate `tasks.md` from the current design, useful after design changes. | `/spec-tasks` |
 

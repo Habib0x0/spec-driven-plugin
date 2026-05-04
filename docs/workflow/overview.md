@@ -6,6 +6,12 @@ The full spec-driven lifecycle moves from idea to deployed feature through six s
 Brainstorm -> Requirements -> Design -> Tasks -> Execution -> Post-Implementation
 ```
 
+For bugfixes, use the parallel bugfix workflow:
+
+```
+Bug Analysis -> Design -> Tasks -> Execution -> Post-Implementation
+```
+
 Each stage has dedicated commands and produces artifacts that feed the next stage.
 
 ## Stage 0: Brainstorm (optional)
@@ -28,6 +34,18 @@ See [Brainstorming](brainstorming.md).
 Output: `requirements.md`
 
 See [Requirements](requirements.md).
+
+## Bugfix Specs
+
+For complex bugs where regressions are costly, use `/spec-bugfix <bug-name>` instead of `/spec`. The workflow parallels the feature spec flow but starts from defect analysis:
+
+- **Bug Analysis** — Document current behavior (defect), expected behavior (correct), and unchanged behavior (regression prevention)
+- **Design** — Root cause analysis, proposed fix, test properties
+- **Tasks** — Reproduction test, fix implementation, regression tests
+
+Output: `bugfix.md`, `design.md`, `tasks.md`
+
+See [/spec-bugfix](../commands/spec-bugfix.md).
 
 ## Stage 2: Design
 

@@ -219,15 +219,25 @@ bash scripts/spec-exec.sh --spec-name user-authentication
 
 #### Usage in Codex
 
-Codex does not use slash commands. Instead, invoke the skill by typing one of the prompt phrases defined in the plugin manifest:
+Codex commands use `$spec-driven:` prefix instead of `/`:
 
-| What you type in Codex | What it does |
+```
+$spec-driven:spec user-authentication
+$spec-driven:spec-status
+$spec-driven:spec-exec
+```
+
+You can also invoke the skill by typing one of its default prompt phrases:
+
+| Prompt | Action |
 | --- | --- |
 | `Create a spec for this feature` | Start a new spec workflow |
 | `Validate the current spec` | Run validation on the active spec |
 | `Break this design into tasks` | Regenerate tasks from the design doc |
 
-You can also reference the skill by its display name, e.g. `Use Spec Driven to plan user authentication`.
+Or reference it by display name: `Use Spec Driven to plan user authentication`.
+
+**Plan mode vs build mode:** Works in both. Plan mode generates the spec for review before writing; build mode writes files directly. Implementation scripts (`spec-exec.sh`, `spec-loop.sh`) run from your terminal.
 
 All generated spec files live in `.codex/specs/<feature-name>/` when running under Codex.
 

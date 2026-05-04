@@ -70,6 +70,32 @@ You can also reference the skill by its display name, e.g. `Use Spec Driven to p
 
 Under Codex, spec files are written to `.codex/specs/<feature-name>/`.
 
+### Plan Mode vs Build Mode
+
+Codex supports two execution modes. The plugin works in both:
+
+**Plan Mode (`codex --plan`)**
+
+- The agent generates the full spec content (requirements, design, tasks)
+- Codex presents it as a plan for review — no files are written yet
+- Review the spec, then approve to apply it in build mode
+- Use this when you want to see what the spec would look like before committing
+
+**Build Mode (`codex` default)**
+
+- The agent generates and writes spec files directly to `.codex/specs/`
+- Implementation scripts (`spec-exec.sh`, `spec-loop.sh`) must be run from your terminal, not inside Codex
+- Use this when you want the spec created immediately and are ready to implement
+
+**Key differences from Claude Code:**
+
+| Feature | Claude Code | Codex |
+|---------|-------------|-------|
+| Spec generation | Writes files directly | Writes files in build mode; plans in plan mode |
+| Task sync | Syncs to Claude Code todo system | No native todo sync; tasks live in `tasks.md` |
+| Execution | `/spec-exec` and `/spec-loop` slash commands | Run `spec-exec.sh` / `spec-loop.sh` from terminal |
+| Spec directory | `.claude/specs/` | `.codex/specs/` |
+
 ## Next steps
 
 - Follow the [Quick start](quick-start.md) to create your first spec

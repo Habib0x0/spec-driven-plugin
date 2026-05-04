@@ -208,6 +208,20 @@ export SPEC_AGENT_CMD='codex exec --full-auto -'
 bash scripts/spec-exec.sh --spec-name user-authentication
 ```
 
+#### Usage in Codex
+
+Codex does not use slash commands. Instead, invoke the skill by typing one of the prompt phrases defined in the plugin manifest:
+
+| What you type in Codex | What it does |
+| --- | --- |
+| `Create a spec for this feature` | Start a new spec workflow |
+| `Validate the current spec` | Run validation on the active spec |
+| `Break this design into tasks` | Regenerate tasks from the design doc |
+
+You can also reference the skill by its display name, e.g. `Use Spec Driven to plan user authentication`.
+
+All generated spec files live in `.codex/specs/<feature-name>/` when running under Codex.
+
 ## Inspiration
 
 This plugin was inspired by [Kiro](https://kiro.dev)'s spec-driven development functionality. Kiro introduced the concept of structured specification workflows that guide developers through requirements gathering, design, and task breakdown before implementation.

@@ -11,6 +11,7 @@ Use `/spec-brainstorm` when:
 - The scope is unclear
 - You want to think through feasibility before committing
 - You want expert input on trade-offs
+- **You have already written exploratory code and want to formalize it into a spec** (vibe-to-spec)
 
 If you already know exactly what you want to build, skip brainstorming and go straight to `/spec`.
 
@@ -22,6 +23,12 @@ If you already know exactly what you want to build, skip brainstorming and go st
 
 The session is conversational. The agent reflects back what it understands, asks 1-2 focused questions per round, and offers observations about things you may not have considered.
 
+### Two starting modes
+
+**Idea-first** (default): You have a concept but little or no code. The agent reads the codebase for context, then explores the idea with you.
+
+**Code-first** (vibe-to-spec): You have already written exploratory code and want to reverse-engineer a formal spec from it. The agent reads your recent changes, summarizes what it sees, confirms your intent, and works backwards from the implementation to a problem statement, requirements, and out-of-scope items.
+
 Topics explored over multiple rounds:
 
 - What problem are we actually solving?
@@ -31,6 +38,7 @@ Topics explored over multiple rounds:
 - What are we explicitly not doing?
 - What are the risks or unknowns?
 - Are there existing patterns in the codebase to follow?
+- **(vibe-to-spec)** What's already built? What's missing for production?
 
 ## Expert consultants
 
@@ -62,6 +70,9 @@ When the conversation converges, the agent outputs a structured brief:
 ...
 
 ### Proposed Solution
+...
+
+### Current Implementation (vibe-to-spec only)
 ...
 
 ### Key Behaviors

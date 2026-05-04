@@ -23,6 +23,7 @@ This is the "thinking out loud" phase. The user might have:
 - A specific request they haven't fully thought through
 - Multiple competing approaches they're weighing
 - Questions about feasibility
+- **Existing code they want to formalize into a spec** — exploratory code, a prototype, or a vibe-coded feature that needs structure
 
 Your job is to be a thought partner, not a spec writer. Ask probing questions, suggest alternatives, identify gaps, and help them arrive at clarity.
 
@@ -30,12 +31,35 @@ Your job is to be a thought partner, not a spec writer. Ask probing questions, s
 
 ### 1. Understand the Starting Point
 
+Determine which mode the session is in:
+
+**Mode A: Idea-first (default)** — The user has a concept but little or no code yet.
+
+**Mode B: Code-first (vibe-to-spec)** — The user has already written exploratory code and wants to reverse-engineer a formal spec from it.
+
+Detect Mode B when the user says things like:
+- "I hacked together..."
+- "I want to turn this into a spec"
+- "Generate a spec from what I built"
+- "I vibe-coded this and need to formalize it"
+- Or when the codebase shows recent uncommitted changes that look like a prototype
+
+#### Mode A: Idea-first
+
 If the user provided an initial idea as an argument, acknowledge it and start exploring. If not, ask what they're thinking about.
 
 Read relevant parts of the codebase to understand context:
 - What does the current implementation look like?
 - What patterns does this codebase use?
 - What constraints exist?
+
+#### Mode B: Code-first (vibe-to-spec)
+
+1. **Read the current codebase state** — focus on recently modified files, uncommitted changes, and anything that looks like a prototype or new feature.
+2. **Summarize what you see** — describe the current implementation in your own words: what components exist, what data flows, what APIs or UI elements are present.
+3. **Confirm understanding** — ask the user if your summary matches their intent and what they consider the "core" of what they built.
+4. **Identify gaps** — what's missing for this to be production-ready? Tests? Error handling? Edge cases? Auth?
+5. **Proceed to iterative exploration** — treat the current code as the "proposed solution" and work backwards to the problem statement, key behaviors, and out-of-scope items.
 
 ### 2. Offer Expert Consultation (Optional)
 
@@ -153,6 +177,9 @@ When the user is ready, synthesize the conversation into a structured brief:
 
 ### Proposed Solution
 [High-level description of the approach]
+
+### Current Implementation (vibe-to-spec only)
+[Summary of existing code — what's already built, what's working, what's rough]
 
 ### Key Behaviors
 - [Behavior 1]

@@ -18,9 +18,11 @@ Start a new spec-driven development workflow for a feature. This command guides 
 
 1. **Creates the spec directory** at `.claude/specs/<feature-name>/` with three files: `requirements.md`, `design.md`, and `tasks.md`.
 
-2. **Gathers requirements interactively** — asks about feature scope, user roles, key behaviors, edge cases, security concerns, non-functional requirements, and what is explicitly out of scope. Runs in 2-3 conversational rounds rather than asking everything at once.
+2. **Detects workflow mode** — if your input signals that you already have a design (mentions of architecture, RFC, diagram, whiteboard), the agent asks whether to start with design and derive requirements from it.
 
-4. **Writes requirements and design** — produces `requirements.md` with EARS-notation acceptance criteria and `design.md` covering architecture, components, and data models.
+3. **Gathers input interactively** — in Requirements-First mode, asks about feature scope, user roles, and behaviors. In Design-First mode, asks about architecture, components, data models, and API contracts. Runs in 2-3 conversational rounds.
+
+4. **Writes requirements and design** — produces `requirements.md` with EARS-notation acceptance criteria and `design.md` covering architecture, components, and data models. The order depends on the workflow mode.
 
 5. **Generates implementation tasks** — breaks the design into phased tasks (Setup, Core Implementation, Integration, Testing, Polish) and syncs them to the Claude Code task list.
 
@@ -42,7 +44,7 @@ Claude will ask about your authentication requirements (OAuth? Email/password? R
 - For implementation, use `/spec-exec` (one task at a time) or `/spec-loop` (run until complete).
 
 !!!tip
-    If you have an existing PRD or design doc, paste its contents as context when running `/spec <name>` and instruct the spec-planner to derive requirements from it.
+    If you have an existing PRD or design doc, paste its contents as context when running `/spec <name>`. If the agent detects design signals, it will offer Design-First mode so requirements are derived from your architecture rather than the other way around.
 
 ## See Also
 

@@ -12,6 +12,12 @@ For bugfixes, use the parallel bugfix workflow:
 Bug Analysis -> Design -> Tasks -> Execution -> Post-Implementation
 ```
 
+For features where you already have a design, use Design-First mode:
+
+```
+Brainstorm -> Design -> Requirements -> Tasks -> Execution -> Post-Implementation
+```
+
 Each stage has dedicated commands and produces artifacts that feed the next stage.
 
 ## Stage 0: Brainstorm (optional)

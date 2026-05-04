@@ -77,7 +77,25 @@ Before gathering requirements, check for (or create) a project profile so that d
 
 4. **Store profile content**: Keep the profile content available as `PROJECT_PROFILE` context to pass to the spec-planner and spec-tasker agents in subsequent steps.
 
-### 2. Interactive Requirements Gathering (inline — NOT delegated)
+### 1.6. Workflow Mode Detection
+
+Determine whether to use **Requirements-First** (default) or **Design-First** ordering.
+
+**Design-First signals** — check the user's input and context for:
+- Mentions of architecture, RFC, design doc, diagram, whiteboard, or technical proposal
+- Descriptions focused on "how" before "what"
+- References to existing design files (`design.md`, architecture docs, API specs)
+- Phrases like "I already have a design", "we whiteboarded this", "here's the architecture"
+
+**If signals are detected** — ask the user via AskUserQuestion:
+- **"Start with design"** — Design-First workflow: gather design input first, then derive requirements from it
+- **"Start with requirements"** — Requirements-First workflow (default): gather requirements first, then design
+
+**If no signals** — default to Requirements-First without asking.
+
+Store the selected mode as `WORKFLOW_MODE` (`requirements-first` or `design-first`). This mode is passed to the spec-planner agent so it knows which file to write first and how to derive the second file.
+
+### 2. Interactive Gathering (inline — NOT delegated)
 
 **IMPORTANT**: This phase runs inline in the /spec command, NOT in a subagent. This is because subagents cannot interact with the user via AskUserQuestion.
 
@@ -128,21 +146,39 @@ The user can respond with:
 - **Partial edits** — "Yes but also add X" or "Change the scope to Y" — Merge their edits with the defaults
 - **Full override** — Provide their own detailed answer, ignoring the recommendation
 
-Ask about these categories across 2-3 rounds:
+Ask about categories across 2-3 rounds. The questions depend on `WORKFLOW_MODE`:
 
-**Round 1 (scope and roles):**
+**Requirements-First mode (default):**
+
+*Round 1 (scope and roles):*
 1. **Feature scope** — What is the core problem this feature solves? What are the boundaries?
 2. **User roles** — Who will use this feature? What are their goals?
 3. **Key behaviors** — What are the main actions/flows? What should happen in each?
 
-**Round 2 (constraints and boundaries):**
+*Round 2 (constraints and boundaries):*
 4. **Edge cases and errors** — What happens when things go wrong? Invalid input? Network failures?
 5. **Security concerns** — Authentication, authorization, data sensitivity?
 6. **Non-functional requirements** — Performance expectations? Accessibility? Scalability?
 
-**Round 3 (if needed — skip if rounds 1-2 were comprehensive):**
+*Round 3 (if needed):*
 7. **Out of scope** — What explicitly should NOT be included?
 8. **Open questions** — Anything ambiguous that needs clarification?
+
+**Design-First mode:**
+
+*Round 1 (architecture and components):*
+1. **High-level architecture** — What components or services are involved? How do they interact?
+2. **Data models** — What new data structures, schemas, or types are needed?
+3. **API/contracts** — What interfaces, endpoints, or public APIs does this expose?
+
+*Round 2 (flow and constraints):*
+4. **Data flow** — How does data move through the system? Key sequence diagrams?
+5. **Security and performance** — Auth, rate limiting, caching, bottlenecks?
+6. **Integration points** — What existing systems or components does this connect to?
+
+*Round 3 (if needed):*
+7. **Alternatives considered** — What other designs were rejected and why?
+8. **Open questions** — Any unresolved architectural decisions?
 
 For rounds 2-3, refine your recommendations based on the user's answers from earlier rounds. If the user accepted defaults in round 1, use that signal to provide stronger defaults in round 2 (they likely want a faster flow).
 
@@ -159,10 +195,13 @@ Delegate to the **spec-planner** agent using the Task tool. This agent runs on t
 Pass the agent ALL of the following context:
 - The feature name
 - The spec directory path
+- **The `WORKFLOW_MODE`** (`requirements-first` or `design-first`)
 - **The complete user answers from step 2** (formatted clearly)
 - **Relevant codebase context** (existing patterns, tech stack, conventions you discovered)
 - **The PROJECT_PROFILE content from Phase 0** (if available — this gives the planner Entity Registry, Registration Points, Regression Markers, and stack details for profile-aware requirements and design)
-- Instruction to write both requirements.md (with EARS notation) and design.md
+- Instructions based on mode:
+  - **Requirements-First**: "Write requirements.md first (with EARS notation), then write design.md based on those requirements"
+  - **Design-First**: "Write design.md first based on the user's design input, then derive requirements.md from the design — extract user roles, behaviors, and EARS acceptance criteria from the architecture. Requirements must be traceable to design decisions."
 - Instruction to NOT ask clarifying questions — all user input has already been gathered
 
 The spec-planner agent will:

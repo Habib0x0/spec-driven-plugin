@@ -45,16 +45,16 @@ codex plugin marketplace add Habib0x0/spec-driven-plugin
 
 ### Command Syntax
 
-Codex commands use `$spec-driven:` prefix instead of `/`:
+Codex commands use `$` prefix instead of `/`:
 
 | Claude Code | Codex |
 |-------------|-------|
-| `/spec <name>` | `$spec-driven:spec <name>` |
-| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` |
-| `/spec-bugfix <name>` | `$spec-driven:spec-bugfix <name>` |
-| `/spec-status` | `$spec-driven:spec-status` |
-| `/spec-exec` | `$spec-driven:spec-exec` |
-| `/spec-loop` | `$spec-driven:spec-loop` |
+| `/spec <name>` | `$spec <name>` |
+| `/spec-brainstorm` | `$spec-brainstorm` |
+| `/spec-bugfix <name>` | `$spec-bugfix <name>` |
+| `/spec-status` | `$spec-status` |
+| `/spec-exec` | `$spec-exec` |
+| `/spec-loop` | `$spec-loop` |
 
 ### Usage in Codex
 

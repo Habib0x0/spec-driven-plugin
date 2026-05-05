@@ -11,7 +11,7 @@ This guide walks through creating a spec from scratch and running the first impl
 
 **Codex:**
 ```
-$spec-driven:spec user-authentication
+$spec user-authentication
 ```
 
 The command will ask you 2-3 rounds of questions about scope, user roles, key behaviors, edge cases, and non-functional requirements. Then the spec-planner agent (opus tier) writes formal requirements and design:
@@ -39,7 +39,7 @@ Your spec files are created at:
 
 **Codex:**
 ```
-$spec-driven:spec-status
+$spec-status
 ```
 
 This shows task completion, dependency status, and which tasks are pending, in progress, or verified.
@@ -53,10 +53,10 @@ This shows task completion, dependency status, and which tasks are pending, in p
 
 **Codex:**
 ```
-$spec-driven:spec-exec
+$spec-exec
 ```
 
-The agent picks the highest-priority pending task, implements it, verifies it, updates `tasks.md`, and commits. Run it again for the next task, or use `/spec-loop` (Claude Code) / `$spec-driven:spec-loop` (Codex) to run all tasks automatically.
+The agent picks the highest-priority pending task, implements it, verifies it, updates `tasks.md`, and commits. Run it again for the next task, or use `/spec-loop` (Claude Code) / `$spec-loop` (Codex) to run all tasks automatically.
 
 !!!tip
     If you have only one spec in `.claude/specs/`, the `--spec-name` argument is auto-detected. With multiple specs, pass `--spec-name <name>` explicitly.

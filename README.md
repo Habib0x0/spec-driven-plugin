@@ -12,41 +12,41 @@ This plugin guides you through three phases:
 
 ## Commands
 
-Commands use `/` prefix in Claude Code and `$spec-driven:` prefix in Codex.
+Commands use `/` prefix in Claude Code and `$` prefix in Codex.
 
 ### Core Workflow
 | Claude Code | Codex | Description |
 |-------------|-------|-------------|
-| `/spec-brainstorm` | `$spec-driven:spec-brainstorm` | Brainstorm a feature idea before spec creation |
-| `/spec <name>` | `$spec-driven:spec <name>` | Start a new feature spec with interactive 3-phase workflow |
-| `/spec-bugfix <name>` | `$spec-driven:spec-bugfix <name>` | Start a new bugfix spec with defect analysis and regression prevention |
-| `/spec-refine` | `$spec-driven:spec-refine` | Refine requirements/design for current spec |
-| `/spec-tasks` | `$spec-driven:spec-tasks` | Regenerate tasks from updated spec |
-| `/spec-status` | `$spec-driven:spec-status` | Show spec progress, task completion, and dependency status |
-| `/spec-validate` | `$spec-driven:spec-validate` | Validate spec completeness and consistency |
+| `/spec-brainstorm` | `$spec-brainstorm` | Brainstorm a feature idea before spec creation |
+| `/spec <name>` | `$spec <name>` | Start a new feature spec with interactive 3-phase workflow |
+| `/spec-bugfix <name>` | `$spec-bugfix <name>` | Start a new bugfix spec with defect analysis and regression prevention |
+| `/spec-refine` | `$spec-refine` | Refine requirements/design for current spec |
+| `/spec-tasks` | `$spec-tasks` | Regenerate tasks from updated spec |
+| `/spec-status` | `$spec-status` | Show spec progress, task completion, and dependency status |
+| `/spec-validate` | `$spec-validate` | Validate spec completeness and consistency |
 
 ### Research & Navigation
 | Claude Code | Codex | Description |
 |-------------|-------|-------------|
-| `/research` | `$spec-driven:research` | Deep parallel research before planning — searches docs, web, and codebase |
-| `/zoom-out` | `$spec-driven:zoom-out` | Map modules, interfaces, and callers for unfamiliar code |
-| `/ubiquitous-language` | `$spec-driven:ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities |
+| `/research` | `$research` | Deep parallel research before planning — searches docs, web, and codebase |
+| `/zoom-out` | `$zoom-out` | Map modules, interfaces, and callers for unfamiliar code |
+| `/ubiquitous-language` | `$ubiquitous-language` | Extract domain terms into a canonical glossary with flagged ambiguities |
 
 ### Implementation
 | Claude Code | Codex | Description |
 |-------------|-------|-------------|
-| `/spec-exec` | `$spec-driven:spec-exec` | Run one autonomous implementation iteration |
-| `/spec-loop` | `$spec-driven:spec-loop` | Loop implementation until all tasks complete |
+| `/spec-exec` | `$spec-exec` | Run one autonomous implementation iteration |
+| `/spec-loop` | `$spec-loop` | Loop implementation until all tasks complete |
 
 ### Post-Completion (Optional)
 | Claude Code | Codex | Description |
 |-------------|-------|-------------|
-| `/spec-accept` | `$spec-driven:spec-accept` | Run user acceptance testing for formal sign-off |
-| `/spec-docs` | `$spec-driven:spec-docs` | Generate documentation from spec and implementation |
-| `/spec-release` | `$spec-driven:spec-release` | Generate release notes and deployment checklist |
-| `/spec-verify` | `$spec-driven:spec-verify` | Run post-deployment smoke tests |
-| `/spec-retro` | `$spec-driven:spec-retro` | Run a retrospective on a completed spec |
-| `/spec-complete` | `$spec-driven:spec-complete` | Run full post-completion pipeline (accept → docs → release → retro) |
+| `/spec-accept` | `$spec-accept` | Run user acceptance testing for formal sign-off |
+| `/spec-docs` | `$spec-docs` | Generate documentation from spec and implementation |
+| `/spec-release` | `$spec-release` | Generate release notes and deployment checklist |
+| `/spec-verify` | `$spec-verify` | Run post-deployment smoke tests |
+| `/spec-retro` | `$spec-retro` | Run a retrospective on a completed spec |
+| `/spec-complete` | `$spec-complete` | Run full post-completion pipeline (accept → docs → release → retro) |
 
 ## Usage
 
@@ -59,7 +59,7 @@ Commands use `/` prefix in Claude Code and `$spec-driven:` prefix in Codex.
 
 **Codex:**
 ```
-$spec-driven:spec user-authentication
+$spec user-authentication
 ```
 
 This will:
@@ -219,12 +219,12 @@ bash scripts/spec-exec.sh --spec-name user-authentication
 
 #### Usage in Codex
 
-Codex commands use `$spec-driven:` prefix instead of `/`:
+Codex commands use `$` prefix instead of `/`:
 
 ```
-$spec-driven:spec user-authentication
-$spec-driven:spec-status
-$spec-driven:spec-exec
+$spec user-authentication
+$spec-status
+$spec-exec
 ```
 
 You can also invoke the skill by typing one of its default prompt phrases:

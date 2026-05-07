@@ -80,18 +80,18 @@ Tasks sync to Claude Code's built-in todo system via `TaskCreate` and `TaskUpdat
 
 The plugin automatically selects the appropriate model for each phase. You do not need to switch models manually.
 
-| Agent | Model | Phase | Rationale |
-|-------|-------|-------|-----------|
-| spec-planner | opus tier | Requirements + Design | Deep reasoning for edge cases, security, architecture |
-| spec-tasker | sonnet tier | Task breakdown | Fast, structured decomposition |
-| spec-validator | sonnet tier | Validation | Checklist-based verification |
-| spec-implementer | sonnet tier | Implementation | Writes code for tasks |
-| spec-tester | sonnet tier | Testing | Verifies with Playwright/tests |
-| spec-reviewer | opus tier | Review | Code quality, security, architecture |
-| spec-consultant | sonnet tier | Consultation | Domain expert analysis during brainstorming |
-| spec-acceptor | sonnet tier | Acceptance | Requirement traceability, formal sign-off |
-| spec-documenter | sonnet tier | Documentation | Generates docs from spec and code |
-| spec-debugger | haiku tier | Debugging | Fixes issues when rejected |
-| spec-scanner | sonnet tier | Profile scan | Detects framework, patterns, entities, and registration points |
+| Agent | Tier | Phase | Rationale |
+|-------|------|-------|-----------|
+| spec-planner | reasoning | Requirements + Design | Deep reasoning for edge cases, security, architecture |
+| spec-tasker | standard | Task breakdown | Fast, structured decomposition |
+| spec-validator | standard | Validation | Checklist-based verification |
+| spec-implementer | standard | Implementation | Writes code for tasks |
+| spec-tester | standard | Testing | Verifies with Playwright/tests |
+| spec-reviewer | reasoning | Review | Code quality, security, architecture |
+| spec-consultant | standard | Consultation | Domain expert analysis during brainstorming |
+| spec-acceptor | standard | Acceptance | Requirement traceability, formal sign-off |
+| spec-documenter | standard | Documentation | Generates docs from spec and code |
+| spec-debugger | lightweight | Debugging | Fixes issues when rejected |
+| spec-scanner | standard | Profile scan | Detects framework, patterns, entities, and registration points |
 
-The opus tier is used where careful reasoning matters most (planning and review). The sonnet tier handles the high-frequency work (implementation, testing, documentation). The haiku tier handles targeted debug fixes. Each agent's tier can be overridden per-environment via `SPEC_MODEL_*` variables — see [model-routing](../advanced/model-routing.md).
+The reasoning tier is used where careful reasoning matters most (planning and review). The standard tier handles the high-frequency work (implementation, testing, documentation). The lightweight tier handles targeted debug fixes. Each agent's tier can be overridden per-environment via `SPEC_MODEL_*` variables — see [model-routing](../advanced/model-routing.md).

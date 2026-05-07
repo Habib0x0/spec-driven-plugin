@@ -1,6 +1,6 @@
 # Design
 
-The design phase defines how the system will implement the requirements. It follows immediately after requirements in the `/spec` workflow, handled by the same spec-planner agent (opus tier).
+The design phase defines how the system will implement the requirements. It follows immediately after requirements in the `/spec` workflow, handled by the same spec-planner agent (reasoning tier).
 
 ## What goes in design.md
 

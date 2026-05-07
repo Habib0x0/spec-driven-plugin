@@ -20,8 +20,8 @@ When this command delegates to agents via the Task tool, check the relevant `SPE
 
 | Env var | Agent | Default tier | Used in |
 |---------|-------|--------------|---------|
-| `SPEC_MODEL_PLANNER` | spec-planner | opus | Requirements / design refinement (steps 4, 5) |
-| `SPEC_MODEL_TASKER` | spec-tasker | sonnet | Task regeneration cascade (step 6) |
+| `SPEC_MODEL_PLANNER` | spec-planner | reasoning | Requirements / design refinement (steps 4, 5) |
+| `SPEC_MODEL_TASKER` | spec-tasker | standard | Task regeneration cascade (step 6) |
 
 ## Workflow
 

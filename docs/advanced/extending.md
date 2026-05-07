@@ -61,7 +61,7 @@ The agent's instructions go here.
 
 Agents are spawned by commands via the `Task` tool. Reference the agent by its fully qualified name: `spec-driven:spec-myagent`.
 
-Model options: `sonnet` (default for most agents), `opus` (for deep reasoning tasks like planning and review).
+Model options: `standard` (default for most agents), `reasoning` (for deep reasoning tasks like planning and review).
 
 ## Adding reference material
 

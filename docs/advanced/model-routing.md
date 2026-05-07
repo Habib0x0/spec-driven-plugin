@@ -1,32 +1,30 @@
 # Model Routing
 
-The spec-driven plugin routes each agent to a **model tier** rather than a specific version-pinned model snapshot. Tier aliases (`opus`, `sonnet`, `haiku`) are resolved by Claude Code at runtime, so the plugin stays compatible with new model releases without plugin-side changes. Each agent's tier can be overridden per-environment via `SPEC_MODEL_*` environment variables, which is the mechanism that also lets you map tiers to non-Anthropic models when you route through Claude Code Router (CCR), LiteLLM, opencode, or similar routers.
+The spec-driven plugin routes each agent to a **capability tier** rather than a specific model or vendor. Three tiers cover the range of work agents do:
 
-## The Three-Tier System
+| Tier | Capability | Used for |
+|------|-----------|----------|
+| `reasoning` | Deep reasoning, design, complex analysis | Requirements, architecture, code review — where subtle mistakes are most expensive |
+| `standard` | Structured code production, validation, documentation | Implementation, task breakdown, testing — fast and accurate for well-specified work |
+| `lightweight` | Targeted fixes, small patches | Debug patches where the failure is already identified — throughput matters more than depth |
 
-The plugin uses three tiers matched to the work each agent does.
+Each agent declares its default tier in frontmatter. The CLI you are using resolves that tier to an actual model. If your CLI does not support tier aliases, or if you want to use a specific model, set the matching `SPEC_MODEL_*` environment variable.
 
-| Tier | Used for | Why |
-|------|----------|-----|
-| `opus` | Deep reasoning and design-sensitive review | Requirements, design, and code review are where subtle mistakes are most expensive — it's worth the token cost to catch them |
-| `sonnet` | Structured code production | Implementation, task breakdown, validation, testing, documentation — fast, accurate, and good enough for well-specified work |
-| `haiku` | Targeted lightweight fixes | Small debug patches where the failure is already identified — throughput matters more than depth |
-
-### Tier Assignments
+## Tier Assignments
 
 | Agent | Default Tier |
 |-------|--------------|
-| spec-planner | opus |
-| spec-reviewer | opus |
-| spec-tasker | sonnet |
-| spec-validator | sonnet |
-| spec-implementer | sonnet |
-| spec-tester | sonnet |
-| spec-acceptor | sonnet |
-| spec-consultant | sonnet |
-| spec-documenter | sonnet |
-| spec-scanner | sonnet |
-| spec-debugger | haiku |
+| spec-planner | reasoning |
+| spec-reviewer | reasoning |
+| spec-tasker | standard |
+| spec-validator | standard |
+| spec-implementer | standard |
+| spec-tester | standard |
+| spec-acceptor | standard |
+| spec-consultant | standard |
+| spec-documenter | standard |
+| spec-scanner | standard |
+| spec-debugger | lightweight |
 
 ## How Tier Resolution Works
 
@@ -35,29 +33,35 @@ Each agent file (`agents/*.md`) declares its tier in YAML frontmatter:
 ```yaml
 ---
 name: spec-planner
-model: opus
+model: reasoning
 ---
 ```
 
-When a command spawns the agent through the Task tool, Claude Code resolves the tier alias to the current model in that tier at invocation time. No version strings are hardcoded in the plugin, so upgrading Claude Code to a new model release picks up the new model automatically — no plugin update required.
+The value in `model:` is a **tier alias**. How it gets resolved depends on your CLI:
+
+- **Claude Code** — resolves `reasoning` → `opus`, `standard` → `sonnet`, `lightweight` → `haiku` automatically.
+- **Codex** — does not use tier aliases; set `SPEC_MODEL_*` environment variables to point each agent at the model you want.
+- **Custom CLI** (via `SPEC_AGENT_CMD`) — the plugin passes prompts to your command; model selection is up to your command.
+
+No version strings are hardcoded in the plugin. Upgrading your CLI to a new model release picks up the new model automatically as long as the tier alias resolution is updated by the CLI.
 
 ## Per-Agent Override Variables
 
-Every agent's tier can be overridden by setting the matching environment variable. The plugin reads these variables in command prompts and passes them as the `model:` parameter to the Task tool when set and non-empty.
+Every agent can be pinned to a specific model by setting its environment variable. This is the primary mechanism for routing to non-default models, non-Anthropic providers, or local routers.
 
 | Variable | Agent | Default Tier |
 |----------|-------|--------------|
-| `SPEC_MODEL_PLANNER` | spec-planner | opus |
-| `SPEC_MODEL_TASKER` | spec-tasker | sonnet |
-| `SPEC_MODEL_VALIDATOR` | spec-validator | sonnet |
-| `SPEC_MODEL_IMPLEMENTER` | spec-implementer | sonnet |
-| `SPEC_MODEL_TESTER` | spec-tester | sonnet |
-| `SPEC_MODEL_REVIEWER` | spec-reviewer | opus |
-| `SPEC_MODEL_DEBUGGER` | spec-debugger | haiku |
-| `SPEC_MODEL_SCANNER` | spec-scanner | sonnet |
-| `SPEC_MODEL_ACCEPTOR` | spec-acceptor | sonnet |
-| `SPEC_MODEL_DOCUMENTER` | spec-documenter | sonnet |
-| `SPEC_MODEL_CONSULTANT` | spec-consultant | sonnet |
+| `SPEC_MODEL_PLANNER` | spec-planner | reasoning |
+| `SPEC_MODEL_TASKER` | spec-tasker | standard |
+| `SPEC_MODEL_VALIDATOR` | spec-validator | standard |
+| `SPEC_MODEL_IMPLEMENTER` | spec-implementer | standard |
+| `SPEC_MODEL_TESTER` | spec-tester | standard |
+| `SPEC_MODEL_REVIEWER` | spec-reviewer | reasoning |
+| `SPEC_MODEL_DEBUGGER` | spec-debugger | lightweight |
+| `SPEC_MODEL_SCANNER` | spec-scanner | standard |
+| `SPEC_MODEL_ACCEPTOR` | spec-acceptor | standard |
+| `SPEC_MODEL_DOCUMENTER` | spec-documenter | standard |
+| `SPEC_MODEL_CONSULTANT` | spec-consultant | standard |
 
 ### Precedence
 
@@ -67,93 +71,113 @@ SPEC_MODEL_* env var (if set and non-empty)
   v  overrides
 Agent frontmatter model: field (tier alias)
   |
-  v  resolved by Claude Code runtime
+  v  resolved by your CLI runtime
 Actual model used for the agent
 ```
 
 Setting a variable to an empty string is treated as unset — the frontmatter tier alias applies.
 
-## Backend Detection
+## CLI Detection
 
-When `ANTHROPIC_BASE_URL` points at a non-Anthropic endpoint, shell scripts (`spec-exec.sh`, `spec-loop.sh`, etc.) print a one-time optimization notice suggesting which `SPEC_MODEL_*` variables to set for your router.
+The plugin auto-detects which CLI is available:
 
-The detection is a pure string check on `ANTHROPIC_BASE_URL` — **no network calls** are made:
+1. If `SPEC_AGENT_CMD` is set, use that custom command.
+2. If `codex` is installed, use Codex.
+3. If `claude` is installed, use Claude Code.
+4. Otherwise, error with instructions to install a supported CLI or set `SPEC_AGENT_CMD`.
 
-- Unset → treated as Anthropic (no banner).
-- Contains `anthropic.com` → treated as Anthropic (no banner).
-- Anything else → treated as non-Anthropic, banner prints once to stderr.
+Control this explicitly with `SPEC_AGENT_BACKEND`:
 
-### Suppressing the Notice
+```bash
+export SPEC_AGENT_BACKEND=claude   # force Claude Code
+export SPEC_AGENT_BACKEND=codex    # force Codex
+export SPEC_AGENT_BACKEND=auto     # default: auto-detect
+```
 
-Set `SPEC_QUIET=1` to suppress the banner. The banner is informational only; it never blocks execution.
+## Mapping Tiers to Models by Provider
+
+Set `SPEC_MODEL_*` variables to route each tier to a model your provider supports. The plugin passes the value through to the CLI without interpretation — any model string your CLI accepts works.
+
+### Anthropic (Claude Code)
+
+No configuration needed for defaults. To pin specific snapshots:
+
+```bash
+export SPEC_MODEL_PLANNER=claude-opus-4-7
+export SPEC_MODEL_TASKER=claude-sonnet-4-6
+export SPEC_MODEL_DEBUGGER=claude-haiku-4-5-20251001
+```
+
+### OpenAI
+
+```bash
+export SPEC_MODEL_PLANNER=o1
+export SPEC_MODEL_REVIEWER=o1
+export SPEC_MODEL_TASKER=gpt-4o
+export SPEC_MODEL_IMPLEMENTER=gpt-4o
+export SPEC_MODEL_TESTER=gpt-4o
+export SPEC_MODEL_VALIDATOR=gpt-4o
+export SPEC_MODEL_ACCEPTOR=gpt-4o
+export SPEC_MODEL_CONSULTANT=gpt-4o
+export SPEC_MODEL_DOCUMENTER=gpt-4o
+export SPEC_MODEL_SCANNER=gpt-4o
+export SPEC_MODEL_DEBUGGER=gpt-4o-mini
+```
+
+### Google (Gemini)
+
+```bash
+export SPEC_MODEL_PLANNER=gemini-1.5-pro
+export SPEC_MODEL_REVIEWER=gemini-1.5-pro
+export SPEC_MODEL_TASKER=gemini-1.5-pro
+export SPEC_MODEL_IMPLEMENTER=gemini-1.5-pro
+export SPEC_MODEL_DEBUGGER=gemini-1.5-flash
+```
+
+### DeepSeek
+
+```bash
+export SPEC_MODEL_PLANNER=deepseek-reasoner
+export SPEC_MODEL_REVIEWER=deepseek-reasoner
+export SPEC_MODEL_TASKER=deepseek-chat
+export SPEC_MODEL_IMPLEMENTER=deepseek-chat
+export SPEC_MODEL_DEBUGGER=deepseek-chat
+```
+
+### Local / Router (Ollama, CCR, LiteLLM, opencode)
+
+```bash
+# Example: Ollama with Qwen3
+export SPEC_MODEL_PLANNER=qwen3-30b-a3b
+export SPEC_MODEL_REVIEWER=qwen3-30b-a3b
+export SPEC_MODEL_TASKER=qwen3-coder
+export SPEC_MODEL_IMPLEMENTER=qwen3-coder
+export SPEC_MODEL_DEBUGGER=qwen3-coder-7b
+
+# Example: routed through LiteLLM
+export SPEC_MODEL_PLANNER=deepseek-v3
+export SPEC_MODEL_TASKER=qwen3-coder
+export SPEC_MODEL_DEBUGGER=qwen3-coder-7b
+```
+
+## Suppressing Notices
+
+Set `SPEC_QUIET=1` to suppress informational banners:
 
 ```bash
 export SPEC_QUIET=1
 ```
 
-The banner also guards against repeat printing within a single process (using the `_SPEC_BACKEND_NOTICE_SHOWN` variable), so sourcing `detect-backend.sh` multiple times in the same script does not spam stderr.
+## Version Pinning
 
-## Router Configuration Examples
-
-The examples below use hypothetical OSS models. Substitute whichever models your router actually exposes.
-
-### Claude Code Router (CCR)
+If you need to lock an agent to a specific snapshot (for reproducibility, benchmarking, or to work around a regression), set the matching env var to the snapshot ID:
 
 ```bash
-# Route through a local CCR instance
-export ANTHROPIC_BASE_URL=http://localhost:3456/v1
-
-# Map plugin tiers to your CCR-backed models
-export SPEC_MODEL_PLANNER=deepseek-v3
-export SPEC_MODEL_REVIEWER=deepseek-v3
-export SPEC_MODEL_TASKER=qwen3-coder
-export SPEC_MODEL_IMPLEMENTER=qwen3-coder
-export SPEC_MODEL_TESTER=qwen3-coder
-export SPEC_MODEL_VALIDATOR=qwen3-coder
-export SPEC_MODEL_ACCEPTOR=qwen3-coder
-export SPEC_MODEL_CONSULTANT=qwen3-coder
-export SPEC_MODEL_DOCUMENTER=qwen3-coder
-export SPEC_MODEL_SCANNER=qwen3-coder
-export SPEC_MODEL_DEBUGGER=qwen3-coder-7b
-```
-
-### LiteLLM
-
-```bash
-# Point at your LiteLLM proxy
-export ANTHROPIC_BASE_URL=http://litellm.local:4000
-
-# LiteLLM lets you alias backend models; reuse those aliases in the env vars
-export SPEC_MODEL_PLANNER=deepseek-v3
-export SPEC_MODEL_REVIEWER=deepseek-v3
-export SPEC_MODEL_TASKER=qwen3-coder
-export SPEC_MODEL_IMPLEMENTER=qwen3-coder
-export SPEC_MODEL_DEBUGGER=qwen3-coder-7b
-```
-
-### opencode
-
-```bash
-# opencode can route to any backend; set the base URL appropriately
-export ANTHROPIC_BASE_URL=https://opencode.example.com/v1
-
-export SPEC_MODEL_PLANNER=deepseek-v3
-export SPEC_MODEL_TASKER=qwen3-coder
-export SPEC_MODEL_DEBUGGER=qwen3-coder-7b
-```
-
-Any router that implements the Messages API and honors the `model` parameter works the same way — set `ANTHROPIC_BASE_URL` at the router, then use `SPEC_MODEL_*` to tell each agent which backend model to use.
-
-## Restoring Version Pinning
-
-If you need to lock an agent to a specific snapshot (for reproducibility, benchmarking, or to work around a regression), set the matching env var to the snapshot ID. The env var overrides the tier alias:
-
-```bash
-# Pin the planner to a specific Anthropic snapshot
+# Pin the planner to a specific snapshot
 export SPEC_MODEL_PLANNER=claude-opus-4-7
 
 # Or pin to a specific OSS model
 export SPEC_MODEL_TASKER=qwen3-coder-2025-03-15
 ```
 
-This works on both Anthropic and non-Anthropic backends — the plugin does not interpret the value, it passes the string through to the Task tool's `model:` parameter.
+This works on any backend — the plugin does not interpret the value, it passes the string through to the CLI.

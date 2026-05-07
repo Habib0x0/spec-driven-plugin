@@ -30,7 +30,7 @@ See [Brainstorming](brainstorming.md).
 
 ## Stage 1: Requirements
 
-`/spec <feature-name>` starts the three-phase workflow. The spec-planner agent (opus tier) guides you through:
+`/spec <feature-name>` starts the three-phase workflow. The spec-planner agent (reasoning tier) guides you through:
 
 - Identifying user roles and their goals
 - Writing user stories in standard format
@@ -70,7 +70,7 @@ See [Design](design.md).
 
 ## Stage 3: Tasks
 
-The spec-tasker agent (sonnet tier) breaks the design into discrete, trackable tasks:
+The spec-tasker agent (standard tier) breaks the design into discrete, trackable tasks:
 
 - Five phases: Setup, Core Implementation, Integration, Testing, Polish
 - Each task has status, wired, and verified fields

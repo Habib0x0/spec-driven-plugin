@@ -40,27 +40,21 @@ templates/                  - Document scaffolding for specs
 
 ## Model Routing
 
-The plugin routes each agent to a model tier. Claude Code resolves tier aliases (`opus`, `sonnet`, `haiku`) to the current model in that tier at runtime, so the plugin stays compatible with new model releases without code changes.
+The plugin routes each agent to a **capability tier** rather than a specific model. Three tiers cover the range of work:
 
-| Agent | Model Tier | Phase | Rationale |
-|-------|------------|-------|-----------|
-| spec-planner | opus | Requirements + Design | Deep reasoning for edge cases, security, architecture |
-| spec-tasker | sonnet | Task breakdown | Fast, structured decomposition |
-| spec-validator | sonnet | Validation | Checklist-based verification |
-| spec-implementer | sonnet | Implementation | Writes code for tasks |
-| spec-tester | sonnet | Testing | Verifies with Playwright/tests |
-| spec-reviewer | opus | Review | Code quality, security, architecture |
-| spec-consultant | sonnet | Consultation | Domain expert analysis during brainstorming (spawned by /spec-brainstorm) |
-| spec-acceptor | sonnet | Acceptance | Requirement traceability, non-functional verification, formal sign-off |
-| spec-documenter | sonnet | Documentation | Generates docs from spec and code |
-| spec-scanner | sonnet | Profile scan | Detects framework, patterns, entities, registration points |
-| spec-debugger | haiku | Debug / small fixes | Lightweight targeted fixes when Tester or Reviewer rejects |
+| Tier | Capability | Agents | Rationale |
+|------|-----------|--------|-----------|
+| `reasoning` | Deep reasoning, design, complex analysis | spec-planner, spec-reviewer | Requirements, architecture, and review are where subtle mistakes are most expensive |
+| `standard` | Structured code production, validation, documentation | spec-tasker, spec-validator, spec-implementer, spec-tester, spec-acceptor, spec-consultant, spec-documenter, spec-scanner | Fast and accurate for well-specified work |
+| `lightweight` | Targeted fixes, small patches | spec-debugger | Throughput matters more than depth when the failure is already identified |
 
-The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models.
+**Claude Code** resolves these tier aliases automatically (`reasoning` → `opus`, `standard` → `sonnet`, `lightweight` → `haiku`). **Codex** and other CLIs do not resolve aliases — set `SPEC_MODEL_*` environment variables to map each agent to a model your backend supports.
 
-Each agent's model can be overridden via environment variable (e.g., `SPEC_MODEL_PLANNER=my-model`). See [`docs/advanced/model-routing.md`](docs/advanced/model-routing.md) for details on per-agent overrides, non-Anthropic backend support, and router configuration examples.
+The `/spec` command delegates to these agents via the Task tool. Users don't need to manually switch models unless they want to override defaults.
 
-For implementation after spec completion, the sonnet tier is recommended — the spec provides all the context needed for accurate code generation.
+Each agent's model can be overridden via environment variable (e.g., `SPEC_MODEL_PLANNER=deepseek-reasoner`). See [`docs/advanced/model-routing.md`](docs/advanced/model-routing.md) for mapping tables for OpenAI, Google, DeepSeek, local routers, and per-agent override details.
+
+For implementation after spec completion, the `standard` tier is recommended — the spec provides all the context needed for accurate code generation.
 
 ## Key Concepts
 

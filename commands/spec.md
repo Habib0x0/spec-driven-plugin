@@ -22,11 +22,11 @@ Create a new specification for a feature using the 3-phase spec-driven workflow.
 
 | Phase | Who | Model Tier | Why |
 |-------|-----|------------|-----|
-| Phase 0 Scan | spec-scanner agent | sonnet | Fast multi-file reading; reasoning depth not critical |
+| Phase 0 Scan | spec-scanner agent | standard | Fast multi-file reading; reasoning depth not critical |
 | Requirements Gathering | /spec command (inline) | Current model | Interactive — needs AskUserQuestion |
-| Requirements + Design Writing | spec-planner agent | opus | Deep reasoning for edge cases and architecture |
-| Tasks | spec-tasker agent | sonnet | Fast, structured task generation |
-| Validation | spec-validator agent | sonnet | Checklist-based verification |
+| Requirements + Design Writing | spec-planner agent | reasoning | Deep reasoning for edge cases and architecture |
+| Tasks | spec-tasker agent | standard | Fast, structured task generation |
+| Validation | spec-validator agent | standard | Checklist-based verification |
 
 ## Model Override
 
@@ -34,10 +34,10 @@ Each agent spawn below reads a `SPEC_MODEL_*` environment variable. When the var
 
 | Env var | Agent | Default tier |
 |---------|-------|--------------|
-| `SPEC_MODEL_SCANNER` | spec-scanner | sonnet |
-| `SPEC_MODEL_PLANNER` | spec-planner | opus |
-| `SPEC_MODEL_TASKER` | spec-tasker | sonnet |
-| `SPEC_MODEL_VALIDATOR` | spec-validator | sonnet |
+| `SPEC_MODEL_SCANNER` | spec-scanner | standard |
+| `SPEC_MODEL_PLANNER` | spec-planner | reasoning |
+| `SPEC_MODEL_TASKER` | spec-tasker | standard |
+| `SPEC_MODEL_VALIDATOR` | spec-validator | standard |
 
 Example spawn with override: `Task(subagent_type="spec-planner", model="$SPEC_MODEL_PLANNER", prompt=...)` when `SPEC_MODEL_PLANNER` is set. See `docs/advanced/model-routing.md` for full details.
 
@@ -190,7 +190,7 @@ Collect all answers (user-provided and accepted defaults) into a structured brie
 
 ### 3. Requirements + Design Writing (via spec-planner agent)
 
-Delegate to the **spec-planner** agent using the Task tool. This agent runs on the **opus tier** for deep reasoning. If `SPEC_MODEL_PLANNER` is set, pass it as the `model:` parameter to override.
+Delegate to the **spec-planner** agent using the Task tool. This agent runs on the **reasoning tier** for deep reasoning. If `SPEC_MODEL_PLANNER` is set, pass it as the `model:` parameter to override.
 
 Pass the agent ALL of the following context:
 - The feature name
@@ -211,7 +211,7 @@ The spec-planner agent will:
 
 ### 4. Tasks Phase (via spec-tasker agent)
 
-After the spec-planner completes, delegate to the **spec-tasker** agent using the Task tool. This agent runs on the **sonnet tier** for efficient task breakdown. If `SPEC_MODEL_TASKER` is set, pass it as the `model:` parameter to override.
+After the spec-planner completes, delegate to the **spec-tasker** agent using the Task tool. This agent runs on the **standard tier** for efficient task breakdown. If `SPEC_MODEL_TASKER` is set, pass it as the `model:` parameter to override.
 
 Tell the spec-tasker agent:
 - The feature name
@@ -256,7 +256,7 @@ After all agents complete, provide a summary:
 - Number of tasks created
 - Key architectural decisions made
 - **Validation status**: Display the `VALIDATION_STATUS` from step 4.5 (either `"Spec validated: PASS"` or the remaining issue count)
-- Model usage: user interaction inline, opus tier for spec writing, sonnet tier for tasks
+- Model usage: user interaction inline, reasoning tier for spec writing, standard tier for tasks
 - If validation passed: suggest running `/spec-exec` or `/spec-loop` for implementation
 - If warnings remain: suggest running `/spec-validate` manually to review remaining issues before implementation
 - Remind user: for implementation, use `/spec-exec` (single task) or `/spec-loop` (all tasks)

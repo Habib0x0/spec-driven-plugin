@@ -1,6 +1,6 @@
 ---
 name: research
-description: "Deep research before planning. Launches parallel agents to search docs, web, and codebase, then synthesizes findings into actionable context."
+description: Research before planning
 argument-hint: "[topic or question]"
 allowed-tools:
   - Read

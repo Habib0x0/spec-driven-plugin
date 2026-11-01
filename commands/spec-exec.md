@@ -1,6 +1,6 @@
 ---
 name: spec-exec
-description: Execute one spec task by running Claude in autonomous mode
+description: Run one spec task
 allowed-tools:
   - Bash
   - Read

@@ -1,6 +1,6 @@
 ---
 name: spec-brainstorm
-description: Brainstorm a feature idea through conversation until it's ready for /spec
+description: Brainstorm a feature idea
 argument-hint: "[idea]"
 allowed-tools:
   - Read

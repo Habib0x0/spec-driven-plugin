@@ -1,6 +1,6 @@
 ---
 name: spec-validate
-description: Validate spec completeness and consistency
+description: Validate the spec
 allowed-tools:
   - Read
   - Glob

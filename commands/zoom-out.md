@@ -1,6 +1,6 @@
 ---
 name: zoom-out
-description: Zoom out and provide a high-level map of modules and callers for unfamiliar code
+description: Map unfamiliar code
 allowed-tools:
   - Read
   - Glob

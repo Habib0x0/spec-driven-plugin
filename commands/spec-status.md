@@ -1,6 +1,6 @@
 ---
 name: spec-status
-description: Show status and progress of current spec
+description: Show spec progress
 allowed-tools:
   - Read
   - Glob

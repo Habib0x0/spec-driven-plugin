@@ -1,6 +1,6 @@
 ---
 name: spec-refine
-description: Refine requirements or design for an existing spec
+description: Refine requirements or design
 allowed-tools:
   - Read
   - Write

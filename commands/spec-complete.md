@@ -1,6 +1,6 @@
 ---
 name: spec-complete
-description: Run full post-completion pipeline (accept, docs, release, retro)
+description: Run the post-completion pipeline
 allowed-tools:
   - Bash
   - Read

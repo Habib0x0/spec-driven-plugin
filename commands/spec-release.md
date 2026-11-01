@@ -1,6 +1,6 @@
 ---
 name: spec-release
-description: Generate release notes, changelog, and deployment checklist
+description: Write release notes
 argument-hint: "[spec-name]"
 allowed-tools:
   - Read

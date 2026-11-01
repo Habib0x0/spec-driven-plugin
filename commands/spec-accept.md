@@ -1,6 +1,6 @@
 ---
 name: spec-accept
-description: Run user acceptance testing against spec requirements for formal sign-off
+description: Run acceptance testing
 argument-hint: "[spec-name]"
 allowed-tools:
   - Read

@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Start a new spec-driven development workflow for a feature
+description: Start a feature spec
 argument-hint: "<feature-name>"
 allowed-tools:
   - Read

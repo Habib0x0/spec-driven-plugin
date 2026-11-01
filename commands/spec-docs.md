@@ -1,6 +1,6 @@
 ---
 name: spec-docs
-description: Generate user-facing documentation from spec and implementation
+description: Write user docs
 argument-hint: "[spec-name]"
 allowed-tools:
   - Read

@@ -1,6 +1,6 @@
 ---
 name: spec-bugfix
-description: Start a new bugfix spec with structured bug analysis, design, and tasks
+description: Start a bugfix spec
 argument-hint: "<bug-name>"
 allowed-tools:
   - Read

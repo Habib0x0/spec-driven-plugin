@@ -1,6 +1,6 @@
 ---
 name: ubiquitous-language
-description: "Extract and formalize domain terminology into a canonical glossary, flagging ambiguities and proposing precise terms. Saves to UBIQUITOUS_LANGUAGE.md."
+description: Build a domain glossary
 argument-hint: "[domain area]"
 allowed-tools:
   - Read

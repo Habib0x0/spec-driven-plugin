@@ -1,6 +1,6 @@
 ---
 name: spec-loop
-description: Loop spec execution until all tasks are complete
+description: Run tasks until done
 allowed-tools:
   - Bash
   - Read

@@ -1,6 +1,6 @@
 ---
 name: spec-tasks
-description: Regenerate tasks from updated spec requirements and design
+description: Regenerate spec tasks
 allowed-tools:
   - Read
   - Write

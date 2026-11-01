@@ -1,6 +1,6 @@
 ---
 name: spec-verify
-description: Run post-deployment smoke tests against a live environment
+description: Smoke-test a live deployment
 argument-hint: "[spec-name] [url]"
 allowed-tools:
   - Read

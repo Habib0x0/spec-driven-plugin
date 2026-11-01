@@ -1,6 +1,6 @@
 ---
 name: spec-retro
-description: Run a retrospective on a completed spec to capture lessons learned
+description: Run a retrospective
 argument-hint: "[spec-name]"
 allowed-tools:
   - Read
